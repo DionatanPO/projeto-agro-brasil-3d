@@ -43,7 +43,7 @@ func _ready() -> void:
 		if video != null:
 			video_fundo.stream = video
 			video_fundo.autoplay = true
-			video_fundo.loop = true
+			video_fundo.loop = false  # Vídeo roda apenas uma vez e fica parado ao terminar
 			video_fundo.volume_db = -80.0  # Sem som
 			video_fundo.expand = true  # Vídeo escala para o tamanho do nó
 			video_fundo.play()  # Inicia a reprodução explicitamente
