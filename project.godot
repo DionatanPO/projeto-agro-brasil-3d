@@ -53,6 +53,7 @@ enabled=PackedStringArray("res://addons/SIsilicon.vfx.lens flare/plugin.cfg", "r
 
 [rendering]
 
+renderer/render_method=2
 occlusion_culling/use_occlusion_culling=true
 
 [shader_globals]
