@@ -134,6 +134,7 @@ current_tab = 0
 tabs_visible = false
 
 [node name="Missão" type="VBoxContainer" parent="Diario/Inset/Conteudo/Abas" unique_id=221399166]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -313,7 +314,7 @@ text = "Alto"
 
 [node name="DicaGrafico" type="Label" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna" unique_id=199009709]
 layout_mode = 2
-text = "Alto = sombras realistas (custa FPS). Médio = equilibrado. Baixo = sem sombras."
+text = "Alto: sombras completas, sombra na vegetação e MSAA. Médio: sombras curtas (45 m), FXAA e LOD médio. Baixo: sem sombras, sem sombra na vegetação, sem lens flare, sem nevoeiro e LOD agressivo (mais FPS)."
 autowrap_mode = 3
 
 [node name="SepGrafico1" type="HSeparator" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna" unique_id=575195042]
@@ -437,3 +438,6 @@ theme_override_font_sizes/font_size = 18
 text = "60 FPS"
 
 [node name="PlayerProfile" parent="." unique_id=900000001 instance=ExtResource("2_guvrm")]
+layout_mode = 3
+offset_right = 300.0
+offset_bottom = 80.0

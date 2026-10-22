@@ -37,6 +37,10 @@ const PASSOS_ARQUIVOS := [
 var _em_cutscene_caminhando := false
 var _destino_cutscene := Vector3.ZERO
 
+## Controle do snap inicial ao chão (evita retentativa infinita).
+var _tentativas_chao := 0
+const MAX_TENTATIVAS_CHAO := 24
+
 @onready var rig: Node3D = $CameraRig
 @onready var bracos_camera: SpringArm3D = $CameraRig/BracosCamera
 @onready var modelo: Node3D = $Modelo
@@ -107,7 +111,9 @@ func _ready() -> void:
 
 func _snap_to_ground() -> void:
 	var space_state = get_world_3d().direct_space_state
-	var query = PhysicsRayQueryParameters3D.create(position, position + Vector3(0, -100, 0), 4)
+	# Usa todas as layers: no Forest o Terrain3D pode estar em uma layer
+	# diferente da usada no mapa do AgroBrasil.
+	var query = PhysicsRayQueryParameters3D.create(position, position + Vector3(0, -150, 0), 0xFFFFFFFF)
 	query.collide_with_areas = false
 	query.collide_with_bodies = true
 	var result = space_state.intersect_ray(query)
@@ -115,9 +121,18 @@ func _snap_to_ground() -> void:
 		var ground_y: float = result.position.y
 		position = Vector3(position.x, ground_y + 1.0, position.z)
 		print("SPAWN -> GROUND Y: ", ground_y, " | FINAL: ", position)
-	else:
-		print("AVISO: Raycast nao achou chao, tentando de novo...")
+	elif _tentativas_chao < MAX_TENTATIVAS_CHAO:
+		_tentativas_chao += 1
 		call_deferred("_snap_to_ground")
+		return
+	else:
+		# Sem chao apos varias tentativas: mantem a posicao e deixa a
+		# gravidade assentar o jogador, evitando um loop infinito de raycast.
+		print("AVISO: chao nao encontrado apos ", MAX_TENTATIVAS_CHAO, " tentativas; mantendo spawn em ", position)
+	_finalizar_spawn()
+
+
+func _finalizar_spawn() -> void:
 	if animador != null:
 		_importar_animacoes_personagem()
 		# Calibra o andar pela animacao: o corpo anda na velocidade nativa do

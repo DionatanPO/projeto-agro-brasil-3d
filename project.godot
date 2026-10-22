@@ -24,6 +24,7 @@ AudioConfig="*res://scripts/autoload/audio_config.gd"
 Jogo="*res://scripts/autoload/jogo.gd"
 XPManager="*res://scripts/autoload/xp_manager.gd"
 MCPRuntime="res://addons/godot_mcp/runtime/mcp_runtime.gd"
+QualidadeGrafica="*res://scripts/autoload/qualidade_grafica.gd"
 
 [display]
 

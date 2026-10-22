@@ -108,8 +108,8 @@ func _ready() -> void:
 	btn_grafico_baixo.pressed.connect(_on_grafico.bind("baixo"))
 	btn_grafico_medio.pressed.connect(_on_grafico.bind("medio"))
 	btn_grafico_alto.pressed.connect(_on_grafico.bind("alto"))
-	_atualizar_botoes_grafico(str(SaveSystem.dados.get("grafico", "alto")))
-	_aplicar_grafico(str(SaveSystem.dados.get("grafico", "alto")))
+	_atualizar_botoes_grafico(QualidadeGrafica.nivel_salvo())
+	QualidadeGrafica.aplicar(QualidadeGrafica.nivel_salvo())
 	btn_fsr_off.pressed.connect(_on_upscaling.bind("off"))
 	btn_fsr1.pressed.connect(_on_upscaling.bind("fsr1"))
 	btn_fsr2.pressed.connect(_on_upscaling.bind("fsr2"))
@@ -202,10 +202,8 @@ func _on_tela_cheia(ativado: bool) -> void:
 
 
 func _on_grafico(nivel: String) -> void:
-	SaveSystem.dados["grafico"] = nivel
-	SaveSystem.salvar()
+	QualidadeGrafica.definir(nivel)
 	_atualizar_botoes_grafico(nivel)
-	_aplicar_grafico(nivel)
 	if _som_ui_switch != null:
 		_som_ui_switch.play()
 
@@ -219,76 +217,6 @@ func _atualizar_botoes_grafico(nivel: String) -> void:
 			AgroUITheme.style_primary_button(par[0])
 		else:
 			AgroUITheme.style_secondary_button(par[0])
-
-
-func _aplicar_grafico(nivel: String) -> void:
-	var cena := get_tree().current_scene
-	var sol := cena.get_node_or_null("Sol") as DirectionalLight3D if cena != null else null
-	if sol == null:
-		sol = get_node_or_null("/root/Mundo/Sol") as DirectionalLight3D
-	var ceu := cena.get_node_or_null("MundoCeu") as WorldEnvironment if cena != null else null
-	if ceu == null:
-		ceu = get_node_or_null("/root/Mundo/MundoCeu") as WorldEnvironment
-	if sol == null or ceu == null or ceu.environment == null:
-		return
-	var env := ceu.environment
-	match nivel:
-		"baixo":
-			sol.shadow_enabled = false
-			sol.light_energy = 0.6
-			env.background_mode = Environment.BG_CLEAR_COLOR
-			env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-			env.ambient_light_color = Color(0.7, 0.75, 0.8)
-			env.ambient_light_energy = 0.6
-			env.fog_enabled = true
-			env.fog_mode = Environment.FOG_MODE_DEPTH
-			env.fog_light_color = Color(0.75, 0.86, 0.94)
-			env.fog_depth_begin = 80.0
-			env.fog_depth_end = 230.0
-			env.tonemap_mode = Environment.TONE_MAPPER_LINEAR
-			env.adjustment_enabled = true
-			env.adjustment_saturation = 0.85
-		"medio":
-			sol.shadow_enabled = true
-			sol.light_energy = 0.6
-			sol.directional_shadow_max_distance = 40.0
-			env.background_mode = Environment.BG_COLOR
-			env.background_color = Color(0.53, 0.75, 0.92)
-			env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-			env.ambient_light_color = Color(0.75, 0.82, 0.9)
-			env.ambient_light_energy = 0.5
-			env.fog_enabled = true
-			env.fog_mode = Environment.FOG_MODE_DEPTH
-			env.fog_light_color = Color(0.75, 0.86, 0.94)
-			env.fog_depth_begin = 80.0
-			env.fog_depth_end = 230.0
-			env.tonemap_mode = Environment.TONE_MAPPER_LINEAR
-			env.adjustment_enabled = true
-			env.adjustment_saturation = 0.85
-		_:
-			sol.shadow_enabled = true
-			sol.light_energy = 0.72
-			sol.directional_shadow_max_distance = 75.0
-			if env.sky == null:
-				var mat := ProceduralSkyMaterial.new()
-				mat.sky_top_color = Color(0.35, 0.55, 0.85)
-				mat.sky_horizon_color = Color(0.7, 0.82, 0.92)
-				mat.ground_bottom_color = Color(0.4, 0.42, 0.38)
-				mat.ground_horizon_color = Color(0.65, 0.7, 0.62)
-				var ceu_proc := Sky.new()
-				ceu_proc.sky_material = mat
-				env.sky = ceu_proc
-			env.background_mode = Environment.BG_SKY
-			env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
-			env.ambient_light_energy = 0.38
-			env.fog_enabled = true
-			env.fog_mode = Environment.FOG_MODE_DEPTH
-			env.fog_light_color = Color(0.75, 0.86, 0.94)
-			env.fog_depth_begin = 80.0
-			env.fog_depth_end = 230.0
-			env.tonemap_mode = Environment.TONE_MAPPER_LINEAR
-			env.adjustment_enabled = true
-			env.adjustment_saturation = 0.85
 
 
 func _on_upscaling(modo: String) -> void:
