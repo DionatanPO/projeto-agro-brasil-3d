@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://dcucsh6m5gurg"]
+
+[ext_resource type="Script" uid="uid://brqiey4r4t5fi" path="res://character/scripts/jogador.gd" id="1_jlq0g"]
+[ext_resource type="PackedScene" uid="uid://crni0f4ky400l" path="res://assets/models/personagem/idle.fbx" id="2_wj2yf"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jlq0g"]
+radius = 0.4
+height = 1.8
+
+[node name="Jogador" type="CharacterBody3D" unique_id=1161009451]
+script = ExtResource("1_jlq0g")
+
+[node name="Colisao" type="CollisionShape3D" parent="." unique_id=415218907]
+shape = SubResource("CapsuleShape3D_jlq0g")
+
+[node name="Modelo" type="Node3D" parent="." unique_id=153947277]
+
+[node name="Personagem" parent="Modelo" unique_id=1192868106 instance=ExtResource("2_wj2yf")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -0.02, 0)
+
+[node name="CameraRig" type="Node3D" parent="." unique_id=192820235]
+
+[node name="BracosCamera" type="SpringArm3D" parent="CameraRig" unique_id=318744246]
+transform = Transform3D(1, 0, 0, 0, 0.9848077, 0.1736482, 0, -0.1736482, 0.9848077, 0, 1.35, 0)
+spring_length = 3.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/BracosCamera" unique_id=41529196]
+current = false
+fov = 70.0

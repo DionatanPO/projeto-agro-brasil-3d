@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://bpc1popflov1v"]
+
+[ext_resource type="Script" uid="uid://dejtdpmjf72fm" path="res://character/scripts/drone_jogador.gd" id="1_d"]
+[ext_resource type="PackedScene" uid="uid://bnijek0oplny5" path="res://assets/models/drone_agricola.glb" id="2_d"]
+[ext_resource type="PackedScene" uid="uid://dkg2gvfqdcqme" path="res://assets/models/elice_drone.glb" id="3_d"]
+
+[sub_resource type="SphereShape3D" id="Sphere_d1"]
+radius = 0.65
+
+[sub_resource type="ParticleProcessMaterial" id="PM_spray"]
+emission_shape = 3
+emission_box_extents = Vector3(1.4, 0.05, 0.95)
+direction = Vector3(0, -1, 0)
+spread = 18.0
+initial_velocity_min = 1.5
+initial_velocity_max = 3.0
+gravity = Vector3(0, -1.2, 0)
+damping_min = 0.5
+damping_max = 1.5
+scale_min = 0.6
+scale_max = 1.4
+color = Color(0.85, 0.95, 0.8, 0.45)
+
+[sub_resource type="StandardMaterial3D" id="Mat_spray"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.88, 0.96, 0.82, 0.4)
+
+[sub_resource type="SphereMesh" id="Mesh_spray"]
+material = SubResource("Mat_spray")
+radius = 0.07
+height = 0.14
+
+[node name="DroneJogador" type="CharacterBody3D" unique_id=881234501]
+collision_layer = 1
+collision_mask = 5
+script = ExtResource("1_d")
+
+[node name="Colisao" type="CollisionShape3D" parent="." unique_id=881234502]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+shape = SubResource("Sphere_d1")
+
+[node name="Estacao" type="Area3D" parent="." unique_id=881234512]
+collision_layer = 0
+
+[node name="Modelo" type="Node3D" parent="." unique_id=881234503]
+transform = Transform3D(0.45, 0, 0, 0, 0.45, 0, 0, 0, 0.45, 0, 0, 0)
+
+[node name="Corpo" parent="Modelo" unique_id=881234504 instance=ExtResource("2_d")]
+
+[node name="Helice01" parent="Modelo" unique_id=881234505 instance=ExtResource("3_d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.803, 2.85, 1.803)
+
+[node name="Helice02" parent="Modelo" unique_id=881234506 instance=ExtResource("3_d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.803, 2.85, -1.803)
+
+[node name="Helice03" parent="Modelo" unique_id=881234507 instance=ExtResource("3_d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.803, 2.85, 1.803)
+
+[node name="Helice04" parent="Modelo" unique_id=881234508 instance=ExtResource("3_d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.803, 2.85, -1.803)
+
+[node name="Pulverizador" type="GPUParticles3D" parent="Modelo" unique_id=881234511]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+emitting = false
+amount = 48
+lifetime = 1.4
+visibility_aabb = AABB(-5, -5, -5, 10, 10, 10)
+process_material = SubResource("PM_spray")
+draw_pass_1 = SubResource("Mesh_spray")
+
+[node name="CameraRig" type="Node3D" parent="." unique_id=881234509]
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig" unique_id=881234510]
+fov = 70.0

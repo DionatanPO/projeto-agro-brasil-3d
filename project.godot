@@ -1,0 +1,66 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Forest by GW Tuts"
+run/main_scene="res://scenes/ui/menus/menu_inicial.tscn"
+config/features=PackedStringArray("4.7")
+
+[autoload]
+
+InputSetup="*res://scripts/autoload/input_setup.gd"
+PhantomCameraManager="*uid://duq6jhf6unyis"
+SaveSystem="*res://scripts/autoload/save_system.gd"
+Missoes="*res://scripts/autoload/missoes.gd"
+AudioConfig="*res://scripts/autoload/audio_config.gd"
+Jogo="*res://scripts/autoload/jogo.gd"
+XPManager="*res://scripts/autoload/xp_manager.gd"
+MCPRuntime="res://addons/godot_mcp/runtime/mcp_runtime.gd"
+
+[display]
+
+window/size/mode=3
+
+[editor]
+
+movie_writer/movie_file="C:/Users/Admin/Documents/terrain/video/scene1.avi"
+movie_writer/fps=120
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/SIsilicon.vfx.lens flare/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/sky_3d/plugin.cfg", "res://addons/terrain_3d/plugin.cfg", "res://addons/godot_mcp/plugin.cfg")
+
+[layer_names]
+
+3d_render/layer_1="player"
+3d_render/layer_2="object"
+3d_render/layer_3="world"
+3d_physics/layer_1="player"
+3d_navigation/layer_1="player"
+3d_physics/layer_2="object"
+3d_navigation/layer_2="object"
+3d_physics/layer_3="world"
+3d_navigation/layer_3="world"
+
+[rendering]
+
+occlusion_culling/use_occlusion_culling=true
+
+[shader_globals]
+
+wind_strength={
+"type": "float",
+"value": 0.03
+}
+wind_speed={
+"type": "float",
+"value": 0.78
+}

@@ -1,0 +1,25 @@
+{
+	"missoes": [
+		{
+			"id": "conhecer_solo",
+			"titulo": "Pisando no Solo",
+			"descricao": "Visite a placa sobre o solo e conclua a leitura.",
+			"pontos_ids": ["solo"],
+			"ordem": 1
+		},
+		{
+			"id": "conhecer_agua",
+			"titulo": "Água Consciente",
+			"descricao": "Visite a placa sobre o uso da água no campo.",
+			"pontos_ids": ["agua"],
+			"ordem": 2
+		},
+		{
+			"id": "conhecer_culturas",
+			"titulo": "Culturas do Brasil",
+			"descricao": "Visite as placas da soja e do milho.",
+			"pontos_ids": ["soja", "milho"],
+			"ordem": 3
+		}
+	]
+}

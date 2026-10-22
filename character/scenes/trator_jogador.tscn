@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://br4ljesnrpw12"]
+
+[ext_resource type="Script" uid="uid://dqrhx4equta18" path="res://character/scripts/trator_jogador.gd" id="1_t4ylw"]
+[ext_resource type="PackedScene" uid="uid://b1h7m7e821mpa" path="res://assets/models/trator/trator.glb" id="2_nabv2"]
+[ext_resource type="PackedScene" uid="uid://dh0h2qatfplau" path="res://assets/models/trator/roda_trator.glb" id="2_x7t4u"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_trator"]
+radius = 0.85
+height = 1.9
+
+[node name="TratorJogador" type="CharacterBody3D" unique_id=287191294]
+collision_layer = 1
+collision_mask = 5
+floor_max_angle = 0.872665
+floor_snap_length = 0.4
+script = ExtResource("1_t4ylw")
+
+[node name="Colisao" type="CollisionShape3D" parent="." unique_id=101546648]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+shape = SubResource("CapsuleShape3D_trator")
+
+[node name="Modelo" type="Node3D" parent="." unique_id=200925058]
+
+[node name="PivoDianteiroEsq" type="Node3D" parent="Modelo" unique_id=991660082]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.887, 0.702, 0.88)
+
+[node name="EixoDE" type="Node3D" parent="Modelo/PivoDianteiroEsq" unique_id=1447878111]
+
+[node name="Roda" parent="Modelo/PivoDianteiroEsq/EixoDE" unique_id=1057088609 instance=ExtResource("2_x7t4u")]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, -0.574, 0)
+
+[node name="PivoDianteiroDir" type="Node3D" parent="Modelo" unique_id=1698622516]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.887, 0.702, -0.88)
+
+[node name="EixoDD" type="Node3D" parent="Modelo/PivoDianteiroDir" unique_id=723203002]
+
+[node name="Roda" parent="Modelo/PivoDianteiroDir/EixoDD" unique_id=1790874816 instance=ExtResource("2_x7t4u")]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, -0.574, 0)
+
+[node name="Corpo" parent="Modelo" unique_id=1247148661 instance=ExtResource("2_nabv2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1706497, 0)
+
+[node name="EixoTE" type="Node3D" parent="Modelo" unique_id=1564837637]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.792, 0.736, 1.08)
+
+[node name="Roda" parent="Modelo/EixoTE" unique_id=573736727 instance=ExtResource("2_x7t4u")]
+transform = Transform3D(0.95, 0, 0, 0, 0.95, 0, 0, 0, 0.95, 0, -0.779, 0)
+
+[node name="EixoTD" type="Node3D" parent="Modelo" unique_id=1435504362]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.792, 0.736, -1.08)
+
+[node name="Roda" parent="Modelo/EixoTD" unique_id=1269417293 instance=ExtResource("2_x7t4u")]
+transform = Transform3D(0.95, 0, 0, 0, 0.95, 0, 0, 0, 0.95, 0, -0.779, 0)
+
+[node name="CameraRig" type="Node3D" parent="." unique_id=712592183]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="BracosCamera" type="SpringArm3D" parent="CameraRig" unique_id=1535410195]
+transform = Transform3D(1, 0, 0, 0, 0.94923544, 0.31456655, 0, -0.31456655, 0.94923544, 0, 2.8, 0)
+spring_length = 7.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/BracosCamera" unique_id=1579546919]
+fov = 70.0
+
+[node name="Estacao" type="Area3D" parent="." unique_id=1224894270]
+collision_layer = 0

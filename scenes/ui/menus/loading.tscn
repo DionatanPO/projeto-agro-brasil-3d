@@ -1,0 +1,164 @@
+[gd_scene format=3 uid="uid://bwhd1c7d23a1m"]
+
+[ext_resource type="Script" path="res://scripts/ui/loading.gd" id="1_l"]
+[ext_resource type="Texture2D" uid="uid://doejrknjcjs07" path="res://assets/imagens/arte_menu_principal.png" id="2_bg"]
+[ext_resource type="Script" path="res://scripts/ui/anel_loading.gd" id="3_a"]
+
+[sub_resource type="Gradient" id="Gradient_overlay"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(0.015, 0.04, 0.025, 0.94, 0.015, 0.04, 0.025, 0.85, 0.01, 0.025, 0.015, 0.96)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_overlay"]
+gradient = SubResource("Gradient_overlay")
+fill_from = Vector2(0.5, 0)
+fill_to = Vector2(0.5, 1)
+
+[node name="Loading" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_l")
+
+[node name="Backdrop" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Overlay" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_overlay")
+expand_mode = 1
+
+[node name="MargemConteudo" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 60
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 50
+
+[node name="VBoxPrincipal" type="VBoxContainer" parent="MargemConteudo"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Topo" type="HBoxContainer" parent="MargemConteudo/VBoxPrincipal"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Badge" type="Label" parent="MargemConteudo/VBoxPrincipal/Topo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.38, 1, 0.62, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 13
+text = "AGROBRASIL 3D"
+
+[node name="EspacadorCentro" type="Control" parent="MargemConteudo/VBoxPrincipal"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PainelDica" type="PanelContainer" parent="MargemConteudo/VBoxPrincipal"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MargemDica" type="MarginContainer" parent="MargemConteudo/VBoxPrincipal/PainelDica"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 18
+
+[node name="VBoxDica" type="VBoxContainer" parent="MargemConteudo/VBoxPrincipal/PainelDica/MargemDica"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="DicaTitulo" type="Label" parent="MargemConteudo/VBoxPrincipal/PainelDica/MargemDica/VBoxDica"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 1, 0.65, 0.95)
+theme_override_font_sizes/font_size = 11
+text = "VOCÊ SABIA? • AGRONEGÓCIO & SUSTENTABILIDADE"
+
+[node name="DicaTexto" type="Label" parent="MargemConteudo/VBoxPrincipal/PainelDica/MargemDica/VBoxDica"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.95, 0.93, 0.95)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 14
+text = "A agricultura de precisão utiliza drones e sensores para aplicar fertilizantes apenas onde a planta realmente necessita, economizando recursos."
+autowrap_mode = 3
+
+[node name="SecaoInferior" type="VBoxContainer" parent="MargemConteudo/VBoxPrincipal"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LinhaInfo" type="HBoxContainer" parent="MargemConteudo/VBoxPrincipal/SecaoInferior"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ColunaSpinner" type="Control" parent="MargemConteudo/VBoxPrincipal/SecaoInferior/LinhaInfo"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Spinner" type="Control" parent="MargemConteudo/VBoxPrincipal/SecaoInferior/LinhaInfo/ColunaSpinner"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_a")
+
+[node name="StatusLabel" type="Label" parent="MargemConteudo/VBoxPrincipal/SecaoInferior/LinhaInfo"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.9, 0.87, 0.9)
+theme_override_font_sizes/font_size = 14
+text = "Carregando a fazenda..."
+
+[node name="PorcentagemLabel" type="Label" parent="MargemConteudo/VBoxPrincipal/SecaoInferior/LinhaInfo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 1, 0.65, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 16
+text = "0%"
+
+[node name="BarraProgresso" type="ProgressBar" parent="MargemConteudo/VBoxPrincipal/SecaoInferior"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+show_percentage = false
+
+[node name="FadeTrans" type="ColorRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)

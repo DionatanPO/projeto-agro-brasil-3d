@@ -1,0 +1,178 @@
+[gd_scene load_steps=2 format=3 uid="uid://bvgohkib3omwu"]
+
+[ext_resource type="Script" path="res://scripts/ui/menu_configuracoes.gd" id="1_script"]
+
+[node name="MenuConfiguracoes" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="FundoScrim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.78)
+
+[node name="Painel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -340.0
+offset_top = -290.0
+offset_right = 340.0
+offset_bottom = 290.0
+grow_horizontal = 2
+grow_vertical = 2
+custom_minimum_size = Vector2(680, 580)
+
+[node name="Inset" type="MarginContainer" parent="Painel"]
+layout_mode = 2
+theme_override_constants/margin_left = 26
+theme_override_constants/margin_top = 22
+theme_override_constants/margin_right = 26
+theme_override_constants/margin_bottom = 22
+
+[node name="Coluna" type="VBoxContainer" parent="Painel/Inset"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Titulo" type="Label" parent="Painel/Inset/Coluna"]
+layout_mode = 2
+text = "CONFIGURACOES"
+
+[node name="Separador" type="ColorRect" parent="Painel/Inset/Coluna"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+color = Color(0.18, 0.49, 0.31, 0.55)
+
+[node name="Abas" type="TabContainer" parent="Painel/Inset/Coluna"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Audio" type="MarginContainer" parent="Painel/Inset/Coluna/Abas"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="ConteudoAudio" type="VBoxContainer" parent="Painel/Inset/Coluna/Abas/Audio"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LblValorEfeitos" type="Label" parent="Painel/Inset/Coluna/Abas/Audio/ConteudoAudio"]
+layout_mode = 2
+text = "Efeitos: 70%"
+
+[node name="SliderEfeitos" type="HSlider" parent="Painel/Inset/Coluna/Abas/Audio/ConteudoAudio"]
+layout_mode = 2
+max_value = 100.0
+value = 70.0
+
+[node name="LblValorMusica" type="Label" parent="Painel/Inset/Coluna/Abas/Audio/ConteudoAudio"]
+layout_mode = 2
+text = "Musica: 70%"
+
+[node name="SliderMusica" type="HSlider" parent="Painel/Inset/Coluna/Abas/Audio/ConteudoAudio"]
+layout_mode = 2
+max_value = 100.0
+value = 70.0
+
+[node name="Tela" type="MarginContainer" parent="Painel/Inset/Coluna/Abas"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="ConteudoTela" type="VBoxContainer" parent="Painel/Inset/Coluna/Abas/Tela"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ChkVSync" type="Button" parent="Painel/Inset/Coluna/Abas/Tela/ConteudoTela"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "V-Sync: LIGADO"
+
+[node name="AjudaVSync" type="Label" parent="Painel/Inset/Coluna/Abas/Tela/ConteudoTela"]
+layout_mode = 2
+text = "Sincroniza a imagem com a taxa de atualizacao do monitor."
+
+[node name="Controles" type="MarginContainer" parent="Painel/Inset/Coluna/Abas"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="ConteudoControles" type="VBoxContainer" parent="Painel/Inset/Coluna/Abas/Controles"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="RotuloToque" type="Label" parent="Painel/Inset/Coluna/Abas/Controles/ConteudoControles"]
+layout_mode = 2
+text = "CONTROLES NA TELA"
+
+[node name="ModosToque" type="HBoxContainer" parent="Painel/Inset/Coluna/Abas/Controles/ConteudoControles"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnToqueAuto" type="Button" parent="Painel/Inset/Coluna/Abas/Controles/ConteudoControles/ModosToque"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "AUTOMATICO"
+
+[node name="BtnToqueSempre" type="Button" parent="Painel/Inset/Coluna/Abas/Controles/ConteudoControles/ModosToque"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SEMPRE"
+
+[node name="BtnToqueNunca" type="Button" parent="Painel/Inset/Coluna/Abas/Controles/ConteudoControles/ModosToque"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "NUNCA"
+
+[node name="DicaToque" type="Label" parent="Painel/Inset/Coluna/Abas/Controles/ConteudoControles"]
+layout_mode = 2
+text = "No automatico, aparecem apenas em celular ou tablet."
+
+[node name="SepToque" type="HSeparator" parent="Painel/Inset/Coluna/Abas/Controles/ConteudoControles"]
+layout_mode = 2
+
+[node name="Scroll" type="ScrollContainer" parent="Painel/Inset/Coluna/Abas/Controles/ConteudoControles"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="MargemLista" type="MarginContainer" parent="Painel/Inset/Coluna/Abas/Controles/ConteudoControles/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_right = 12
+
+[node name="ListaControles" type="VBoxContainer" parent="Painel/Inset/Coluna/Abas/Controles/ConteudoControles/Scroll/MargemLista"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="BarraAcoes" type="HBoxContainer" parent="Painel/Inset/Coluna"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 2
+
+[node name="BotaoVoltar" type="Button" parent="Painel/Inset/Coluna/BarraAcoes"]
+layout_mode = 2
+text = "VOLTAR AO MENU"

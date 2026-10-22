@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://cvfibpkfye1ar"]
+
+[ext_resource type="Script" uid="uid://dnmiyemmqtn6m" path="res://scripts/ui/menu_principal.gd" id="1_tu06j"]
+[ext_resource type="PackedScene" uid="uid://0jvpln1tne0u" path="res://scenes/ui/player_profile.tscn" id="2_guvrm"]
+
+[node name="Node" type="Control" unique_id=321499415]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_tu06j")
+
+[node name="Backdrop" type="TextureRect" parent="." unique_id=925504775]
+layout_mode = 0
+
+[node name="VideoFundo" type="VideoStreamPlayer" parent="." unique_id=925504776]
+
+[node name="MenuLateral" type="Control" parent="." unique_id=452408263]
+anchors_preset = 0
+
+[node name="Coluna" type="VBoxContainer" parent="MenuLateral" unique_id=338029444]
+layout_mode = 0
+
+[node name="Botoes" type="HBoxContainer" parent="MenuLateral/Coluna" unique_id=2036380736]
+layout_mode = 2
+
+[node name="ItemNovo" type="VBoxContainer" parent="MenuLateral/Coluna/Botoes" unique_id=1686196990]
+layout_mode = 2
+
+[node name="Barra" type="ColorRect" parent="MenuLateral/Coluna/Botoes/ItemNovo" unique_id=1376817515]
+layout_mode = 2
+
+[node name="BotaoNovo" type="Button" parent="MenuLateral/Coluna/Botoes/ItemNovo" unique_id=1145727462]
+layout_mode = 2
+
+[node name="ItemConfiguracoes" type="VBoxContainer" parent="MenuLateral/Coluna/Botoes" unique_id=777000101]
+layout_mode = 2
+
+[node name="Barra" type="ColorRect" parent="MenuLateral/Coluna/Botoes/ItemConfiguracoes" unique_id=777000102]
+layout_mode = 2
+
+[node name="BotaoConfiguracoes" type="Button" parent="MenuLateral/Coluna/Botoes/ItemConfiguracoes" unique_id=777000103]
+layout_mode = 2
+text = "CONFIGURACOES"
+
+[node name="ItemSair" type="VBoxContainer" parent="MenuLateral/Coluna/Botoes" unique_id=728196125]
+layout_mode = 2
+
+[node name="Barra" type="ColorRect" parent="MenuLateral/Coluna/Botoes/ItemSair" unique_id=1697224853]
+layout_mode = 2
+
+[node name="BotaoSair" type="Button" parent="MenuLateral/Coluna/Botoes/ItemSair" unique_id=229613956]
+layout_mode = 2
+
+[node name="FadeRect" type="ColorRect" parent="." unique_id=10825261]
+layout_mode = 0
+
+

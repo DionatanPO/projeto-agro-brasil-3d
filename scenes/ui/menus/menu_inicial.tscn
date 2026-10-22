@@ -1,0 +1,251 @@
+[gd_scene format=3 uid="uid://cao82jhs1a3ql"]
+
+[ext_resource type="Script" uid="uid://dnmiyemmqtn6m" path="res://scripts/ui/menu_principal.gd" id="1_rnqe2"]
+[ext_resource type="Texture2D" uid="uid://doejrknjcjs07" path="res://assets/imagens/arte_menu_principal.png" id="2_rnqe2"]
+
+[sub_resource type="Gradient" id="Gradient_scrim"]
+offsets = PackedFloat32Array(0, 0.65, 1)
+colors = PackedColorArray(0.01, 0.03, 0.02, 0.88, 0.01, 0.03, 0.02, 0.45, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_scrim"]
+gradient = SubResource("Gradient_scrim")
+width = 256
+
+[node name="MenuInicial" type="Control" unique_id=155984901]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rnqe2")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=657714140]
+visible = false
+
+[node name="Backdrop" type="TextureRect" parent="." unique_id=2036926878]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_rnqe2")
+expand_mode = 1
+
+[node name="VideoFundo" type="VideoStreamPlayer" parent="." unique_id=2036926879]
+layout_mode = 0
+volume_db = -80.0
+autoplay = true
+expand = true
+loop = true
+
+[node name="SombraLateral" type="TextureRect" parent="." unique_id=1310461260]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 650.0
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_scrim")
+expand_mode = 1
+
+[node name="MenuLateral" type="MarginContainer" parent="." unique_id=1374263376]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_right = 480.0
+grow_vertical = 2
+theme_override_constants/margin_top = 75
+theme_override_constants/margin_bottom = 50
+
+[node name="Coluna" type="VBoxContainer" parent="MenuLateral" unique_id=2145459209]
+layout_mode = 2
+
+[node name="Cabecalho" type="VBoxContainer" parent="MenuLateral/Coluna" unique_id=1519252168]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Titulo" type="Label" parent="MenuLateral/Coluna/Cabecalho" unique_id=908214690]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.95)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 36
+text = "AGROBRASIL"
+
+[node name="LinhaInfo" type="HBoxContainer" parent="MenuLateral/Coluna/Cabecalho" unique_id=125541034]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Badge3D" type="Label" parent="MenuLateral/Coluna/Cabecalho/LinhaInfo" unique_id=188201542]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.38, 1, 0.62, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 16
+text = "3D"
+
+[node name="Separador" type="Label" parent="MenuLateral/Coluna/Cabecalho/LinhaInfo" unique_id=396597655]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.35)
+theme_override_font_sizes/font_size = 13
+text = "•"
+
+[node name="Subtitulo" type="Label" parent="MenuLateral/Coluna/Cabecalho/LinhaInfo" unique_id=1024292090]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.88, 0.85, 0.7)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 12
+text = "SIMULADOR AGRÍCOLA EDUCATIVO"
+
+[node name="LinhaDecorativa" type="ColorRect" parent="MenuLateral/Coluna/Cabecalho" unique_id=1944803055]
+custom_minimum_size = Vector2(260, 2)
+layout_mode = 2
+color = Color(0.38, 1, 0.62, 0.45)
+
+[node name="EspacadorTopo" type="Control" parent="MenuLateral/Coluna" unique_id=1789452972]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="Botoes" type="VBoxContainer" parent="MenuLateral/Coluna" unique_id=256573512]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ItemContinuar" type="Control" parent="MenuLateral/Coluna/Botoes" unique_id=1153128514]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+
+[node name="Barra" type="ColorRect" parent="MenuLateral/Coluna/Botoes/ItemContinuar" unique_id=392268613]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(3, 22)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -11.0
+offset_right = 3.0
+offset_bottom = 11.0
+grow_vertical = 2
+color = Color(0.38, 1, 0.62, 1)
+
+[node name="BotaoContinuar" type="Button" parent="MenuLateral/Coluna/Botoes/ItemContinuar" unique_id=975530426]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "CONTINUAR JORNADA"
+flat = true
+alignment = 0
+
+[node name="ItemNovo" type="Control" parent="MenuLateral/Coluna/Botoes" unique_id=1153128513]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+
+[node name="Barra" type="ColorRect" parent="MenuLateral/Coluna/Botoes/ItemNovo" unique_id=392268612]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(3, 22)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -11.0
+offset_right = 3.0
+offset_bottom = 11.0
+grow_vertical = 2
+color = Color(0.38, 1, 0.62, 1)
+
+[node name="BotaoNovo" type="Button" parent="MenuLateral/Coluna/Botoes/ItemNovo" unique_id=975530425]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "NOVA JORNADA"
+flat = true
+alignment = 0
+
+[node name="ItemConfiguracoes" type="Control" parent="MenuLateral/Coluna/Botoes" unique_id=368491759]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+
+[node name="Barra" type="ColorRect" parent="MenuLateral/Coluna/Botoes/ItemConfiguracoes" unique_id=400952611]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(3, 22)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -11.0
+offset_right = 3.0
+offset_bottom = 11.0
+grow_vertical = 2
+color = Color(0.38, 1, 0.62, 1)
+
+[node name="BotaoConfiguracoes" type="Button" parent="MenuLateral/Coluna/Botoes/ItemConfiguracoes" unique_id=1332270133]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "CONFIGURAÇÕES"
+flat = true
+alignment = 0
+
+[node name="ItemSair" type="Control" parent="MenuLateral/Coluna/Botoes" unique_id=368491758]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+
+[node name="Barra" type="ColorRect" parent="MenuLateral/Coluna/Botoes/ItemSair" unique_id=400952610]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(3, 22)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -11.0
+offset_right = 3.0
+offset_bottom = 11.0
+grow_vertical = 2
+color = Color(0.38, 1, 0.62, 1)
+
+[node name="BotaoSair" type="Button" parent="MenuLateral/Coluna/Botoes/ItemSair" unique_id=1332270132]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "SAIR DO JOGO"
+flat = true
+alignment = 0
+
+[node name="EspacadorFim" type="Control" parent="MenuLateral/Coluna" unique_id=957005353]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Rodape" type="Label" parent="MenuLateral/Coluna" unique_id=675928412]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.35)
+theme_override_font_sizes/font_size = 11
+text = "v0.1.0 Alpha • AgroBrasil 3D"
+
+[node name="FadeRect" type="ColorRect" parent="." unique_id=169474263]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0, 0, 1)

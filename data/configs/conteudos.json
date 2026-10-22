@@ -1,0 +1,29 @@
+{
+	"conteudos": {
+		"solo": {
+			"titulo": "Solo: a base da lavoura",
+			"texto": "Tudo o que a planta precisa começa aqui. Um solo saudável tem matéria orgânica, boa estrutura e vida: minhocas e microrganismos ajudam a liberar nutrientes. Práticas como cobertura do solo, rotação de culturas e análise de solo antes de adubar aumentam a produtividade e reduzem erosão. Observe a cor escura da terra nesta faixa: é sinal de matéria orgânica.",
+			"fonte": "Embrapa Solos"
+		},
+		"soja": {
+			"titulo": "Soja: a gigante brasileira",
+			"texto": "O Brasil é um dos maiores produtores e exportadores de soja do mundo. A planta faz parceria com bactérias (inoculante) que retiram nitrogênio do ar e adubam o solo de graça: é a fixação biológica de nitrogênio. Na colheita, parte vai para ração animal e óleo. Rotacionar soja com milho ajuda a quebrar ciclos de pragas.",
+			"fonte": "Embrapa Soja / CONAB"
+		},
+		"milho": {
+			"titulo": "Milho: energia do campo",
+			"texto": "O milho é cultivado em duas épocas: a safra de verão e a chamada segunda safra (safrinha), plantada após a soja. Ele vira ração, alimento e até etanol. Em sistemas de integração lavoura-pecuária, o milho divide espaço com pasto, aproveitando melhor a terra na mesma área.",
+			"fonte": "Embrapa Milho e Sorgo"
+		},
+		"agua": {
+			"titulo": "Água: usar sem desperdiçar",
+			"texto": "A agricultura precisa de muita água, por isso cada gota conta: irrigação por gotejamento entrega água direto na raiz e perde menos por evaporação. Proteger nascentes e matas ciliares (a vegetação na beira dos rios) mantém a água limpa e o rio cheio o ano todo. Captar água da chuva também ajuda na sede dos animais.",
+			"fonte": "Embrapa / ANA"
+		},
+		"tecnologia": {
+			"titulo": "Tecnologia no campo",
+			"texto": "O campo moderno usa GPS para plantar em linhas retas, sensores que medem a umidade do solo e drones que fotografam a lavoura para achar falhas e pragas cedo. Com esses dados, o produtor aplica adubo e defensivo só onde precisa: economia no bolso e menos impacto no ambiente. É a agricultura de precisão.",
+			"fonte": "Embrapa Agricultura Digital"
+		}
+	}
+}

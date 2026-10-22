@@ -1,0 +1,439 @@
+[gd_scene format=3 uid="uid://crbgbbqyqkl40"]
+
+[ext_resource type="Script" uid="uid://dov26k4m8wrns" path="res://scripts/ui/hud.gd" id="1_0mwgc"]
+[ext_resource type="PackedScene" uid="uid://0jvpln1tne0u" path="res://scenes/ui/player_profile.tscn" id="2_guvrm"]
+
+[node name="HUD" type="CanvasLayer" unique_id=657714139]
+script = ExtResource("1_0mwgc")
+
+[node name="Scrim" type="ColorRect" parent="." unique_id=2142194128]
+visible = false
+z_index = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.04, 0.07, 0.05, 0.76)
+
+[node name="Dialogo" type="PanelContainer" parent="." unique_id=469760412]
+visible = false
+z_index = 4
+custom_minimum_size = Vector2(403, 221)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -202.0
+offset_top = -111.0
+offset_right = 202.0
+offset_bottom = 111.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Inset" type="MarginContainer" parent="Dialogo" unique_id=668071434]
+layout_mode = 2
+
+[node name="Conteudo" type="VBoxContainer" parent="Dialogo/Inset" unique_id=662010775]
+layout_mode = 2
+
+[node name="Selo" type="Label" parent="Dialogo/Inset/Conteudo" unique_id=291638949]
+layout_mode = 2
+text = "CADERNO DE CAMPO  •  DESCOBERTA"
+
+[node name="DialogoTitulo" type="Label" parent="Dialogo/Inset/Conteudo" unique_id=966119582]
+layout_mode = 2
+text = "Título da descoberta"
+autowrap_mode = 3
+
+[node name="DialogoTexto" type="Label" parent="Dialogo/Inset/Conteudo" unique_id=659743069]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Conteúdo educativo da placa."
+autowrap_mode = 3
+
+[node name="DialogoFonte" type="Label" parent="Dialogo/Inset/Conteudo" unique_id=1525174830]
+layout_mode = 2
+text = "Fonte: Embrapa"
+autowrap_mode = 3
+
+[node name="BotaoEntendi" type="Button" parent="Dialogo/Inset/Conteudo" unique_id=1803361195]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+text = "Entendi, continuar"
+
+[node name="Diario" type="PanelContainer" parent="." unique_id=582061874]
+visible = false
+z_index = 4
+custom_minimum_size = Vector2(520, 420)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -210.0
+offset_right = 260.0
+offset_bottom = 210.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Inset" type="MarginContainer" parent="Diario" unique_id=370781296]
+layout_mode = 2
+
+[node name="Conteudo" type="VBoxContainer" parent="Diario/Inset" unique_id=241494182]
+layout_mode = 2
+
+[node name="Titulo" type="Label" parent="Diario/Inset/Conteudo" unique_id=1417976590]
+layout_mode = 2
+text = "Caderno de campo"
+
+[node name="Subtitulo" type="Label" parent="Diario/Inset/Conteudo" unique_id=2043392071]
+layout_mode = 2
+text = "Descobertas e objetivos desta jornada."
+autowrap_mode = 3
+
+[node name="SeletorAbas" type="HBoxContainer" parent="Diario/Inset/Conteudo" unique_id=1292243419]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="BtnMissao" type="Button" parent="Diario/Inset/Conteudo/SeletorAbas" unique_id=115466227]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Missão"
+
+[node name="BtnControles" type="Button" parent="Diario/Inset/Conteudo/SeletorAbas" unique_id=1352869922]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Controles"
+
+[node name="BtnAudio" type="Button" parent="Diario/Inset/Conteudo/SeletorAbas" unique_id=1493419655]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Áudio"
+
+[node name="BtnTela" type="Button" parent="Diario/Inset/Conteudo/SeletorAbas" unique_id=2051681985]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Tela"
+
+[node name="BtnGraficos" type="Button" parent="Diario/Inset/Conteudo/SeletorAbas" unique_id=716086128]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Gráficos"
+
+[node name="Abas" type="TabContainer" parent="Diario/Inset/Conteudo" unique_id=734239642]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+tab_alignment = 1
+current_tab = 0
+tabs_visible = false
+
+[node name="Missão" type="VBoxContainer" parent="Diario/Inset/Conteudo/Abas" unique_id=221399166]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Margem" type="MarginContainer" parent="Diario/Inset/Conteudo/Abas/Missão" unique_id=653135468]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="Coluna" type="VBoxContainer" parent="Diario/Inset/Conteudo/Abas/Missão/Margem" unique_id=211867246]
+layout_mode = 2
+
+[node name="Objetivo" type="Label" parent="Diario/Inset/Conteudo/Abas/Missão/Margem/Coluna" unique_id=450705860]
+layout_mode = 2
+text = "Objetivo atual"
+autowrap_mode = 3
+
+[node name="AvisoVazio" type="Label" parent="Diario/Inset/Conteudo/Abas/Missão/Margem/Coluna" unique_id=372097196]
+visible = false
+layout_mode = 2
+text = "Nenhuma descoberta ainda. Explore as placas!"
+autowrap_mode = 3
+
+[node name="ListaBox" type="VBoxContainer" parent="Diario/Inset/Conteudo/Abas/Missão/Margem/Coluna" unique_id=309157218]
+layout_mode = 2
+
+[node name="MissoesInfo" type="Label" parent="Diario/Inset/Conteudo/Abas/Missão/Margem/Coluna" unique_id=194751868]
+layout_mode = 2
+text = "Missões"
+autowrap_mode = 3
+
+[node name="Controles" type="VBoxContainer" parent="Diario/Inset/Conteudo/Abas" unique_id=1923269610]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Margem" type="MarginContainer" parent="Diario/Inset/Conteudo/Abas/Controles" unique_id=880479074]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="Coluna" type="VBoxContainer" parent="Diario/Inset/Conteudo/Abas/Controles/Margem" unique_id=1919604532]
+layout_mode = 2
+
+[node name="TextoControles" type="Label" parent="Diario/Inset/Conteudo/Abas/Controles/Margem/Coluna" unique_id=1731447522]
+layout_mode = 2
+text = "WASD / Setas ou stick esquerdo — mover
+Shift ou LB — correr
+Espaço ou A — pular
+Mouse ou stick direito — olhar (clique para capturar)
+E ou X — interagir com as placas
+Tab ou Start — abrir/fechar o caderno
+Esc — soltar o mouse"
+autowrap_mode = 3
+
+[node name="Áudio" type="VBoxContainer" parent="Diario/Inset/Conteudo/Abas" unique_id=993053495]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="Margem" type="MarginContainer" parent="Diario/Inset/Conteudo/Abas/Áudio" unique_id=108017772]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="Coluna" type="VBoxContainer" parent="Diario/Inset/Conteudo/Abas/Áudio/Margem" unique_id=1925506302]
+layout_mode = 2
+
+[node name="RotuloEfeitos" type="Label" parent="Diario/Inset/Conteudo/Abas/Áudio/Margem/Coluna" unique_id=693714567]
+layout_mode = 2
+text = "Efeitos sonoros"
+
+[node name="VolumeEfeitos" type="HSlider" parent="Diario/Inset/Conteudo/Abas/Áudio/Margem/Coluna" unique_id=1356067555]
+layout_mode = 2
+value = 80.0
+
+[node name="RotuloMusica" type="Label" parent="Diario/Inset/Conteudo/Abas/Áudio/Margem/Coluna" unique_id=497726644]
+layout_mode = 2
+text = "Música"
+
+[node name="VolumeMusica" type="HSlider" parent="Diario/Inset/Conteudo/Abas/Áudio/Margem/Coluna" unique_id=157276212]
+layout_mode = 2
+value = 80.0
+
+[node name="Mudo" type="CheckButton" parent="Diario/Inset/Conteudo/Abas/Áudio/Margem/Coluna" unique_id=1044781997]
+layout_mode = 2
+text = "Mudo (tudo)"
+
+[node name="Tela" type="VBoxContainer" parent="Diario/Inset/Conteudo/Abas" unique_id=1605025362]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="Margem" type="MarginContainer" parent="Diario/Inset/Conteudo/Abas/Tela" unique_id=2014460629]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="Coluna" type="VBoxContainer" parent="Diario/Inset/Conteudo/Abas/Tela/Margem" unique_id=1335852911]
+layout_mode = 2
+
+[node name="TelaCheia" type="CheckButton" parent="Diario/Inset/Conteudo/Abas/Tela/Margem/Coluna" unique_id=1458941531]
+layout_mode = 2
+text = "Tela cheia"
+
+[node name="DicaTela" type="Label" parent="Diario/Inset/Conteudo/Abas/Tela/Margem/Coluna" unique_id=159235535]
+layout_mode = 2
+text = "Alterna entre janela e tela cheia."
+autowrap_mode = 3
+
+[node name="SepTela" type="HSeparator" parent="Diario/Inset/Conteudo/Abas/Tela/Margem/Coluna" unique_id=989290785]
+layout_mode = 2
+
+[node name="RotuloVSync" type="Label" parent="Diario/Inset/Conteudo/Abas/Tela/Margem/Coluna" unique_id=1066427193]
+layout_mode = 2
+text = "SINCRONIA VERTICAL"
+autowrap_mode = 3
+
+[node name="BtnVSync" type="CheckButton" parent="Diario/Inset/Conteudo/Abas/Tela/Margem/Coluna" unique_id=638837003]
+layout_mode = 2
+text = "V-Sync ligado"
+
+[node name="DicaVSync" type="Label" parent="Diario/Inset/Conteudo/Abas/Tela/Margem/Coluna" unique_id=351950276]
+layout_mode = 2
+text = "Ligado = sem rasgo, FPS travado no Hz do monitor. Desligado = FPS livre."
+autowrap_mode = 3
+
+[node name="Graficos" type="VBoxContainer" parent="Diario/Inset/Conteudo/Abas" unique_id=1493511664]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 4
+
+[node name="Margem" type="MarginContainer" parent="Diario/Inset/Conteudo/Abas/Graficos" unique_id=945668176]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="Coluna" type="VBoxContainer" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem" unique_id=579214075]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="RotuloGrafico" type="Label" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna" unique_id=1932728136]
+layout_mode = 2
+text = "PREDEFINIÇÃO • SOMBRAS DO SOL"
+autowrap_mode = 3
+
+[node name="Botoes" type="HBoxContainer" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna" unique_id=1368858956]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnBaixo" type="Button" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna/Botoes" unique_id=1333866657]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Baixo"
+
+[node name="BtnMedio" type="Button" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna/Botoes" unique_id=1890689524]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Médio"
+
+[node name="BtnAlto" type="Button" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna/Botoes" unique_id=1153889403]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Alto"
+
+[node name="DicaGrafico" type="Label" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna" unique_id=199009709]
+layout_mode = 2
+text = "Alto = sombras realistas (custa FPS). Médio = equilibrado. Baixo = sem sombras."
+autowrap_mode = 3
+
+[node name="SepGrafico1" type="HSeparator" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna" unique_id=575195042]
+layout_mode = 2
+
+[node name="RotuloUpscaling" type="Label" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna" unique_id=1451434131]
+layout_mode = 2
+text = "UPSCALING • AMD FSR"
+autowrap_mode = 3
+
+[node name="BotoesUpscaling" type="HBoxContainer" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna" unique_id=1717543799]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnFSR_Off" type="Button" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna/BotoesUpscaling" unique_id=1654919362]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Off"
+
+[node name="BtnFSR1" type="Button" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna/BotoesUpscaling" unique_id=867666005]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "FSR 1.0"
+
+[node name="BtnFSR2" type="Button" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna/BotoesUpscaling" unique_id=2139989594]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "FSR 2.2"
+
+[node name="EscalaUpscaling" type="HSlider" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna" unique_id=943561748]
+layout_mode = 2
+max_value = 2.0
+value = 1.0
+ticks_on_borders = true
+
+[node name="ValorEscala" type="Label" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna" unique_id=1838720167]
+layout_mode = 2
+text = "Equilibrado"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="DicaUpscaling" type="Label" parent="Diario/Inset/Conteudo/Abas/Graficos/Margem/Coluna" unique_id=473479336]
+layout_mode = 2
+text = "Arraste para Performance (mais FPS) ou Qualidade (mais nítido). FSR 2.2 só no Forward+."
+autowrap_mode = 3
+
+[node name="Acoes" type="HBoxContainer" parent="Diario/Inset/Conteudo" unique_id=1884515582]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BotaoFechar" type="Button" parent="Diario/Inset/Conteudo/Acoes" unique_id=2005201765]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Voltar ao jogo"
+
+[node name="BotaoVoltar" type="Button" parent="Diario/Inset/Conteudo/Acoes" unique_id=820644449]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Menu principal"
+
+[node name="MissaoCompleta" type="PanelContainer" parent="." unique_id=1540448631]
+visible = false
+custom_minimum_size = Vector2(380, 220)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -190.0
+offset_top = -110.0
+offset_right = 190.0
+offset_bottom = 110.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Inset" type="MarginContainer" parent="MissaoCompleta" unique_id=167687131]
+layout_mode = 2
+
+[node name="Conteudo" type="VBoxContainer" parent="MissaoCompleta/Inset" unique_id=1331826986]
+layout_mode = 2
+
+[node name="Titulo" type="Label" parent="MissaoCompleta/Inset/Conteudo" unique_id=1162824982]
+layout_mode = 2
+text = "Missão concluída!"
+horizontal_alignment = 1
+
+[node name="Texto" type="Label" parent="MissaoCompleta/Inset/Conteudo" unique_id=1404032700]
+layout_mode = 2
+text = "..."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="BotaoNovaFase" type="Button" parent="MissaoCompleta/Inset/Conteudo" unique_id=160085651]
+layout_mode = 2
+text = "Ir para nova fase"
+
+[node name="BotaoContinuar" type="Button" parent="MissaoCompleta/Inset/Conteudo" unique_id=788560201]
+layout_mode = 2
+text = "Continuar explorando"
+
+[node name="FPS" type="Label" parent="." unique_id=900100200]
+z_index = 5
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -36.0
+offset_right = 216.0
+offset_bottom = -10.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 18
+text = "60 FPS"
+
+[node name="PlayerProfile" parent="." unique_id=900000001 instance=ExtResource("2_guvrm")]
