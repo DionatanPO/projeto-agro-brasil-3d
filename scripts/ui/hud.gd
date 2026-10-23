@@ -376,28 +376,28 @@ func _preencher_diario() -> void:
 	if prox.is_empty():
 		objetivo_missao.text = "Todas as missões concluídas! Parabéns!"
 	else:
-		objetivo_missao.text = "OBJETIVO  •  %s — %s" % [prox.get("titulo", ""), prox.get("descricao", "")]
-	var descobertas: Variant = SaveSystem.dados.get("descobertas", [])
-	var vazio: bool = not (descobertas is Array) or descobertas.is_empty()
-	aviso_vazio.visible = vazio
-	lista_box.visible = not vazio
-	for f in lista_box.get_children():
-		lista_box.remove_child(f)
-		f.free()
-	if not vazio:
-		for ponto: Variant in descobertas:
-			var c: Dictionary = Jogo.obter_conteudo(str(ponto))
-			var item := Label.new()
-			item.text = "•  " + str(c.get("titulo", ponto))
-			item.add_theme_font_size_override("font_size", 12)
-			lista_box.add_child(item)
+		objetivo_missao.text = _texto_missao_atual(prox)
+	# Apenas a missao atual e exibida no caderno: oculta descobertas e lista de missoes futuras.
+	aviso_vazio.visible = false
+	lista_box.visible = false
+	missoes_info.visible = false
+func _texto_missao_atual(prox: Dictionary) -> String:
 	var linhas: Array[String] = []
-	for missao_id: String in Missoes.ordem:
-		var m: Dictionary = Missoes.por_id.get(missao_id, {})
-		var marca := "✓" if Missoes.esta_concluida(missao_id) else "○"
-		linhas.append("%s  %s" % [marca, m.get("titulo", missao_id)])
-	missoes_info.text = "\n".join(linhas)
-
+	linhas.append(str(prox.get("titulo", "")))
+	linhas.append(str(prox.get("descricao", "")))
+	linhas.append("")
+	linhas.append("Objetivos:")
+	var descobertas: Variant = SaveSystem.dados.get("descobertas", [])
+	var concluida: bool = Missoes.esta_concluida(str(prox.get("id", "")))
+	for obj: Variant in Missoes.objetivos_da_missao(str(prox.get("id", ""))):
+		if not (obj is Dictionary):
+			continue
+		var o: Dictionary = obj as Dictionary
+		var ponto_id: String = str(o.get("ponto_id", ""))
+		var feito: bool = concluida or (ponto_id.is_empty()) or (descobertas is Array and ponto_id in descobertas)
+		var marca := "[x]" if feito else "[ ]"
+		linhas.append("%s %s" % [marca, str(o.get("texto", ""))])
+	return "\n".join(linhas)
 
 func _process(delta: float) -> void:
 	_fps_tempo += delta

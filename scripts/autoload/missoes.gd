@@ -47,6 +47,23 @@ func proxima_pendente() -> Dictionary:
 	return {}
 
 
+func missao_atual() -> Dictionary:
+	return proxima_pendente()
+
+
+func obter_missao(missao_id: String) -> Dictionary:
+	return por_id.get(missao_id, {})
+
+
+func objetivos_da_missao(missao_id: String) -> Array:
+	return (por_id.get(missao_id, {}) as Dictionary).get("objetivos", [])
+
+
+func dialogo_da_missao_atual() -> String:
+	var m: Dictionary = proxima_pendente()
+	return str(m.get("dialogo_id", ""))
+
+
 func total_concluidas() -> int:
 	return concluidas().size()
 
@@ -66,7 +83,15 @@ func _carregar_definicoes() -> void:
 		return
 	ordem.clear()
 	por_id.clear()
-	for m: Variant in (parsed as Dictionary).get("missoes", []):
+	var missoes_carregadas: Array = (parsed as Dictionary).get("missoes", [])
+	# Ordena por campo "ordem" (quando presente) para manter sequencia robusta.
+	missoes_carregadas.sort_custom(func(a: Variant, b: Variant) -> bool:
+		var oa: int = (a as Dictionary).get("ordem", 0) if a is Dictionary else 0
+		var ob: int = (b as Dictionary).get("ordem", 0) if b is Dictionary else 0
+		return oa < ob
+	)
+	for m: Variant in missoes_carregadas:
 		if m is Dictionary and (m as Dictionary).has("id"):
-			ordem.append((m as Dictionary)["id"])
-			por_id[(m as Dictionary)["id"]] = m
+			var mid: String = str((m as Dictionary)["id"])
+			ordem.append(mid)
+			por_id[mid] = m

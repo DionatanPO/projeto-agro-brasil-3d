@@ -18,7 +18,7 @@ extends CharacterBody3D
 @export var sensibilidade_mouse := 0.003
 @export var sensibilidade_stick := 2.8
 ## Segundos parado ate trocar o Idle normal pelo SadIdle (cabeca baixa).
-@export var tempo_sad_idle := 3.0
+@export var tempo_sad_idle := 10.0
 
 ## Passos sintetizados de grama/terra (passo_1..6.wav, gerados fora do jogo):
 ## entram em rodizio pra passada nao repetir sempre o mesmo som.
@@ -32,6 +32,9 @@ const PASSOS_ARQUIVOS := [
 ]
 
 @export var bloqueado := false
+var _dialogo_inicial_agendado := false
+var _ultimo_dialogo_idle := -100.0
+var _permitir_dialogo_idle := false
 
 ## Estado interno da caminhada autônoma da cutscene.
 var _em_cutscene_caminhando := false
@@ -333,7 +336,7 @@ func _remover_root_motion(clip: Animation) -> void:
 ## continuam animados.
 func _congelar_pernas_no_pulo(clip: Animation) -> void:
 	for i in range(clip.get_track_count() - 1, -1, -1):
-		var caminho := String(clip.track_get_path(i))
+		var caminho: String = String(clip.track_get_path(i))
 		var e_perna := false
 		for osso in PERNAS_PULO:
 			if caminho.ends_with(osso):
@@ -369,6 +372,14 @@ func _unhandled_input(evento: InputEvent) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if not bloqueado and not _dialogo_inicial_agendado:
+		_dialogo_inicial_agendado = true
+		_permitir_dialogo_idle = true
+		get_tree().create_timer(2.0).timeout.connect(func() -> void:
+			var _dialogo_missao: String = Missoes.dialogo_da_missao_atual()
+			if not _dialogo_missao.is_empty():
+				DialogoManager.tocar(_dialogo_missao)
+		)
 	if bloqueado:
 		# Modo caminhada autônoma da cutscene: move o personagem em direção ao destino.
 		if _em_cutscene_caminhando and _destino_cutscene != Vector3.ZERO:
@@ -567,6 +578,12 @@ func _atualizar_animacao(nome: String) -> void:
 		if manter_fase:
 			animador.seek(fase * animacao.length, true)
 		_animacao_atual = chave
+		# Diálogo quando entra em idle parado (apenas fora da cutscene)
+		if nome == "SadIdle" and chave == "SadIdle" and not bloqueado and _permitir_dialogo_idle:
+			var agora := Time.get_ticks_msec() / 1000.0
+			if agora - _ultimo_dialogo_idle >= 8.0:
+				_ultimo_dialogo_idle = agora
+				DialogoManager.tocar("dialogo parado")
 
 
 ## Inicia a caminhada autônoma da cutscene em direção ao destino.

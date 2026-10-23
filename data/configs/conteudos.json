@@ -24,6 +24,11 @@
 			"titulo": "Tecnologia no campo",
 			"texto": "O campo moderno usa GPS para plantar em linhas retas, sensores que medem a umidade do solo e drones que fotografam a lavoura para achar falhas e pragas cedo. Com esses dados, o produtor aplica adubo e defensivo só onde precisa: economia no bolso e menos impacto no ambiente. É a agricultura de precisão.",
 			"fonte": "Embrapa Agricultura Digital"
+		},
+		"pacote": {
+			"titulo": "Pacote da instituição",
+			"texto": "Você localizou a encomenda enviada pela instituição de ensino. Recolha o pacote para dar início às atividades da fazenda.",
+			"fonte": "Instituição de ensino"
 		}
 	}
 }
