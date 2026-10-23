@@ -8,7 +8,7 @@
 				{
 					"id": "ir_local",
 					"texto": "Vá até o local da encomenda",
-					"ponto_id": "pacote"
+					"ponto_id": "local_encomenda"
 				},
 				{
 					"id": "encontrar_encomenda",
@@ -17,6 +17,7 @@
 				}
 			],
 			"pontos_ids": [
+				"local_encomenda",
 				"pacote"
 			],
 			"dialogo_id": "dialogo1",

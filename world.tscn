@@ -68,6 +68,7 @@
 [ext_resource type="PackedScene" uid="uid://6gyw0odkomrl" path="res://assets/Farm Buildings - Sept 2018/FBX/WaterTower.fbx" id="66_ir1d4"]
 [ext_resource type="PackedScene" uid="uid://cgp7byniv15f" path="res://assets/Farm Buildings - Sept 2018/FBX/Well.fbx" id="67_tj74d"]
 [ext_resource type="PackedScene" uid="uid://bv8030ocyb8tk" path="res://assets/Farm Buildings - Sept 2018/FBX/SmallBarn.fbx" id="68_yy5nj"]
+[ext_resource type="Script" uid="uid://zx9m2k8p4q7w" path="res://scripts/world/area_encomenda.gd" id="69_encomenda"]
 
 [sub_resource type="Gradient" id="Gradient_gv5m4"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -745,3 +746,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.06796, 10.561348, 187.2291
 
 [node name="Well2" parent="." unique_id=739476005 instance=ExtResource("67_tj74d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.104645, 11.606371, 197.58466)
+
+[node name="AreaEncomenda" type="Area3D" parent="." unique_id=900000001 instance=ExtResource("69_encomenda")]
+position = Vector3(70.0, 10.0, 195.0)
+monitoring = true
+monitorable = true

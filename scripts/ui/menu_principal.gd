@@ -25,8 +25,6 @@ const CENA_CONFIGURACOES := "res://scenes/ui/menu_configuracoes.tscn"
 @onready var barra_configuracoes: ColorRect = get_node_or_null("MenuLateral/Coluna/Botoes/ItemConfiguracoes/Barra") as ColorRect
 @onready var fade_rect: ColorRect = get_node_or_null("FadeRect") as ColorRect
 
-var _som_ui_click: AudioStreamPlayer
-var _som_ui_hover: AudioStreamPlayer
 var _musica_menu: AudioStreamPlayer
 var _transicao_em_andamento := false
 
@@ -75,9 +73,6 @@ func _ready() -> void:
 	fade_rect.color = Color.BLACK
 	fade_rect.modulate.a = 0.0
 	fade_rect.z_index = 100
-
-	# Sons de UI
-	_configurar_sons_ui()
 
 	# Música do menu principal
 	var musica := load("res://assets/audio/musicas/musica_menu_principal.mp3") as AudioStream
@@ -171,7 +166,6 @@ func _configurar_item_menu(botao: Button, barra: ColorRect) -> void:
 		barra.modulate.a = 0.0
 
 	var on_enter := func() -> void:
-		_tocar_hover_ui()
 		var tw := create_tween().set_parallel(true)
 		tw.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		tw.tween_property(botao, "position:x", 16.0, 0.18)
@@ -302,28 +296,4 @@ func _transicionar_para_loading() -> void:
 	)
 
 
-func _configurar_sons_ui() -> void:
-	_som_ui_click = AudioStreamPlayer.new()
-	_som_ui_click.stream = load("res://assets/audio/ui/click1.ogg")
-	_som_ui_click.bus = "Efeitos"
-	add_child(_som_ui_click)
-
-	_som_ui_hover = AudioStreamPlayer.new()
-	_som_ui_hover.stream = load("res://assets/audio/ui/rollover1.ogg")
-	_som_ui_hover.bus = "Efeitos"
-	_som_ui_hover.volume_db = -6.0
-	add_child(_som_ui_hover)
-
-	for b: Button in [botao_continuar, botao_novo, botao_configuracoes, botao_sair]:
-		if b != null and not b.pressed.is_connected(_tocar_click_ui):
-			b.pressed.connect(_tocar_click_ui)
-
-
-func _tocar_click_ui() -> void:
-	if _som_ui_click != null and _som_ui_click.stream != null:
-		_som_ui_click.play()
-
-
-func _tocar_hover_ui() -> void:
-	if _som_ui_hover != null and _som_ui_hover.stream != null:
-		_som_ui_hover.play()
+# Efeitos sonoros de UI removidos a pedido do usuário.

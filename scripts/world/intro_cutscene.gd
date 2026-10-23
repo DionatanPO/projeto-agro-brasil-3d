@@ -58,7 +58,6 @@ var _pulado := false
 var _player: CharacterBody3D
 var _player_cam: Camera3D
 var _hud: CanvasLayer
-var _som_drone: AudioStreamPlayer
 var _musica_intro: AudioStreamPlayer
 
 # Estado do shot atual
@@ -102,17 +101,10 @@ func _ready() -> void:
 	if _hud != null:
 		_hud.visible = false
 
-	var stream := load("res://assets/audio/som_drone_loop.mp3") as AudioStream
-	if stream != null:
-		_som_drone = AudioStreamPlayer.new()
-		_som_drone.stream = stream
-		_som_drone.volume_db = -18.0
-		if AudioServer.get_bus_index("Efeitos") >= 0:
-			_som_drone.bus = "Efeitos"
-		add_child(_som_drone)
+	# Som de drone removido da cutscene (apenas música de fundo)
 
 	# Música de intro: toca uma vez, continua após a cutscene
-	var musica := load("res://assets/audio/musicas/intro.mp3") as AudioStream
+	var musica := load("res://assets/audio/musicas/musica_menu_principal.mp3") as AudioStream
 	if musica != null:
 		_musica_intro = AudioStreamPlayer.new()
 		_musica_intro.stream = musica
@@ -148,8 +140,6 @@ func _iniciar() -> void:
 	fade.color.a = 1.0
 	skip_hint.visible = true
 
-	if _som_drone != null:
-		_som_drone.play()
 	if _musica_intro != null:
 		_musica_intro.play()
 
@@ -219,9 +209,6 @@ func _finalizar() -> void:
 			_player_cam.make_current()
 	if _hud != null:
 		_hud.visible = true
-
-	if _som_drone != null and _som_drone.playing:
-		_som_drone.stop()
 
 	if SaveSystem != null:
 		SaveSystem.dados["intro_mundo_vista"] = true
