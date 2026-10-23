@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://cvl0nqo1pugqd"]
+
+[ext_resource type="PackedScene" path="res://scenes/world/cenarios/torre_eolica.tscn" id="1_p"]
+
+[node name="ParqueEolico" type="Node3D" unique_id=839695814]
+
+[node name="Referencia" type="Marker3D" parent="." unique_id=611762499]
+
+[node name="Turbina01" parent="." unique_id=435771212 instance=ExtResource("1_p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 0, 0)
+rpm = 16.0
+
+[node name="Referencia" type="Marker3D" parent="Turbina01" unique_id=493183113]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.191345, 0, -38.741127)
+
+[node name="Turbina02" parent="Turbina01" unique_id=1856859829 instance=ExtResource("1_p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.191345, 0, -20.741127)
+rpm = 19.0
+
+[node name="Turbina02" parent="." unique_id=1105177361 instance=ExtResource("1_p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18)
+rpm = 19.0
+
+[node name="Turbina03" parent="." unique_id=249023728 instance=ExtResource("1_p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, -6)
+rpm = 22.0

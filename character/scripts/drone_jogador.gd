@@ -22,6 +22,8 @@ var _fog_fim_base := 150.0
 @export var sensibilidade_mouse := 0.003
 @export var sensibilidade_stick := 2.8
 @export var ligado := true
+## Modo usado pela cena do tutorial: nao permite sair nem abrir outro tutorial.
+@export var modo_tutorial := false
 @export var fov_base := 70.0
 @export var fov_turbo := 86.0
 @export var tremor_max := 0.012
@@ -48,7 +50,7 @@ var _vinheta: TextureRect
 var _vento: AudioStreamPlayer3D
 var _tremor_suave := 0.0
 
-const HOME_DRONE := Vector3(114.0, 11.5, 95.0)
+const HOME_DRONE := Vector3(69.664, 11.197, 192.916)  # agrupamento da fazenda
 const RAIO_ESTACAO := 4.5
 
 var _jogador: CharacterBody3D
@@ -73,7 +75,7 @@ func _ready() -> void:
 	cam.rotation = Vector3(_angulo_vertical, 0.0, 0.0)
 
 	var cena_pos := position
-	if SaveSystem != null and SaveSystem.tem_save():
+	if not modo_tutorial and SaveSystem != null and SaveSystem.tem_save():
 		var pos: Variant = SaveSystem.dados.get("posicao_drone")
 		if pos is Array and (pos as Array).size() == 3:
 			var px := float(pos[0])
@@ -120,7 +122,7 @@ func _ready() -> void:
 	ligado = false
 	_spool = 0.0
 	_jogador = get_tree().get_first_node_in_group("jogador") as CharacterBody3D
-	if SaveSystem != null and str(SaveSystem.dados.get("veiculo", "jogador")) == "drone":
+	if not modo_tutorial and SaveSystem != null and str(SaveSystem.dados.get("veiculo", "jogador")) == "drone":
 		_entrar(true)
 
 
@@ -142,7 +144,7 @@ func _montar_estacao() -> void:
 	_prompt.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	_prompt.position = Vector3(0, 2.5, 0)
 	_prompt.font_size = 64
-	_prompt.text = "Pressione E para pilotar o drone"
+	_prompt.text = "Pressione E para pilotar o drone  •  T tutorial"
 	_prompt.visible = false
 	add_child(_prompt)
 	estacao.body_entered.connect(_on_corpo_entrou)
@@ -155,7 +157,7 @@ func _on_corpo_entrou(corpo: Node3D) -> void:
 	if corpo.is_in_group("jogador"):
 		_jogador = corpo as CharacterBody3D
 		_jogador_perto = true
-		_prompt.text = "Pressione E para pilotar o drone"
+		_prompt.text = "Pressione E para pilotar o drone  •  T tutorial"
 		_prompt.visible = true
 
 
@@ -178,6 +180,13 @@ func _unhandled_input(evento: InputEvent) -> void:
 	if evento is InputEventMouseButton and (evento as InputEventMouseButton).pressed:
 		if ligado and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if modo_tutorial:
+		return
+	if evento.is_action_pressed("tutorial_drone"):
+		if not ligado and _jogador != null and _jogador.visible and global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0:
+			get_viewport().set_input_as_handled()
+			_abrir_tutorial()
+		return
 	if evento.is_action_pressed("interagir"):
 		if ligado:
 			_sair()
@@ -185,6 +194,15 @@ func _unhandled_input(evento: InputEvent) -> void:
 		elif _jogador != null and _jogador.visible and global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0:
 			_entrar(false)
 			get_viewport().set_input_as_handled()
+
+
+## Abre o tutorial pelo atalho T, perto do drone e a pe.
+## Guarda as posicoes atuais para o mapa continuar de onde parou.
+func _abrir_tutorial() -> void:
+	if SaveSystem != null:
+		SaveSystem.dados["posicao_drone"] = [global_position.x, global_position.y, global_position.z]
+		SaveSystem.salvar()
+	get_tree().change_scene_to_file("res://scenes/world/tutorial_drone.tscn")
 
 
 func _set_jogador(ativo_jogador: bool) -> void:
@@ -297,8 +315,8 @@ func _descer_desligado(delta: float) -> void:
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("ui_cancel") and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	if not ligado and _jogador != null and is_instance_valid(_jogador) and _prompt != null:
-		_prompt.text = "Pressione E para pilotar o drone (%.1f m)" % global_position.distance_to(_jogador.global_position)
+	if not modo_tutorial and not ligado and _jogador != null and is_instance_valid(_jogador) and _prompt != null:
+		_prompt.text = "Pressione E para pilotar o drone (%.1f m)  •  T tutorial" % global_position.distance_to(_jogador.global_position)
 		if _jogador.visible:
 			var perto := global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0
 			if perto and not _jogador_perto:

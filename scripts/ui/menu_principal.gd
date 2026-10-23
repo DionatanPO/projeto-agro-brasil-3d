@@ -27,6 +27,7 @@ const CENA_CONFIGURACOES := "res://scenes/ui/menu_configuracoes.tscn"
 
 var _som_ui_click: AudioStreamPlayer
 var _som_ui_hover: AudioStreamPlayer
+var _musica_menu: AudioStreamPlayer
 var _transicao_em_andamento := false
 
 
@@ -77,6 +78,19 @@ func _ready() -> void:
 
 	# Sons de UI
 	_configurar_sons_ui()
+
+	# Música do menu principal
+	var musica := load("res://assets/audio/musicas/musica_menu_principal.mp3") as AudioStream
+	if musica != null:
+		_musica_menu = AudioStreamPlayer.new()
+		_musica_menu.stream = musica
+		_musica_menu.volume_db = -12.0
+		if musica is AudioStreamMP3:
+			(musica as AudioStreamMP3).loop = true
+		if AudioServer.get_bus_index("Musica") >= 0:
+			_musica_menu.bus = "Musica"
+		add_child(_musica_menu)
+		_musica_menu.play()
 
 	# Configura microinterações e estilos
 	if botao_continuar != null:
@@ -212,6 +226,8 @@ func _on_sair() -> void:
 		return
 	_transicao_em_andamento = true
 	_desativar_botoes()
+	if _musica_menu != null and _musica_menu.playing:
+		_musica_menu.stop()
 	get_tree().quit()
 
 
@@ -275,6 +291,8 @@ func _desativar_botoes() -> void:
 
 
 func _transicionar_para_loading() -> void:
+	if _musica_menu != null and _musica_menu.playing:
+		_musica_menu.stop()
 	var transicao := create_tween()
 	transicao.set_trans(Tween.TRANS_CUBIC)
 	transicao.set_ease(Tween.EASE_IN_OUT)

@@ -26,7 +26,6 @@
 [ext_resource type="PackedScene" uid="uid://nyrcl5y85ob3" path="res://env models/plants/grass/scenes/grass_3.tscn" id="12_7qk3m"]
 [ext_resource type="Texture2D" uid="uid://cfqk60lpl5ljv" path="res://addons/sky_3d/assets/resources/SNoise.tres" id="12_bc84e"]
 [ext_resource type="PackedScene" uid="uid://su6xvw0p4vgv" path="res://env models/rocks/complex scenes/scene2.tscn" id="12_mc2jv"]
-[ext_resource type="PackedScene" uid="uid://cxe1dw3tqqf54" path="res://env models/rocks/complex scenes/arc2.tscn" id="13_bo7i5"]
 [ext_resource type="PackedScene" uid="uid://0f41iahap7f4" path="res://env models/plants/grass/scenes/grass_4.tscn" id="13_jas3d"]
 [ext_resource type="Texture2D" uid="uid://cecwdqjol0ckd" path="res://addons/sky_3d/assets/textures/noiseClouds.png" id="13_wukud"]
 [ext_resource type="PackedScene" uid="uid://bp3y1df4sdgnp" path="res://env models/rocks/scenes/small rock 2.tscn" id="14_4h6ng"]
@@ -52,15 +51,23 @@
 [ext_resource type="AudioStream" uid="uid://dcubyq78dk5sb" path="res://env models/audio/air.mp3" id="39_q42o5"]
 [ext_resource type="AudioStream" uid="uid://djnb0tj8wfxx5" path="res://env models/audio/air + chirp.mp3" id="40_iett8"]
 [ext_resource type="AudioStream" uid="uid://dlscn7dcgl7ps" path="res://env models/audio/chirp.mp3" id="41_r5m4j"]
+[ext_resource type="PackedScene" uid="uid://cvl0nqo1pugqd" path="res://scenes/ui/parque_eolico.tscn" id="42_37ykd"]
 [ext_resource type="AudioStream" uid="uid://ctdw3tmpsya52" path="res://env models/audio/chirp (2).mp3" id="42_e77ka"]
+[ext_resource type="PackedScene" uid="uid://cmmhmwkn27vlq" path="res://scenes/world/cenarios/parque_solar.tscn" id="43_1hvhf"]
 [ext_resource type="AudioStream" uid="uid://b5jr7eehkdf0w" path="res://env models/audio/chirp (3).mp3" id="43_c0wax"]
 [ext_resource type="PackedScene" uid="uid://bpkj5mqenfpw0" path="res://env models/movable/butterfly_scene/butterfly_area.tscn" id="49_55kwu"]
 [ext_resource type="PackedScene" uid="uid://dd6v46w7lb8o8" path="res://terrain mat/scenes/lens_flare.tscn" id="57_sedwk"]
 [ext_resource type="PackedScene" uid="uid://cqe8jd0vjbvfo" path="res://character/player.tscn" id="59_e77ka"]
 [ext_resource type="PackedScene" uid="uid://dvracmssmoc1r" path="res://env models/bridge/bridge.tscn" id="60_c0wax"]
 [ext_resource type="PackedScene" uid="uid://br4ljesnrpw12" path="res://character/scenes/trator_jogador.tscn" id="62_trator"]
+[ext_resource type="PackedScene" uid="uid://bjwnevipuwu80" path="res://assets/Farm Buildings - Sept 2018/FBX/BigBarn.fbx" id="63_3fh52"]
 [ext_resource type="PackedScene" uid="uid://bpc1popflov1v" path="res://character/scenes/drone_jogador.tscn" id="63_drone"]
+[ext_resource type="PackedScene" uid="uid://dt011n2s4py3j" path="res://assets/Farm Buildings - Sept 2018/FBX/ChickenCoop.fbx" id="64_8f1f8"]
 [ext_resource type="PackedScene" uid="uid://crbgbbqyqkl40" path="res://scenes/ui/hud.tscn" id="64_hud"]
+[ext_resource type="PackedScene" uid="uid://tgppk10v6yqd" path="res://assets/Farm Buildings - Sept 2018/FBX/Silo_House.fbx" id="65_lxwtw"]
+[ext_resource type="PackedScene" uid="uid://6gyw0odkomrl" path="res://assets/Farm Buildings - Sept 2018/FBX/WaterTower.fbx" id="66_ir1d4"]
+[ext_resource type="PackedScene" uid="uid://cgp7byniv15f" path="res://assets/Farm Buildings - Sept 2018/FBX/Well.fbx" id="67_tj74d"]
+[ext_resource type="PackedScene" uid="uid://bv8030ocyb8tk" path="res://assets/Farm Buildings - Sept 2018/FBX/SmallBarn.fbx" id="68_yy5nj"]
 
 [sub_resource type="Gradient" id="Gradient_gv5m4"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -368,7 +375,7 @@ shader_parameter/moon_texture_flip_u = false
 shader_parameter/moon_texture_flip_v = false
 shader_parameter/moon_size = 0.07
 shader_parameter/atm_moon_mie_tint = Color(0.137255, 0.184314, 0.292196, 1)
-shader_parameter/atm_moon_mie_intensity = 0.025119642019271842
+shader_parameter/atm_moon_mie_intensity = 0.0
 shader_parameter/atm_moon_partial_mie_phase = Vector3(0.36, 1.64, 1.6)
 shader_parameter/starmap_color = Color(0.709804, 0.709804, 0.709804, 0.854902)
 shader_parameter/starmap_texture = ExtResource("17_bo7i5")
@@ -392,8 +399,8 @@ shader_parameter/cirrus_absorption = 2.0
 shader_parameter/cirrus_sky_tint_fade = 0.5
 shader_parameter/cirrus_size = 1.0
 shader_parameter/cirrus_uv = Vector2(0.16, 0.11)
-shader_parameter/cirrus_position1 = Vector2(0.24902181, 0.24902181)
-shader_parameter/cirrus_position2 = Vector2(0.24902181, 0.24902181)
+shader_parameter/cirrus_position1 = Vector2(0.3051038, 0.3051038)
+shader_parameter/cirrus_position2 = Vector2(0.3051038, 0.3051038)
 shader_parameter/cirrus_texture = ExtResource("12_bc84e")
 shader_parameter/cumulus_visible = true
 shader_parameter/cumulus_intensity = 0.6
@@ -403,7 +410,7 @@ shader_parameter/cumulus_absorption = 2.0
 shader_parameter/cumulus_noise_freq = 2.7
 shader_parameter/cumulus_sky_tint_fade = 0.0
 shader_parameter/cumulus_size = 0.5
-shader_parameter/cumulus_position = Vector2(85.82511, 85.82511)
+shader_parameter/cumulus_position = Vector2(1.525478, 1.525478)
 shader_parameter/cumulus_texture = ExtResource("13_wukud")
 shader_parameter/cumulus_partial_mie_phase = Vector3(0.957564, 1.042436, 0.412)
 shader_parameter/cumulus_mie_intensity = 1.0
@@ -475,9 +482,6 @@ transform = Transform3D(-0.5836669, 1.3322291, 0.36673877, 1.0543361, 0.68670845
 
 [node name="Node3D2" parent="Terrain3D/Big rocks" unique_id=1866337741 instance=ExtResource("12_mc2jv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84.83855, 9.84107, 100.45558)
-
-[node name="Node3D3" parent="Terrain3D/Big rocks" unique_id=122826619 instance=ExtResource("13_bo7i5")]
-transform = Transform3D(0.94499457, 0, 0.32708594, 0, 1, 0, -0.32708594, 0, 0.94499457, 206.34142, 10.940586, 168.55577)
 
 [node name="MeshInstance3D3" parent="Terrain3D/Big rocks" unique_id=710383533 instance=ExtResource("14_4h6ng")]
 transform = Transform3D(1.0397941, 1.0559417, -4.775334, -0.2246595, 4.887227, 1.0317659, 4.885525, 0, 1.0637875, 47.018574, 11.341118, 195.2588)
@@ -619,6 +623,12 @@ stream = ExtResource("43_c0wax")
 volume_db = -8.819
 autoplay = true
 
+[node name="ParqueEolico" parent="Terrain3D/ForestAudio" unique_id=839695814 instance=ExtResource("42_37ykd")]
+transform = Transform3D(-0.98995405, 0, -0.14138937, 0, 1, 0, 0.14138937, 0, -0.98995405, 123.988144, 10.841993, 226.99738)
+
+[node name="ParqueSolar" parent="Terrain3D/ForestAudio" unique_id=883105101 instance=ExtResource("43_1hvhf")]
+transform = Transform3D(-0.94856465, 0, -0.31658334, 0.01451366, 0.9989486, -0.043486636, 0.31625047, -0.045844674, -0.9475673, 188.16666, 11.715464, 209.15282)
+
 [node name="Water" type="MeshInstance3D" parent="Terrain3D" unique_id=123465259]
 transform = Transform3D(-0.25881904, 0, -0.9659258, 0, 1, 0, 0.9659258, 0, -0.25881904, 127.373, 8.54921, 128.57552)
 mesh = SubResource("PlaneMesh_036b0")
@@ -694,7 +704,7 @@ transform = Transform3D(0.76021326, 0, -0.64967364, 0, 1, 0, 0.64967364, 0, 0.76
 transform = Transform3D(0.76021326, 0, -0.64967364, 0, 1, 0, 0.64967364, 0, 0.76021326, 42.023575, 10.482239, 55.717278)
 
 [node name="bridge" parent="." unique_id=1865252733 instance=ExtResource("60_c0wax")]
-transform = Transform3D(0.88888925, 0, 0.45812216, 0, 1, 0, -0.45812216, 0, 0.88888925, 127.21681, 10.027454, 122.27132)
+transform = Transform3D(0.7396311, 0, 0.6730125, 0, 1, 0, -0.6730125, 0, 0.7396311, 125.217, 10.027, 122.271)
 metadata/_edit_lock_ = true
 
 [node name="bridge2" parent="." unique_id=728106487 instance=ExtResource("60_c0wax")]
@@ -702,12 +712,36 @@ transform = Transform3D(0.72647876, 0, 0.687189, 0, 1, 0, -0.687189, 0, 0.726478
 metadata/_edit_lock_ = true
 
 [node name="Player" parent="." unique_id=988198540 instance=ExtResource("59_e77ka")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 116.49875, 2.5, 97.251144)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 76.456, 11.812, 192.678)
 
 [node name="Trator" parent="." unique_id=300000001 instance=ExtResource("62_trator")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120, 10.5, 95)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 81, 11, 192.5)
 
 [node name="DroneJogador" parent="." unique_id=881234501 instance=ExtResource("63_drone")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 114, 11.5, 95)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 69.664, 11.197, 192.916)
 
 [node name="HUD" parent="." unique_id=1027796201 instance=ExtResource("64_hud")]
+
+[node name="BigBarn" parent="." unique_id=706689849 instance=ExtResource("63_3fh52")]
+transform = Transform3D(0.35049713, 0.015811056, 0.9364304, -0.0028117946, 0.9998707, -0.015829755, -0.93655974, 0.0029151528, 0.35049626, 58.905502, 10.755095, 194.86177)
+
+[node name="ChickenCoop" parent="." unique_id=1565183534 instance=ExtResource("64_8f1f8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 69.337975, -0.17880249, 197.68521)
+
+[node name="Silo_House" parent="." unique_id=1160084009 instance=ExtResource("65_lxwtw")]
+transform = Transform3D(-0.7885478, 0, 0.6149734, 0, 1, 0, -0.6149734, 0, -0.7885478, 62.401268, 10.969176, 203.91855)
+
+[node name="WaterTower" parent="." unique_id=1161770115 instance=ExtResource("66_ir1d4")]
+transform = Transform3D(0.9208765, 0, 0.38985446, 0, 1, 0, -0.38985446, 0, 0.9208765, 71.36576, 10.277155, 206.8024)
+
+[node name="Well" parent="." unique_id=5470539 instance=ExtResource("67_tj74d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 91.557556, -21.893818, 208.71114)
+
+[node name="SmallBarn" parent="." unique_id=1790644504 instance=ExtResource("68_yy5nj")]
+transform = Transform3D(-0.5762005, 0, -0.81730837, 0, 1, 0, 0.81730837, 0, -0.5762005, 80.47419, 11.147575, 199.68132)
+
+[node name="ChickenCoop2" parent="." unique_id=1856212305 instance=ExtResource("64_8f1f8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.06796, 10.561348, 187.22913)
+
+[node name="Well2" parent="." unique_id=739476005 instance=ExtResource("67_tj74d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.104645, 11.606371, 197.58466)

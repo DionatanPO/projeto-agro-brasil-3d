@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/world/torre_eolica.gd" id="1_e"]
+[ext_resource type="PackedScene" path="res://assets/models/torre_eolica.glb" id="2_e"]
+[ext_resource type="PackedScene" path="res://assets/models/elice_eolica.glb" id="3_e"]
+
+[node name="TorreEolica" type="Node3D"]
+script = ExtResource("1_e")
+
+[node name="Torre" parent="." instance=ExtResource("2_e")]
+
+[node name="Rotor" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 26.5, 0.98)
+
+[node name="Elice" parent="Rotor" instance=ExtResource("3_e")]

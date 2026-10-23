@@ -9,7 +9,7 @@ extends CharacterBody3D
 ## Audio: motor (som_trator.mp3 em loop) e buzina (buzina_trator.mp3) vem de
 ## arquivo; o beep de re continua sintetizado em codigo.
 
-const HOME_TRATOR := Vector3(120.0, 10.5, 95.0)  # mesma posição do spawn no world.tscn
+const HOME_TRATOR := Vector3(81.0, 11.0, 192.5)  # mesma posição do spawn no world.tscn
 const RAIO_ESTACAO := 4.5
 
 @export var velocidade_max := 9.0
@@ -108,7 +108,7 @@ func _ready() -> void:
 		_som_re.bus = "Efeitos"
 	add_child(_som_re)
 	# FORÇA posição da cena no primeiro jogo - ignora save se Y inválido
-	var cena_pos := position  # Posição definida no world.tscn (120, 10.5, 95)
+	var cena_pos := position  # Posição definida no world.tscn (81.0, 11.0, 192.5)
 	
 	# Só carrega save se existir E Y > 5 (não no vazio)
 	if SaveSystem.tem_save():

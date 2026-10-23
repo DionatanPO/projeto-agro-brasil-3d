@@ -91,8 +91,8 @@ var _intervalo_passo_andar := 0.48
 
 func _ready() -> void:
 	add_to_group("jogador")
-	# Spawn alto e raycast para achar chão do terreno
-	var spawn_pos := Vector3(116.5, 50.0, 97.25)
+	# Spawn alto e raycast para achar chão do terreno (agrupamento da fazenda)
+	var spawn_pos := Vector3(76.456, 50.0, 192.678)
 	position = spawn_pos
 	
 	# Só carrega save se existir E Y > 5 (não no vazio)
@@ -113,7 +113,11 @@ func _snap_to_ground() -> void:
 	var space_state = get_world_3d().direct_space_state
 	# Usa todas as layers: no Forest o Terrain3D pode estar em uma layer
 	# diferente da usada no mapa do AgroBrasil.
-	var query = PhysicsRayQueryParameters3D.create(position, position + Vector3(0, -150, 0), 0xFFFFFFFF)
+	# Comeca acima do jogador e ignora o proprio corpo: se ele ja tiver caido
+	# ate o chao antes deste deferred rodar, o raio nao pode acertar a si mesmo.
+	var origem := position + Vector3(0, 2.0, 0)
+	var query = PhysicsRayQueryParameters3D.create(origem, origem + Vector3(0, -150, 0), 0xFFFFFFFF)
+	query.exclude = [get_rid()]
 	query.collide_with_areas = false
 	query.collide_with_bodies = true
 	var result = space_state.intersect_ray(query)
@@ -133,6 +137,7 @@ func _snap_to_ground() -> void:
 
 
 func _finalizar_spawn() -> void:
+	pass
 	if animador != null:
 		_importar_animacoes_personagem()
 		# Calibra o andar pela animacao: o corpo anda na velocidade nativa do
@@ -146,6 +151,30 @@ func _finalizar_spawn() -> void:
 	floor_max_angle = deg_to_rad(50.0)
 	floor_snap_length = 0.4
 	_configurar_sons_passos()
+	
+	# Cutscene de introdução do mundo (só na primeira vez)
+	if not SaveSystem.dados.get("intro_mundo_vista", false):
+		_instanciar_intro_cutscene()
+
+
+func forcar_idle_cutscene() -> void:
+	if _tem_animacao("Idle"):
+		_atualizar_animacao("Idle")
+		if animador != null:
+			animador.play("Idle")
+	elif _tem_animacao("SadIdle"):
+		_atualizar_animacao("SadIdle")
+
+func _instanciar_intro_cutscene() -> void:
+	if SaveSystem.dados.get("intro_mundo_vista", false):
+		return
+	var cena := preload("res://scenes/world/intro_cutscene.tscn")
+	var inst := cena.instantiate()
+	get_tree().root.add_child(inst)
+	# Garante pose de idle (parado) durante a cutscene
+	_atualizar_animacao("Idle")
+	# A cutscene se auto-gerencia: bloqueia o jogador, roda a câmera,
+	# mostra legendas, e ao final devolve o controle e se remove.
 
 
 ## Intervalo entre sons de passo tirado da propria animacao (s). Os clips

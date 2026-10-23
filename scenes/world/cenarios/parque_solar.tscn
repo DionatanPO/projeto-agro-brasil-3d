@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://cmmhmwkn27vlq"]
+
+[ext_resource type="PackedScene" uid="uid://m7yq3wxidp77" path="res://assets/models/parque_solar.glb" id="1_lwxpt"]
+
+[node name="ParqueSolar" type="Node3D" unique_id=883105101]
+
+[node name="Referencia" type="Marker3D" parent="." unique_id=883105102]
+
+[node name="parque_solar" parent="." unique_id=1245060585 instance=ExtResource("1_lwxpt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.660614, 0, -0.5930176)
