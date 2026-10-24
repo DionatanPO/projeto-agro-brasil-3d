@@ -2,82 +2,106 @@
 	"missoes": [
 		{
 			"id": "primeira_entrega",
+			"tipo": "discovery",
 			"titulo": "Primeira Entrega",
 			"descricao": "A encomenda enviada pela instituição de ensino já deve ter chegado. Vá até o ponto central da fazenda para localizar e recolher o pacote.",
 			"objetivos": [
 				{
 					"id": "ir_local",
-					"texto": "Vá até o local da encomenda",
-					"ponto_id": "local_encomenda"
+					"tipo": "descoberta",
+					"alvo_id": "local_encomenda",
+					"texto": "Vá até o local da encomenda"
 				},
 				{
 					"id": "encontrar_encomenda",
-					"texto": "Encontre a encomenda",
-					"ponto_id": "pacote"
+					"tipo": "descoberta",
+					"alvo_id": "pacote",
+					"texto": "Encontre a encomenda"
 				}
 			],
-			"pontos_ids": [
-				"local_encomenda",
-				"pacote"
+			"recompensas": [
+				{
+					"tipo": "xp",
+					"valor": 100
+				},
+				{
+					"tipo": "spawn",
+					"cena": "res://character/scenes/agrobot.tscn"
+				}
 			],
-			"dialogo_id": "dialogo1",
+			"requer": [],
 			"ordem": 1
 		},
 		{
 			"id": "conhecer_solo",
+			"tipo": "discovery",
 			"titulo": "Pisando no Solo",
 			"descricao": "Visite a placa sobre o solo e conclua a leitura.",
 			"objetivos": [
 				{
 					"id": "visitar_solo",
-					"texto": "Visite a placa sobre o solo",
-					"ponto_id": "solo"
+					"tipo": "descoberta",
+					"alvo_id": "solo",
+					"texto": "Visite a placa sobre o solo"
 				}
 			],
-			"pontos_ids": [
-				"solo"
+			"recompensas": [
+				{
+					"tipo": "xp",
+					"valor": 100
+				}
 			],
-			"dialogo_id": "dialogo2",
+			"requer": ["primeira_entrega"],
 			"ordem": 2
 		},
 		{
 			"id": "conhecer_agua",
+			"tipo": "discovery",
 			"titulo": "Água Consciente",
 			"descricao": "Visite a placa sobre o uso da água no campo.",
 			"objetivos": [
 				{
 					"id": "visitar_agua",
-					"texto": "Visite a placa sobre a água",
-					"ponto_id": "agua"
+					"tipo": "descoberta",
+					"alvo_id": "agua",
+					"texto": "Visite a placa sobre a água"
 				}
 			],
-			"pontos_ids": [
-				"agua"
+			"recompensas": [
+				{
+					"tipo": "xp",
+					"valor": 100
+				}
 			],
-			"dialogo_id": "dialogo3",
+			"requer": ["conhecer_solo"],
 			"ordem": 3
 		},
 		{
 			"id": "conhecer_culturas",
+			"tipo": "discovery",
 			"titulo": "Culturas do Brasil",
 			"descricao": "Visite as placas da soja e do milho.",
 			"objetivos": [
 				{
 					"id": "visitar_soja",
-					"texto": "Visite a placa da soja",
-					"ponto_id": "soja"
+					"tipo": "descoberta",
+					"alvo_id": "soja",
+					"texto": "Visite a placa da soja"
 				},
 				{
 					"id": "visitar_milho",
-					"texto": "Visite a placa do milho",
-					"ponto_id": "milho"
+					"tipo": "descoberta",
+					"alvo_id": "milho",
+					"texto": "Visite a placa do milho"
 				}
 			],
-			"pontos_ids": [
-				"soja",
-				"milho"
+			"recompensas": [
+				{
+					"tipo": "xp",
+					"valor": 150
+				}
 			],
-			"dialogo_id": "dialogo4",
+			"requer": ["conhecer_agua"],
 			"ordem": 4
 		}
 	]

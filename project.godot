@@ -20,6 +20,7 @@ InputSetup="*res://scripts/autoload/input_setup.gd"
 PhantomCameraManager="*uid://duq6jhf6unyis"
 SaveSystem="*res://scripts/autoload/save_system.gd"
 Missoes="*res://scripts/autoload/missoes.gd"
+MissionManager="*res://scripts/missions/mission_manager.gd"
 AudioConfig="*res://scripts/autoload/audio_config.gd"
 Jogo="*res://scripts/autoload/jogo.gd"
 XPManager="*res://scripts/autoload/xp_manager.gd"
@@ -55,7 +56,7 @@ enabled=PackedStringArray("res://addons/SIsilicon.vfx.lens flare/plugin.cfg", "r
 [rendering]
 
 occlusion_culling/use_occlusion_culling=true
-renderer/render_method=2
+renderer/render_method=1
 
 [shader_globals]
 

@@ -127,6 +127,12 @@ func _ready() -> void:
 	Jogo.dialogo_solicitado.connect(_abrir_dialogo)
 	Jogo.alternar_diario.connect(_alternar_diario)
 	Jogo.descoberta_registrada.connect(_on_descoberta)
+	# Novo sistema de missões
+	if not MissionManager.mission_completed.is_connected(_on_missao):
+		MissionManager.mission_completed.connect(_on_missao)
+	if not MissionManager.mission_changed.is_connected(_on_mission_changed):
+		MissionManager.mission_changed.connect(_on_mission_changed)
+	# Legado (compatibilidade)
 	Missoes.missao_concluida.connect(_on_missao)
 
 func _configurar_espacamento() -> void:
@@ -348,7 +354,21 @@ func _on_descoberta(_ponto_id: String) -> void:
 func _on_missao(missao_id: String) -> void:
 	if diario.visible:
 		_preencher_diario()
-	var m: Dictionary = Missoes.por_id.get(missao_id, {})
+	
+	# Usa MissionManager se disponível, senão fallback para Missoes
+	var m: Dictionary
+	var mission = MissionManager.get_mission(missao_id)
+	if mission:
+		m = {
+			"id": mission.mission_id,
+			"titulo": mission.titulo,
+			"descricao": mission.descricao,
+			"objetivos": mission.objetivos,
+			"ordem": mission.ordem,
+		}
+	if m.is_empty() or not m:
+		m = Missoes.por_id.get(missao_id, {})
+	
 	popup_texto.text = str(m.get("titulo", missao_id))
 	popup_missao.show()
 	scrim.show()
@@ -356,6 +376,12 @@ func _on_missao(missao_id: String) -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	# Focar no botão OK único
 	$MissaoCompleta/Inset/Conteudo/BotaoOK.grab_focus()
+
+
+func _on_mission_changed(mission_id) -> void:
+	# Missão ativa mudou - atualiza diário se aberto
+	if diario.visible:
+		call_deferred("_preencher_diario")
 
 func _on_ok_missao() -> void:
 	# Apenas fechar o popup e continuar - missão já foi registrada no SaveSystem
@@ -367,7 +393,19 @@ func _on_ok_missao() -> void:
 	SaveSystem.salvar()
 
 func _preencher_diario() -> void:
-	var prox: Dictionary = Missoes.proxima_pendente()
+	var prox: Dictionary
+	var mission = MissionManager.get_proxima_pendente()
+	if mission:
+		prox = {
+			"id": mission.mission_id,
+			"titulo": mission.titulo,
+			"descricao": mission.descricao,
+			"objetivos": mission.objetivos,
+			"ordem": mission.ordem,
+		}
+	if not prox:
+		prox = Missoes.proxima_pendente()
+	
 	if prox.is_empty():
 		objetivo_missao.text = "Todas as missões concluídas! Parabéns!"
 	else:
@@ -376,19 +414,30 @@ func _preencher_diario() -> void:
 	aviso_vazio.visible = false
 	lista_box.visible = false
 	missoes_info.visible = false
+
+
 func _texto_missao_atual(prox: Dictionary) -> String:
 	var linhas: Array[String] = []
 	linhas.append(str(prox.get("titulo", "")))
 	linhas.append(str(prox.get("descricao", "")))
 	linhas.append("")
 	linhas.append("Objetivos:")
-	var descobertas: Variant = SaveSystem.dados.get("descobertas", [])
-	var concluida: bool = Missoes.esta_concluida(str(prox.get("id", "")))
-	for obj: Variant in Missoes.objetivos_da_missao(str(prox.get("id", ""))):
+	
+	var descobertas: Array = SaveSystem.dados.get("descobertas", [])
+	var missao_id: String = str(prox.get("id", ""))
+	var concluida: bool = false
+	var m = MissionManager.get_mission(missao_id)
+	concluida = m != null and m.is_concluida()
+	
+	var objetivos_arr: Array
+	var m2 = MissionManager.get_mission(missao_id)
+	objetivos_arr = m2.objetivos if m2 else []
+	
+	for obj: Variant in objetivos_arr:
 		if not (obj is Dictionary):
 			continue
 		var o: Dictionary = obj as Dictionary
-		var ponto_id: String = str(o.get("ponto_id", ""))
+		var ponto_id: String = str(o.get("alvo_id", o.get("ponto_id", "")))
 		var feito: bool = concluida or (ponto_id.is_empty()) or (descobertas is Array and ponto_id in descobertas)
 		var marca := "[x]" if feito else "[ ]"
 		linhas.append("%s %s" % [marca, str(o.get("texto", ""))])
