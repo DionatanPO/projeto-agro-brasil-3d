@@ -71,4 +71,12 @@ func _dados_padrao() -> Dictionary:
 		"tempo_jogado_seg": 0.0,
 		"xp": 0,
 		"nivel": 1,
+		"agrobot_coletado": false,
 	}
+
+
+func _notification(what: int) -> void:
+	# Salva progresso ao fechar a janela ou pausar a aplicação (mobile)
+	match what:
+		NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_WM_GO_BACK_REQUEST:
+			salvar()

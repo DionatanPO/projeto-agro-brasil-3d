@@ -24,6 +24,15 @@ func _ready() -> void:
 	# Conecta aos sinais do SaveSystem para manter sincronização
 	SaveSystem.progresso_carregado.connect(_on_save_loaded)
 	SaveSystem.progresso_salvo.connect(_on_save_saved)
+	
+	# Conecta ao sinal de missão concluída para conceder XP
+	if not Missoes.missao_concluida.is_connected(_on_missao_concluida):
+		Missoes.missao_concluida.connect(_on_missao_concluida)
+
+
+func _on_missao_concluida(_missao_id: String) -> void:
+	"""Callback quando uma missão é concluída - concede 100 XP"""
+	award_xp_for_mission_completed()
 
 func _load_from_save() -> void:
 	"""Carrega XP e nível do SaveSystem"""
@@ -31,9 +40,39 @@ func _load_from_save() -> void:
 	_xp = save_data.get("xp", 0)
 	_level = clamp(save_data.get("nivel", 1), 1, MAX_LEVEL)
 	
+	# Reconcilia XP: se há missões concluídas mas XP não reflete isso,
+	# concede o XP faltante (100 por missão). Só roda uma vez por sessão.
+	_reconciliar_xp_missoes(save_data)
+	
 	# NotificaListeners sobre o estado inicial
 	emit_signal("xp_changed", 0, _xp)
 	emit_signal("level_changed", 1, _level)
+
+
+func _reconciliar_xp_missoes(save_data: Dictionary) -> void:
+	"""Concede XP retroativo para missões já concluídas que não deram XP antes."""
+	var missoes_concluidas: Array = save_data.get("missoes_concluidas", [])
+	if missoes_concluidas.is_empty():
+		return
+	
+	# XP esperado = 100 por missão
+	var xp_esperado := missoes_concluidas.size() * 100
+	
+	# Se XP atual for menor que o esperado (ex: save antigo sem sistema de XP),
+	# concede a diferença
+	if _xp < xp_esperado:
+		var xp_faltante := xp_esperado - _xp
+		print("[XPManager] Reconciliando XP: +", xp_faltante, " (", missoes_concluidas.size(), " missões concluídas)")
+		_xp = xp_esperado
+		
+		# Recalcula nível baseado no novo XP
+		while _level < MAX_LEVEL and _xp >= get_total_xp_for_level(_level + 1):
+			_level += 1
+		
+		# Atualiza o save com o XP corrigido
+		save_data["xp"] = _xp
+		save_data["nivel"] = _level
+		SaveSystem.salvar()
 
 func _on_save_loaded(data: Dictionary) -> void:
 	"""Callback quando o save é carregado"""

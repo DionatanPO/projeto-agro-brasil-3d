@@ -13,6 +13,12 @@ var tempo_sessao: float = 0.0
 
 func _ready() -> void:
 	_carregar_conteudos()
+	# Autosave periódico (a cada 10 segundos) para manter posição e progresso atualizados
+	var timer = Timer.new()
+	timer.wait_time = 10.0
+	timer.timeout.connect(SaveSystem.salvar)
+	add_child(timer)
+	timer.start()
 
 
 func _process(delta: float) -> void:

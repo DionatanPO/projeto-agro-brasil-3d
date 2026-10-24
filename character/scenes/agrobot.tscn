@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://character/scripts/agrobot.gd" id="1_agrobot"]
+[ext_resource type="PackedScene" path="res://.godot/imported/agrobot.glb-606496c91c0f871b1d8db274dc636f13.scn" id="3_model"]
+
+[node name="Agrobot" type="Node3D"]
+script = ExtResource("1_agrobot")
+
+[node name="Modelo" type="Node3D" parent="."]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="Corpo" parent="Modelo" instance=ExtResource("3_model")]

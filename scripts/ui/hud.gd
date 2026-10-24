@@ -86,13 +86,11 @@ func _ready() -> void:
 	$Dialogo/Inset/Conteudo/BotaoEntendi.pressed.connect(_on_entendi)
 	$Diario/Inset/Conteudo/Acoes/BotaoFechar.pressed.connect(_on_fechar_diario)
 	$Diario/Inset/Conteudo/Acoes/BotaoVoltar.pressed.connect(_on_voltar_menu)
-	$MissaoCompleta/Inset/Conteudo/BotaoNovaFase.pressed.connect(_on_ir_nova_fase)
-	$MissaoCompleta/Inset/Conteudo/BotaoContinuar.pressed.connect(_on_continuar_explorando)
+	$MissaoCompleta/Inset/Conteudo/BotaoOK.pressed.connect(_on_ok_missao)
 	AgroUITheme.style_primary_button($Dialogo/Inset/Conteudo/BotaoEntendi)
 	AgroUITheme.style_secondary_button($Diario/Inset/Conteudo/Acoes/BotaoFechar)
 	AgroUITheme.style_secondary_button($Diario/Inset/Conteudo/Acoes/BotaoVoltar)
-	AgroUITheme.style_primary_button($MissaoCompleta/Inset/Conteudo/BotaoNovaFase)
-	AgroUITheme.style_secondary_button($MissaoCompleta/Inset/Conteudo/BotaoContinuar)
+	AgroUITheme.style_primary_button($MissaoCompleta/Inset/Conteudo/BotaoOK)
 	slider_efeitos.set_value_no_signal(AudioConfig.volume_efeitos())
 	slider_musica.set_value_no_signal(AudioConfig.volume_musica())
 	check_mudo.set_pressed_no_signal(AudioServer.is_bus_mute(0))
@@ -337,19 +335,6 @@ func _on_aba(indice: int) -> void:
 		else:
 			AgroUITheme.style_secondary_button(b)
 
-func _on_ir_nova_fase() -> void:
-	get_tree().paused = false
-	SaveSystem.salvar()
-	Loading.proxima_cena = CENA_FASE_TESTE
-	Loading.titulo_carga = "Carregando a próxima fase..."
-	get_tree().change_scene_to_file("res://scenes/ui/menus/loading.tscn")
-
-func _on_continuar_explorando() -> void:
-	popup_missao.hide()
-	if not diario.visible and not dialogo.visible:
-		scrim.hide()
-		get_tree().paused = false
-
 func _on_voltar_menu() -> void:
 	get_tree().paused = false
 	SaveSystem.salvar()
@@ -369,7 +354,17 @@ func _on_missao(missao_id: String) -> void:
 	scrim.show()
 	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	$MissaoCompleta/Inset/Conteudo/BotaoNovaFase.grab_focus()
+	# Focar no botão OK único
+	$MissaoCompleta/Inset/Conteudo/BotaoOK.grab_focus()
+
+func _on_ok_missao() -> void:
+	# Apenas fechar o popup e continuar - missão já foi registrada no SaveSystem
+	popup_missao.hide()
+	if not diario.visible and not dialogo.visible:
+		scrim.hide()
+		get_tree().paused = false
+	# Garante que o save seja escrito ao fechar o popup de missão
+	SaveSystem.salvar()
 
 func _preencher_diario() -> void:
 	var prox: Dictionary = Missoes.proxima_pendente()
