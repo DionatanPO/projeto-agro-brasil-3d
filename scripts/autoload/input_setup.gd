@@ -18,6 +18,7 @@ const ACOES: Dictionary = {
 	"diario": [KEY_TAB],
 	"chuva": [KEY_F1],  # Ativar/desativar simulacao de chuva
 	"camera": [KEY_Y],  # Alternar distancia da camera (fase da descida)
+	"escanear": [KEY_Q],  # Teclado: Q para escanear (teste)
 }
 
 ## Botoes do controle (Xbox): A pula, LB corre, X interage, Y abre o caderno.
@@ -32,13 +33,18 @@ const BOTOES_PAD: Dictionary = {
 	"diario": [JOY_BUTTON_START],
 }
 
+## Gatilhos (analógicos) - LT/RT para ações contínuas
+const GATILHOS_PAD: Dictionary = {
+	"escanear": [JOY_AXIS_TRIGGER_LEFT],  # LT (gatilho esquerdo) para escanear
+	"pulverizar": [JOY_AXIS_TRIGGER_RIGHT],  # RT já existia no EIXOS_PAD
+}
+
 ## Stick esquerdo no lugar do WASD (eixo + lado que ativa).
 const EIXOS_PAD: Dictionary = {
 	"mover_esq": [JOY_AXIS_LEFT_X, -1.0],
 	"mover_dir": [JOY_AXIS_LEFT_X, 1.0],
 	"mover_frente": [JOY_AXIS_LEFT_Y, -1.0],
 	"mover_tras": [JOY_AXIS_LEFT_Y, 1.0],
-	"pulverizar": [JOY_AXIS_TRIGGER_RIGHT, 1.0],
 }
 
 
@@ -58,6 +64,14 @@ func _ready() -> void:
 			var evento_pad := InputEventJoypadButton.new()
 			evento_pad.button_index = botao as JoyButton
 			InputMap.action_add_event(acao, evento_pad)
+	for acao: String in GATILHOS_PAD.keys():
+		if not InputMap.has_action(acao):
+			InputMap.add_action(acao, 0.2)
+		for eixo: int in GATILHOS_PAD[acao]:
+			var evento_eixo := InputEventJoypadMotion.new()
+			evento_eixo.axis = eixo as JoyAxis
+			evento_eixo.axis_value = 0.5  # Threshold para considerar "pressionado"
+			InputMap.action_add_event(acao, evento_eixo)
 	for acao: String in EIXOS_PAD.keys():
 		if not InputMap.has_action(acao):
 			InputMap.add_action(acao, 0.2)

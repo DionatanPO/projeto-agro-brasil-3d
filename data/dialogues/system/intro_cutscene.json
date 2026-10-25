@@ -1,0 +1,13 @@
+{
+  "dialogues": [
+    {
+      "id": "intro_narrador",
+      "speaker": "narrator",
+      "audio": "system/intro_narrador.wav",
+      "once": true,
+      "triggers": [
+        { "type": "custom_signal", "signal": "intro_started" }
+      ]
+    }
+  ]
+}

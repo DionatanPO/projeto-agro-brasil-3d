@@ -196,6 +196,18 @@ func load_save_data(data: Dictionary) -> void:
 		_concluida = true  # mantém
 
 
+func resetar_estado() -> void:
+	"""Zera o estado da missão (usado ao iniciar um Novo Jogo)."""
+	_ativa = false
+	_concluida = false
+	_falhou = false
+	_progresso_objetivos.clear()
+	for obj in objetivos:
+		var oid: String = str(obj.get("id", ""))
+		if not oid.is_empty():
+			_progresso_objetivos[oid] = 0.0
+
+
 ## Helpers ──────────────────────────────────────────────────────────────────
 
 func _marcar_objetivo_completo(objective_id: String) -> void:

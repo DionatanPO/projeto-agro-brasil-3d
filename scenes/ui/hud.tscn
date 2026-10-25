@@ -382,6 +382,7 @@ text = "Menu principal"
 
 [node name="MissaoCompleta" type="PanelContainer" parent="." unique_id=1540448631]
 visible = false
+z_index = 5
 custom_minimum_size = Vector2(380, 220)
 anchors_preset = 8
 anchor_left = 0.5
@@ -412,13 +413,10 @@ text = "..."
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="BotaoNovaFase" type="Button" parent="MissaoCompleta/Inset/Conteudo" unique_id=160085651]
+[node name="BotaoOK" type="Button" parent="MissaoCompleta/Inset/Conteudo" unique_id=160085651]
 layout_mode = 2
-text = "Ir para nova fase"
-
-[node name="BotaoContinuar" type="Button" parent="MissaoCompleta/Inset/Conteudo" unique_id=788560201]
-layout_mode = 2
-text = "Continuar explorando"
+text = "OK"
+custom_minimum_size = Vector2(0, 48)
 
 [node name="FPS" type="Label" parent="." unique_id=900100200]
 z_index = 5

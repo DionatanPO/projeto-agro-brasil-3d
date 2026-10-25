@@ -1,0 +1,22 @@
+{
+  "dialogues": [
+    {
+      "id": "conhecer_solo_inicio",
+      "speaker": "player",
+      "audio": "player/conhecer_solo_1.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "conhecer_solo" }
+      ]
+    },
+    {
+      "id": "conhecer_solo_placa",
+      "speaker": "player",
+      "audio": "player/conhecer_solo_2.wav",
+      "once": true,
+      "triggers": [
+        { "type": "objective_completed", "mission_id": "conhecer_solo", "objective_id": "visitar_solo" }
+      ]
+    }
+  ]
+}

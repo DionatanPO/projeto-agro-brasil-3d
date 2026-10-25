@@ -109,6 +109,12 @@ func _restaurar_do_save() -> void:
 	var save_data: Dictionary = SaveSystem.dados
 	var missoes_save: Array = save_data.get("missoes_estado", [])
 	
+	# Sempre parte de um estado limpo: evita carregar progresso da sessão anterior
+	# ao iniciar um Novo Jogo no mesmo processo.
+	_missao_ativa = null
+	for m in _todas_missoes:
+		m.resetar_estado()
+	
 	if missoes_save.is_empty():
 		# Migração: save antigo só tinha array de IDs concluídas
 		_migrar_save_antigo(save_data)
@@ -200,7 +206,8 @@ func _on_mission_failed(mission_id: String, reason: String) -> void:
 	mission_failed.emit(mission_id, reason)
 
 
-func _on_objective_completed(mission_id: String, objective_id: String) -> void:
+func _on_objective_completed(objective_id: String, mission_id: String) -> void:
+	# Nota: ordem invertida porque Godot 4 passa os args do signal ANTES dos bound args
 	objective_completed.emit(mission_id, objective_id)
 	_save_missoes_estado()
 

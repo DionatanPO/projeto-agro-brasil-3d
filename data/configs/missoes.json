@@ -23,10 +23,6 @@
 				{
 					"tipo": "xp",
 					"valor": 100
-				},
-				{
-					"tipo": "spawn",
-					"cena": "res://character/scenes/agrobot.tscn"
 				}
 			],
 			"requer": [],

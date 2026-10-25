@@ -1,0 +1,6 @@
+{
+  "entries": [
+    { "category": "missions", "file": "missions/primeira_entrega.json" },
+    { "category": "player", "file": "player/monologues.json" }
+  ]
+}

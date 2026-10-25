@@ -25,22 +25,10 @@ func _ready() -> void:
 	SaveSystem.progresso_carregado.connect(_on_save_loaded)
 	SaveSystem.progresso_salvo.connect(_on_save_saved)
 	
-	# Conecta ao sinal de missão concluída do MissionManager (novo sistema)
-	if not MissionManager.mission_completed.is_connected(_on_mission_completed):
-		MissionManager.mission_completed.connect(_on_mission_completed)
-	# Compatibilidade: também ouve o sinal antigo do Missoes
-	if not Missoes.missao_concluida.is_connected(_on_missao_concluida_legacy):
-		Missoes.missao_concluida.connect(_on_missao_concluida_legacy)
+	# XP de missão é concedido pelas recompensas declaradas em data/configs/missoes.json
+	# (MissionBase._aplicar_recompensas). Não premiar automaticamente aqui para
+	# evitar XP duplicado.
 
-
-func _on_mission_completed(_missao_id: String) -> void:
-	"""Callback quando uma missão é concluída (novo MissionManager)"""
-	award_xp_for_mission_completed()
-
-
-func _on_missao_concluida_legacy(_missao_id: String) -> void:
-	"""Callback legado para compatibilidade com Missoes autoload"""
-	award_xp_for_mission_completed()
 
 func _load_from_save() -> void:
 	"""Carrega XP e nível do SaveSystem"""

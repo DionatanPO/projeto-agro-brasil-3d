@@ -1,0 +1,36 @@
+{
+  "dialogues": [
+    {
+      "id": "primeira_entrega_inicio",
+      "speaker": "player",
+      "audio": "player/primeira_entrega_1.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "primeira_entrega" }
+      ],
+      "conditions": { "intro_seen": true }
+    },
+    {
+      "id": "primeira_entrega_chegou_area",
+      "speaker": "player",
+      "audio": "player/primeira_entrega_2.wav",
+      "once": true,
+      "triggers": [
+        { "type": "area_entered", "area_id": "area_encomenda", "mission_id": "primeira_entrega" }
+      ],
+      "conditions": {
+        "mission_active": "primeira_entrega",
+        "objective_incomplete": "ir_local"
+      }
+    },
+    {
+      "id": "primeira_entrega_abriu_caixa",
+      "speaker": "player",
+      "audio": "player/primeira_entrega_3.wav",
+      "once": true,
+      "triggers": [
+        { "type": "objective_completed", "mission_id": "primeira_entrega", "objective_id": "encontrar_encomenda" }
+      ]
+    }
+  ]
+}

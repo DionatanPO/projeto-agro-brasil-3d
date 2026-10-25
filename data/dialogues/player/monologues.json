@@ -1,0 +1,12 @@
+{
+  "dialogues": [
+    {
+      "id": "player_parado",
+      "speaker": "player",
+      "audio": "player/idle_parado.wav",
+      "triggers": [
+        { "type": "manual" }
+      ]
+    }
+  ]
+}

@@ -214,4 +214,8 @@ func _finalizar() -> void:
 		SaveSystem.dados["intro_mundo_vista"] = true
 		SaveSystem.salvar()
 
+	# Dispara o monólogo pós-cutscene da missão ativa (dialogo 1)
+	if is_instance_valid(DialogueManager) and DialogueManager.has_method("on_intro_finished"):
+		DialogueManager.on_intro_finished()
+
 	queue_free()

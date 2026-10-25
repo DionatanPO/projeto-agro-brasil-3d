@@ -38,7 +38,6 @@ layout_mode = 0
 volume_db = -80.0
 autoplay = true
 expand = true
-loop = false
 
 [node name="SombraLateral" type="TextureRect" parent="." unique_id=1310461260]
 layout_mode = 1

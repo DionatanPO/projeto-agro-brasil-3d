@@ -372,13 +372,11 @@ func _unhandled_input(evento: InputEvent) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	# Habilita os monólogos de idle após o diálogo inicial ter chance de tocar.
 	if not bloqueado and not _dialogo_inicial_agendado:
 		_dialogo_inicial_agendado = true
-		_permitir_dialogo_idle = true
-		get_tree().create_timer(2.0).timeout.connect(func() -> void:
-			var _dialogo_missao: String = Missoes.dialogo_da_missao_atual()
-			if not _dialogo_missao.is_empty():
-				DialogoManager.tocar(_dialogo_missao)
+		get_tree().create_timer(6.0).timeout.connect(func() -> void:
+			_permitir_dialogo_idle = true
 		)
 	if bloqueado:
 		# Modo caminhada autônoma da cutscene: move o personagem em direção ao destino.
@@ -583,7 +581,8 @@ func _atualizar_animacao(nome: String) -> void:
 			var agora := Time.get_ticks_msec() / 1000.0
 			if agora - _ultimo_dialogo_idle >= 8.0:
 				_ultimo_dialogo_idle = agora
-				DialogoManager.tocar("dialogo parado")
+				if is_instance_valid(DialogueManager):
+					DialogueManager.play("player_parado")
 
 
 ## Inicia a caminhada autônoma da cutscene em direção ao destino.
