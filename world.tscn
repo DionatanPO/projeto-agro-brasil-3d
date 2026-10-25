@@ -446,6 +446,21 @@ volumetric_fog_sky_affect = 0.0
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_gggvi"]
 exposure_multiplier = 1.25
 
+[sub_resource type="TorusMesh" id="AreaRingMesh"]
+inner_radius = 39.5
+outer_radius = 40.5
+ring_radius = 0.5
+radial_segments = 64
+tube_segments = 8
+
+[sub_resource type="StandardMaterial3D" id="AreaRingMaterial"]
+albedo_color = Color(1, 0, 0, 0.3)
+emission_enabled = true
+emission = Color(1, 0.2, 0.2, 1)
+emission_energy_multiplier = 1.0
+transparency = 2
+cull_mode = 2
+
 [node name="Node3D" type="Node3D" unique_id=2061065415]
 
 [node name="Terrain3D" type="Terrain3D" parent="." unique_id=1958099366]
@@ -772,19 +787,5 @@ show_prompt = false
 
 [node name="AreaVisual" type="MeshInstance3D" parent="AreaEncomendaTrigger" unique_id=1804591024]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 0)
-mesh = SubResource("1_ring")
-
-[sub_resource type="TorusMesh" id="1_ring"]
-inner_radius = 39.5
-outer_radius = 40.5
-ring_radius = 0.5
-radial_segments = 64
-tube_segments = 8
-
-[node name="Material" type="StandardMaterial3D" parent="AreaVisual" unique_id=1804591025]
-albedo_color = Color(1, 0, 0, 0.3)
-emission_enabled = true
-emission = Color(1, 0.2, 0.2, 1)
-emission_energy_multiplier = 1.0
-transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-cull_mode = BaseMaterial3D.CULL_DISABLED
+mesh = SubResource("AreaRingMesh")
+material_override = SubResource("AreaRingMaterial")
