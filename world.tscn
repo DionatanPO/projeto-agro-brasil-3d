@@ -769,3 +769,22 @@ height = 4.0
 collision_offset_y = 2.0
 auto_create_collision = true
 show_prompt = false
+
+[node name="AreaVisual" type="MeshInstance3D" parent="AreaEncomendaTrigger" unique_id=1804591024]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 0)
+mesh = SubResource("1_ring")
+
+[sub_resource type="TorusMesh" id="1_ring"]
+inner_radius = 39.5
+outer_radius = 40.5
+ring_radius = 0.5
+radial_segments = 64
+tube_segments = 8
+
+[node name="Material" type="StandardMaterial3D" parent="AreaVisual" unique_id=1804591025]
+albedo_color = Color(1, 0, 0, 0.3)
+emission_enabled = true
+emission = Color(1, 0.2, 0.2, 1)
+emission_energy_multiplier = 1.0
+transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+cull_mode = BaseMaterial3D.CULL_DISABLED
