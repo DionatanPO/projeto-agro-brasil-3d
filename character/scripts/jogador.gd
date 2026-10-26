@@ -18,7 +18,7 @@ extends CharacterBody3D
 @export var sensibilidade_mouse := 0.003
 @export var sensibilidade_stick := 2.8
 ## Segundos parado ate trocar o Idle normal pelo SadIdle (cabeca baixa).
-@export var tempo_sad_idle := 10.0
+@export var tempo_sad_idle := 40.0
 
 ## Passos sintetizados de grama/terra (passo_1..6.wav, gerados fora do jogo):
 ## entram em rodizio pra passada nao repetir sempre o mesmo som.

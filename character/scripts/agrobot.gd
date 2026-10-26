@@ -7,9 +7,9 @@ class_name Agrobot
 ## Tudo o que o agrobot precisa esta NESTE script + a cena agrobot.tscn.
 ## Nao existe mais script separado de scanner.
 
-@export var velocidade_seguir: float = 10.0        # velocidade base de perseguição (m/s)
-@export var tempo_resposta: float = 0.12            # suavidade do follow (s) — menor = mais "grudado"
-@export var ganho_velocidade: float = 1.3           # multiplica velocidade_seguir pela velocidade do jogador
+@export var velocidade_seguir: float = 25.0         # velocidade de perseguição (m/s) — alta = cola no jogador
+@export var tempo_resposta: float = 0.05            # suavidade (s) — 0.05 = praticamente instantâneo, sem lag
+@export var suavizar_modelo: bool = true            # suaviza só o modelo visual, não a raiz
 ## Altura em relacao a origem do jogador (a origem fica ~1 m acima do chao).
 ## 1.0 deixa o agrobot logo acima da cabeca.
 @export var offset_acima: Vector3 = Vector3(0.0, 1.0, 0.0)
@@ -22,20 +22,27 @@ var _anel: MeshInstance3D
 var _anel_mat: StandardMaterial3D
 var _pulso := 1.0
 
-# Estado interno do SmoothDamp (mola criticamente amortecida).
-var _vel_seguir: Vector3 = Vector3.ZERO
+# Referência ao modelo visual (para suavização opcional só no visual).
+var _modelo: Node3D = null
+
+# Estado do SmoothDamp para o modelo visual (se suavizar_modelo = true).
+var _vel_modelo: Vector3 = Vector3.ZERO
 
 
 func _ready() -> void:
 	add_to_group("agrobot")
 	_jogador = get_tree().get_first_node_in_group("jogador")
+	var mdl := find_child("Modelo")
+	_modelo = mdl if mdl else find_child("*")  # pega primeiro filho visual
 	if _jogador != null:
 		global_position = _jogador.global_position + offset_acima
 	_criar_anel()
-	set_process(true)
+	# Roda no physics tick junto com o jogador → zero lag de frame.
+	set_physics_process(true)
+	set_process(false)  # _process não usado para follow
 
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if not _ativo:
 		return
 	if _jogador == null or not is_instance_valid(_jogador):
@@ -43,46 +50,33 @@ func _process(delta: float) -> void:
 		if _jogador == null:
 			return
 
-	# --- Segue o jogador com SmoothDamp (mola criticamente amortecida) ---
-	# Elimina o lag variável e os "trancos" ao correr: o follower mantém
-	# velocidade interna contínua, curva naturalmente sem cortar caminho,
-	# e adapta a rapidez à velocidade do jogador.
+	# Posição alvo = posição ATUAL do jogador (mesmo tick de física) + offset.
 	var alvo := _jogador.global_position + offset_acima
 
-	# Mede velocidade horizontal do jogador para adaptar o follow.
-	var vel_jogador: float = 0.0
-	if _jogador is CharacterBody3D:
-		var v := (_jogador as CharacterBody3D).velocity
-		vel_jogador = Vector2(v.x, v.z).length()
+	# Move a raiz (Node3D) direto para o alvo — sem lag, sem atraso.
+	# Se quiser um toque de "flutuação" orgânica, ative suavizar_modelo
+	# e o modelo visual fará o SmoothDamp; a raiz segue exato.
+	if suavizar_modelo and _modelo != null:
+		# Raiz cola no alvo; modelo visual suaviza com mola.
+		global_position = alvo
+		_suavizar_modelo_visual(delta)
+	else:
+		# Comportamento clássico: raiz segue com SmoothDamp rápido.
+		# Omega alto = resposta quase instantânea.
+		var omega := 2.0 / maxf(tempo_resposta, 0.01)
+		var x := omega * delta
+		var expo := 1.0 / (1.0 + x + 0.48 * x * x + 0.235 * x * x * x)
+		var dif := global_position - alvo
+		# Reutiliza _vel_modelo como velocidade do SmoothDamp da raiz.
+		_vel_modelo = (_vel_modelo + dif * omega * delta) * expo
+		global_position = alvo + (dif + _vel_modelo * delta) * expo
 
-	# Tempo de resposta mais curto quando o jogador corre = cola mais rápido.
-	# Clampa para não oscilar: min 0.06s, max tempo_resposta base.
-	var t_resp := lerpf(maxf(tempo_resposta, 0.06), tempo_resposta, 1.0 / (1.0 + vel_jogador * 0.3))
-
-	# SmoothDamp clássico (Game Programming Gems / Unity Mathf.SmoothDamp adaptado).
-	# Críticamente amortecido: sem overshoot, sem oscilação, framerate-independente.
-	var omega := 2.0 / t_resp
-	var x := omega * delta
-	var expo := 1.0 / (1.0 + x + 0.48 * x * x + 0.235 * x * x * x)
-	var dif := global_position - alvo
-	_vel_seguir = (_vel_seguir + dif * omega * delta) * expo
-	var nova_pos := alvo + (dif + _vel_seguir * delta) * expo
-
-	# Snap: cola de vez quando já está praticamente em cima (evita drift residual).
-	if (alvo - global_position).length_squared() < 0.0004:  # 2 cm
-		nova_pos = alvo
-		_vel_seguir = Vector3.ZERO
-
-	global_position = nova_pos
-
-	# Olha para o jogador (apenas yaw) — suavizado pelo mesmo princípio.
-	var direcao := _jogador.global_position - global_position
-	direcao.y = 0.0
-	if direcao.length() > 0.01:
-		var alvo_yaw := atan2(direcao.x, direcao.z)
-		# Usa lerp_angle com o mesmo omega para sincronizar rotação com posição.
-		var t_rot := 1.0 - exp(-omega * delta * 0.7)  # rotação ligeiramente mais lenta
-		rotation.y = lerp_angle(rotation.y, alvo_yaw, t_rot)
+	# Rotação: copia o yaw do MODELO do jogador + 180°.
+	# O Modelo olha para onde o personagem anda; +PI faz o Agrobot
+	# olhar para a mesma direção (paisagem), não para o jogador.
+	var modelo_jogador := _jogador.get_node_or_null("Modelo") as Node3D
+	if modelo_jogador != null:
+		rotation.y = lerp_angle(rotation.y, modelo_jogador.rotation.y + PI, 1.0 - exp(-30.0 * delta))
 
 	if Input.is_action_just_pressed("escanear"):
 		disparar_pulso()
@@ -90,10 +84,33 @@ func _process(delta: float) -> void:
 	_animar_pulso(delta)
 
 
+func _suavizar_modelo_visual(delta: float) -> void:
+	"""Suaviza só o modelo visual (offset local) com mola criticamente amortecida.
+	A raiz do Agrobot fica exata na posição do jogador + offset; o modelo
+	'flutua' levemente atrás, criando sensação de inércia/flutuação natural."""
+	if _modelo == null:
+		return
+	# Alvo local = origem (0,0,0) pois a raiz já está no alvo mundial.
+	var alvo_local := Vector3.ZERO
+	var pos_atual := _modelo.position
+	var omega := 2.0 / maxf(tempo_resposta, 0.01)
+	var x := omega * delta
+	var expo := 1.0 / (1.0 + x + 0.48 * x * x + 0.235 * x * x * x)
+	var dif := pos_atual - alvo_local
+	_vel_modelo = (_vel_modelo + dif * omega * delta) * expo
+	_modelo.position = alvo_local + (dif + _vel_modelo * delta) * expo
+	# Snap quando praticamente parado.
+	if pos_atual.length_squared() < 0.0001:
+		_modelo.position = Vector3.ZERO
+		_vel_modelo = Vector3.ZERO
+
+
 ## Chamado pela AreaEncomenda ao abrir a caixa.
 func ativar(posicao_jogador: Vector3) -> void:
 	global_position = posicao_jogador + offset_acima
-	_vel_seguir = Vector3.ZERO   # reseta mola: sem "voo" inicial
+	if _modelo != null:
+		_modelo.position = Vector3.ZERO
+	_vel_modelo = Vector3.ZERO
 	_ativo = true
 	visible = true
 
