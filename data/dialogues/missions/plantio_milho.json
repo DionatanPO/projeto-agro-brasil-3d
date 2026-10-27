@@ -1,0 +1,23 @@
+{
+  "dialogues": [
+    {
+      "id": "plantio_milho_inicio",
+      "speaker": "player",
+      "audio": "player/m3_plantio_inicio.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "plantio_milho" }
+      ],
+      "conditions": { "intro_seen": true }
+    },
+    {
+      "id": "plantio_milho_concluido",
+      "speaker": "agrobot",
+      "audio": "agrobot/m3_plantio_concluido.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_completed", "mission_id": "plantio_milho" }
+      ]
+    }
+  ]
+}

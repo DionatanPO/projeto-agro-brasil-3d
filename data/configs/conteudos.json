@@ -49,6 +49,11 @@
 			"titulo": "Silo de Grãos",
 			"texto": "O silo armazena os grãos colhidos, protegendo a produção contra umidade, pragas e perdas pós-colheita. Mantém a qualidade dos grãos até o momento da venda ou do processamento, essencial para a segurança alimentar da fazenda.",
 			"fonte": "Embrapa Armazenagem"
+		},
+		"area_plantio_milho": {
+			"titulo": "Plantio de Milho",
+			"texto": "O milho é uma das principais culturas do Brasil, cultivado em safra de verão e safrinha. É usado para ração animal, produção de etanol e alimentação humana. O plantio adequado requer solo preparado, espaçamento entre fileiras e boas práticas de manejo.",
+			"fonte": "Embrapa Milho e Sorgo"
 		}
 	}
 }

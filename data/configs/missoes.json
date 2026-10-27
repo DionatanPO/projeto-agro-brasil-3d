@@ -63,6 +63,28 @@
 			"ordem": 2
 		},
 		{
+			"id": "plantio_milho",
+			"tipo": "discovery",
+			"titulo": "Plante Milho na Fazenda",
+			"descricao": "O Agrobot identificou uma área de terra entre o silo e o parque solar. Plante milho nessa região para começar a produção da fazenda.",
+			"objetivos": [
+				{
+					"id": "plantar_milho",
+					"tipo": "descoberta",
+					"alvo_id": "area_plantio_milho",
+					"texto": "Plante milho na área entre o silo e o parque solar"
+				}
+			],
+			"recompensas": [
+				{
+					"tipo": "xp",
+					"valor": 150
+				}
+			],
+			"requer": ["mostrar_fazenda_agrobot"],
+			"ordem": 3
+		},
+		{
 			"id": "conhecer_agua",
 			"tipo": "discovery",
 			"titulo": "Água Consciente",
@@ -81,8 +103,8 @@
 					"valor": 100
 				}
 			],
-			"requer": ["mostrar_fazenda_agrobot"],
-			"ordem": 3
+			"requer": ["plantio_milho"],
+			"ordem": 4
 		},
 		{
 			"id": "conhecer_culturas",
@@ -110,7 +132,7 @@
 				}
 			],
 			"requer": ["conhecer_agua"],
-			"ordem": 4
+			"ordem": 5
 		}
 	]
 }

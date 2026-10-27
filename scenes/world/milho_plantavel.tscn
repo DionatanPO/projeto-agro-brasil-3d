@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://milho_plantavel_001"]
+
+[ext_resource type="PackedScene" uid="uid://corn_fbx" path="res://assets/models/Corn_2.fbx" id="1_corn_fbx"]
+
+[node name="MilhoPlantavel" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Milho" type="MeshInstance3D" parent="." instance=ExtResource("1_corn_fbx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)

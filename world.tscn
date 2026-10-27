@@ -70,6 +70,7 @@
 [ext_resource type="PackedScene" uid="uid://bv8030ocyb8tk" path="res://assets/Farm Buildings - Sept 2018/FBX/SmallBarn.fbx" id="68_yy5nj"]
 [ext_resource type="Script" uid="uid://xoo1kkvuhq05" path="res://scripts/world/area_encomenda.gd" id="69_encomenda"]
 [ext_resource type="Script" uid="uid://ukoj887alfra" path="res://scripts/world/area_trigger.gd" id="70_trigger"]
+[ext_resource type="Script" uid="uid://area_plantio_001" path="res://scripts/world/area_plantio.gd" id="74_plantio"]
 [ext_resource type="PackedScene" uid="uid://bhatfe8c7clem" path="res://assets/models/silo.glb" id="71_ir1d4"]
 [ext_resource type="PackedScene" uid="uid://cs2gv7sno7ivj" path="res://assets/models/galpao.glb" id="72_yy5nj"]
 [ext_resource type="PackedScene" uid="uid://3vtasx27k5vv" path="res://assets/models/carroca.glb" id="73_p5g01"]
@@ -867,3 +868,34 @@ transform = Transform3D(0.7969278, 0.0121222325, -0.6039528, -0.06384537, 0.9958
 
 [node name="carroca" parent="." unique_id=1902465838 instance=ExtResource("73_p5g01")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 64.86531, 10.843219, 106.51745)
+
+[node name="AreaPlantioAtivacao" type="Area3D" parent="." unique_id=2500000001]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 190, 11, 160)
+script = ExtResource("70_trigger")
+trigger_type = 0
+mission_id = "plantio_milho"
+objective_id = "plantar_milho"
+discovery_id = ""
+require_active_mission = false
+auto_register_discovery = false
+dialogue_area_id = "area_plantio_milho"
+radius = 15.0
+height = 4.0
+collision_offset_y = 2.0
+auto_create_collision = true
+show_prompt = false
+
+[node name="AreaPlantio" type="Area3D" parent="." unique_id=2500000002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 190, 11, 160)
+script = ExtResource("74_plantio")
+mission_id = "plantio_milho"
+objective_id = "plantar_milho"
+quantidade_necessaria = 5
+distancia_max_plantio = 15.0
+
+[node name="AreaPlantioCollision" type="CollisionShape3D" parent="AreaPlantio" unique_id=2500000003]
+
+[node name="AreaPlantioVisual" type="MeshInstance3D" parent="AreaPlantioAtivacao" unique_id=2500000004]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 0)
+mesh = SubResource("AreaRingMesh")
+material_override = SubResource("AreaRingMaterial")
