@@ -29,16 +29,28 @@
 			"ordem": 1
 		},
 		{
-			"id": "conhecer_solo",
+			"id": "mostrar_fazenda_agrobot",
 			"tipo": "discovery",
-			"titulo": "Pisando no Solo",
-			"descricao": "Visite a placa sobre o solo e conclua a leitura.",
+			"titulo": "Mostre a Fazenda para o Agrobot",
+			"descricao": "O Agrobot chegou à fazenda. Leve-o até o Parque Solar, o Parque Eólico e o Silo para escanear e mapear as estruturas da propriedade.",
 			"objetivos": [
 				{
-					"id": "visitar_solo",
+					"id": "escanear_solar",
 					"tipo": "descoberta",
-					"alvo_id": "solo",
-					"texto": "Visite a placa sobre o solo"
+					"alvo_id": "parque_solar",
+					"texto": "Escanear o Parque Solar com o Agrobot"
+				},
+				{
+					"id": "escanear_eolico",
+					"tipo": "descoberta",
+					"alvo_id": "parque_eolico",
+					"texto": "Escanear o Parque Eólico com o Agrobot"
+				},
+				{
+					"id": "escanear_silo",
+					"tipo": "descoberta",
+					"alvo_id": "silo",
+					"texto": "Escanear o Silo com o Agrobot"
 				}
 			],
 			"recompensas": [
@@ -69,7 +81,7 @@
 					"valor": 100
 				}
 			],
-			"requer": ["conhecer_solo"],
+			"requer": ["mostrar_fazenda_agrobot"],
 			"ordem": 3
 		},
 		{

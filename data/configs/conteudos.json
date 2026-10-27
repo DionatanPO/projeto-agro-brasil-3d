@@ -29,6 +29,26 @@
 			"titulo": "Pacote da instituição",
 			"texto": "Você localizou a encomenda enviada pela instituição de ensino. Recolha o pacote para dar início às atividades da fazenda.",
 			"fonte": "Instituição de ensino"
+		},
+		"fazenda_centro": {
+			"titulo": "Centro da Fazenda",
+			"texto": "O coração da propriedade, onde ficam os celeiros, silos e as principais estruturas. É aqui que toda a produção da fazenda é coordenada e onde o Agrobot pode começar a aprender sobre o campo.",
+			"fonte": "Fazenda"
+		},
+		"parque_solar": {
+			"titulo": "Parque Solar",
+			"texto": "Energia limpa e renovável capturada diretamente do sol. Placas fotovoltaicas convertem a luz solar em eletricidade para alimentar bombas de água, cercas elétricas e sistemas de irrigação da fazenda, reduzindo a dependência de combustíveis fósseis.",
+			"fonte": "Embrapa Energia"
+		},
+		"parque_eolico": {
+			"titulo": "Parque Eólico",
+			"texto": "Turbinas eólicas transformam a força do vento em eletricidade. É uma fonte renovável que funciona dia e noite, desde que haja vento, complementando a energia solar nos períodos nublados ou chuvosos.",
+			"fonte": "Embrapa Energia"
+		},
+		"silo": {
+			"titulo": "Silo de Grãos",
+			"texto": "O silo armazena os grãos colhidos, protegendo a produção contra umidade, pragas e perdas pós-colheita. Mantém a qualidade dos grãos até o momento da venda ou do processamento, essencial para a segurança alimentar da fazenda.",
+			"fonte": "Embrapa Armazenagem"
 		}
 	}
 }

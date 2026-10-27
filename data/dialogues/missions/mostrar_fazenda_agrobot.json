@@ -1,0 +1,68 @@
+{
+  "dialogues": [
+    {
+      "id": "mostrar_fazenda_agrobot_inicio_player_1",
+      "speaker": "player",
+      "audio": "player/m2_player_intro_1.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "mostrar_fazenda_agrobot" }
+      ],
+      "conditions": { "intro_seen": true }
+    },
+    {
+      "id": "mostrar_fazenda_agrobot_inicio_agrobot_1",
+      "speaker": "agrobot",
+      "audio": "agrobot/m2_agrobot_intro_1.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "mostrar_fazenda_agrobot" }
+      ]
+    },
+    {
+      "id": "mostrar_fazenda_agrobot_inicio_player_2",
+      "speaker": "player",
+      "audio": "player/m2_player_intro_2.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "mostrar_fazenda_agrobot" }
+      ]
+    },
+    {
+      "id": "mostrar_fazenda_agrobot_inicio_agrobot_2",
+      "speaker": "agrobot",
+      "audio": "agrobot/m2_agrobot_intro_2.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "mostrar_fazenda_agrobot" }
+      ]
+    },
+    {
+      "id": "mostrar_fazenda_agrobot_solar",
+      "speaker": "agrobot",
+      "audio": "agrobot/m2_agrobot_solar.wav",
+      "once": true,
+      "triggers": [
+        { "type": "objective_completed", "mission_id": "mostrar_fazenda_agrobot", "objective_id": "escanear_solar" }
+      ]
+    },
+    {
+      "id": "mostrar_fazenda_agrobot_eolico",
+      "speaker": "agrobot",
+      "audio": "agrobot/m2_agrobot_eolico.wav",
+      "once": true,
+      "triggers": [
+        { "type": "objective_completed", "mission_id": "mostrar_fazenda_agrobot", "objective_id": "escanear_eolico" }
+      ]
+    },
+    {
+      "id": "mostrar_fazenda_agrobot_silo",
+      "speaker": "agrobot",
+      "audio": "agrobot/m2_agrobot_silo.wav",
+      "once": true,
+      "triggers": [
+        { "type": "objective_completed", "mission_id": "mostrar_fazenda_agrobot", "objective_id": "escanear_silo" }
+      ]
+    }
+  ]
+}

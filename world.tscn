@@ -70,6 +70,9 @@
 [ext_resource type="PackedScene" uid="uid://bv8030ocyb8tk" path="res://assets/Farm Buildings - Sept 2018/FBX/SmallBarn.fbx" id="68_yy5nj"]
 [ext_resource type="Script" uid="uid://xoo1kkvuhq05" path="res://scripts/world/area_encomenda.gd" id="69_encomenda"]
 [ext_resource type="Script" uid="uid://ukoj887alfra" path="res://scripts/world/area_trigger.gd" id="70_trigger"]
+[ext_resource type="PackedScene" uid="uid://bhatfe8c7clem" path="res://assets/models/silo.glb" id="71_ir1d4"]
+[ext_resource type="PackedScene" uid="uid://cs2gv7sno7ivj" path="res://assets/models/galpao.glb" id="72_yy5nj"]
+[ext_resource type="PackedScene" uid="uid://3vtasx27k5vv" path="res://assets/models/carroca.glb" id="73_p5g01"]
 
 [sub_resource type="Gradient" id="Gradient_gv5m4"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -401,8 +404,8 @@ shader_parameter/cirrus_absorption = 2.0
 shader_parameter/cirrus_sky_tint_fade = 0.5
 shader_parameter/cirrus_size = 1.0
 shader_parameter/cirrus_uv = Vector2(0.16, 0.11)
-shader_parameter/cirrus_position1 = Vector2(0.2219082, 0.2219082)
-shader_parameter/cirrus_position2 = Vector2(0.2219082, 0.2219082)
+shader_parameter/cirrus_position1 = Vector2(0.83752257, 0.83752257)
+shader_parameter/cirrus_position2 = Vector2(0.83752257, 0.83752257)
 shader_parameter/cirrus_texture = ExtResource("12_bc84e")
 shader_parameter/cumulus_visible = true
 shader_parameter/cumulus_intensity = 0.6
@@ -412,7 +415,7 @@ shader_parameter/cumulus_absorption = 2.0
 shader_parameter/cumulus_noise_freq = 2.7
 shader_parameter/cumulus_sky_tint_fade = 0.0
 shader_parameter/cumulus_size = 0.5
-shader_parameter/cumulus_position = Vector2(31.200354, 31.200354)
+shader_parameter/cumulus_position = Vector2(9.192393, 9.192393)
 shader_parameter/cumulus_texture = ExtResource("13_wukud")
 shader_parameter/cumulus_partial_mie_phase = Vector3(0.957564, 1.042436, 0.412)
 shader_parameter/cumulus_mie_intensity = 1.0
@@ -446,20 +449,18 @@ volumetric_fog_sky_affect = 0.0
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_gggvi"]
 exposure_multiplier = 1.25
 
-[sub_resource type="TorusMesh" id="AreaRingMesh"]
-inner_radius = 59.5
-outer_radius = 60.5
-ring_radius = 0.5
-radial_segments = 64
-tube_segments = 8
-
 [sub_resource type="StandardMaterial3D" id="AreaRingMaterial"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+cull_mode = 2
 albedo_color = Color(1, 0, 0, 0.3)
 emission_enabled = true
 emission = Color(1, 0.2, 0.2, 1)
-emission_energy_multiplier = 1.0
-transparency = 2
-cull_mode = 2
+
+[sub_resource type="TorusMesh" id="AreaRingMesh"]
+inner_radius = 59.5
+outer_radius = 60.5
 
 [node name="Node3D" type="Node3D" unique_id=2061065415]
 
@@ -764,28 +765,105 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.06796, 10.561348, 187.2291
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.104645, 11.606371, 197.58466)
 
 [node name="AreaEncomenda" type="Area3D" parent="." unique_id=1804591022]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 125.217, 11, 122.271)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 11, 100)
 script = ExtResource("69_encomenda")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AreaEncomenda" unique_id=295789866]
 
 [node name="AreaEncomendaTrigger" type="Area3D" parent="." unique_id=1804591023]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 125.217, 11, 122.271)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 11, 100)
 script = ExtResource("70_trigger")
-trigger_type = 0
 mission_id = "primeira_entrega"
 objective_id = "ir_local"
 discovery_id = "local_encomenda"
-require_active_mission = true
-auto_register_discovery = true
 dialogue_area_id = "area_encomenda"
 radius = 60.0
 height = 4.0
 collision_offset_y = 2.0
-auto_create_collision = true
 show_prompt = false
 
 [node name="AreaVisual" type="MeshInstance3D" parent="AreaEncomendaTrigger" unique_id=1804591024]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 0)
-mesh = SubResource("AreaRingMesh")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 material_override = SubResource("AreaRingMaterial")
+mesh = SubResource("AreaRingMesh")
+
+[node name="AreaFazendaCentroTrigger" type="Area3D" parent="." unique_id=2100000001]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75, 11, 198)
+script = ExtResource("70_trigger")
+mission_id = "mostrar_fazenda_agrobot"
+objective_id = "apresentar_fazenda"
+discovery_id = "fazenda_centro"
+dialogue_area_id = "area_fazenda_centro"
+radius = 30.0
+height = 4.0
+collision_offset_y = 2.0
+show_prompt = false
+
+[node name="AreaFazendaCentroVisual" type="MeshInstance3D" parent="AreaFazendaCentroTrigger" unique_id=2100000002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+material_override = SubResource("AreaRingMaterial")
+mesh = SubResource("AreaRingMesh")
+
+[node name="AreaParqueSolarTrigger" type="Area3D" parent="." unique_id=-2094967295]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 188.17, 11.72, 209.15)
+script = ExtResource("70_trigger")
+mission_id = "mostrar_fazenda_agrobot"
+objective_id = "escanear_solar"
+discovery_id = "parque_solar"
+dialogue_area_id = "area_parque_solar"
+radius = 25.0
+height = 6.0
+collision_offset_y = 2.0
+show_prompt = false
+
+[node name="AreaParqueSolarVisual" type="MeshInstance3D" parent="AreaParqueSolarTrigger" unique_id=-2094967294]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+material_override = SubResource("AreaRingMaterial")
+mesh = SubResource("AreaRingMesh")
+
+[node name="AreaParqueEolicoTrigger" type="Area3D" parent="." unique_id=-1994967295]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 123.99, 10.84, 227)
+script = ExtResource("70_trigger")
+mission_id = "mostrar_fazenda_agrobot"
+objective_id = "escanear_eolico"
+discovery_id = "parque_eolico"
+dialogue_area_id = "area_parque_eolico"
+radius = 25.0
+height = 6.0
+collision_offset_y = 2.0
+show_prompt = false
+
+[node name="AreaParqueEolicoVisual" type="MeshInstance3D" parent="AreaParqueEolicoTrigger" unique_id=-1994967294]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+material_override = SubResource("AreaRingMaterial")
+mesh = SubResource("AreaRingMesh")
+
+[node name="silo" parent="." unique_id=671258526 instance=ExtResource("71_ir1d4")]
+transform = Transform3D(2.1793857, 0, 1.1511688, 0, 2.5656328, 0, -1.146281, 0, 2.1886785, 193.28421, 11.047266, 113.03619)
+
+[node name="AreaSiloTrigger" type="Area3D" parent="." unique_id=2400000001]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 193.28, 11.05, 113.04)
+script = ExtResource("70_trigger")
+trigger_type = 0
+mission_id = "mostrar_fazenda_agrobot"
+objective_id = "escanear_silo"
+discovery_id = "silo"
+require_active_mission = true
+auto_register_discovery = true
+dialogue_area_id = "area_silo"
+radius = 25.0
+height = 6.0
+collision_offset_y = 2.0
+auto_create_collision = true
+show_prompt = false
+
+[node name="AreaSiloVisual" type="MeshInstance3D" parent="AreaSiloTrigger" unique_id=2400000002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+material_override = SubResource("AreaRingMaterial")
+mesh = SubResource("AreaRingMesh")
+
+[node name="galpao" parent="." unique_id=1305804623 instance=ExtResource("72_yy5nj")]
+transform = Transform3D(0.7969278, 0.0121222325, -0.6039528, -0.06384537, 0.995889, -0.06425627, 0.600691, 0.0897672, 0.79442567, 184.06227, 12.213152, 159.90755)
+
+[node name="carroca" parent="." unique_id=1902465838 instance=ExtResource("73_p5g01")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 64.86531, 10.843219, 106.51745)
