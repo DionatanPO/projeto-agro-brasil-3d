@@ -899,3 +899,20 @@ distancia_max_plantio = 15.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 0)
 mesh = SubResource("AreaRingMesh")
 material_override = SubResource("AreaRingMaterial")
+
+[node name="AreaPlantioChao" type="MeshInstance3D" parent="AreaPlantio" unique_id=2500000005]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 190, 10.4, 160)
+scale = Vector3(30.0, 1.0, 30.0)
+mesh = SubResource("PlanePlantio")
+material_override = SubResource("MaterialVermelhoPlantio")
+
+[sub_resource type="PlaneMesh" id="PlanePlantio"]
+size = Vector2(30, 30)
+
+[sub_resource type="StandardMaterial3D" id="MaterialVermelhoPlantio"]
+albedo_color = Color(1, 0.1, 0.1, 0.4)
+metallic = 0.0
+roughness = 0.8
+transparency = 2
+shading_mode = 2
+cull_mode = 0

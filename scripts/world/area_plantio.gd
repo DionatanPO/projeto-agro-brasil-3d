@@ -66,6 +66,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	var query := PhysicsRayQueryParameters3D.create(origem, alvo)
 	query.collide_with_areas = false
 	query.collide_with_bodies = true
+	query.collision_mask = 0xFFFFFFFF  # atinge todas as camadas (inclui Terrain3D)
 	var resultado := space_state.intersect_ray(query)
 	
 	if resultado.is_empty():
