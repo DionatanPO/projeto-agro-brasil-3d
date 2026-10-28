@@ -463,6 +463,17 @@ emission = Color(1, 0.2, 0.2, 1)
 inner_radius = 59.5
 outer_radius = 60.5
 
+[sub_resource type="PlaneMesh" id="PlanePlantio"]
+size = Vector2(30, 30)
+
+[sub_resource type="StandardMaterial3D" id="MaterialVermelhoPlantio"]
+albedo_color = Color(1, 0.1, 0.1, 0.4)
+metallic = 0.0
+roughness = 0.8
+transparency = 2
+shading_mode = 2
+cull_mode = 0
+
 [node name="Node3D" type="Node3D" unique_id=2061065415]
 
 [node name="Terrain3D" type="Terrain3D" parent="." unique_id=1958099366]
@@ -905,14 +916,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 190, 10.4, 160)
 scale = Vector3(30.0, 1.0, 30.0)
 mesh = SubResource("PlanePlantio")
 material_override = SubResource("MaterialVermelhoPlantio")
-
-[sub_resource type="PlaneMesh" id="PlanePlantio"]
-size = Vector2(30, 30)
-
-[sub_resource type="StandardMaterial3D" id="MaterialVermelhoPlantio"]
-albedo_color = Color(1, 0.1, 0.1, 0.4)
-metallic = 0.0
-roughness = 0.8
-transparency = 2
-shading_mode = 2
-cull_mode = 0
