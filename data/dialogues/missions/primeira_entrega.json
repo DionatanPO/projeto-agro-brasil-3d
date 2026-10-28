@@ -24,9 +24,9 @@
       }
     },
     {
-      "id": "primeira_entrega_abriu_caixa",
-      "speaker": "player",
-      "audio": "player/primeira_entrega_3.wav",
+      "id": "primeira_entrega_abriu_caixa_agrobot",
+      "speaker": "agrobot",
+      "audio": "agrobot/primeira_entrega_concluida.wav",
       "once": true,
       "triggers": [
         { "type": "objective_completed", "mission_id": "primeira_entrega", "objective_id": "encontrar_encomenda" }

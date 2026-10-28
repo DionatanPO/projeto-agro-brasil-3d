@@ -30,9 +30,16 @@ func _ready() -> void:
 	SaveSystem.progresso_salvo.connect(_on_save_saved)
 	
 	# Conecta sinais das missões
+	# ATENÇÃO ao bind: o sinal do MissionBase JÁ envia o mission_id.
+	# mission_completed(mission_id) e mission_failed(mission_id, reason) não
+	# podem receber um bind extra, senão o Godot passa argumentos a mais que o
+	# handler declara e a chamada falha (ex.: "expected 1 argument, got 2").
+	# Isso fazia _on_mission_completed nunca rodar e a próxima missão nunca
+	# ser ativada (ex.: missão 2 não iniciava após concluir a missão 1).
+	# objective_completed só envia o objective_id, então este mantém o bind.
 	for m in _todas_missoes:
-		m.mission_completed.connect(_on_mission_completed.bind(m.mission_id))
-		m.mission_failed.connect(_on_mission_failed.bind(m.mission_id))
+		m.mission_completed.connect(_on_mission_completed)
+		m.mission_failed.connect(_on_mission_failed)
 		m.objective_completed.connect(_on_objective_completed.bind(m.mission_id))
 
 

@@ -36,6 +36,21 @@ func _on_register() -> void:
 	if is_instance_valid(Jogo):
 		Jogo.descoberta_registrada.connect(_on_descoberta_registrada)
 
+func _on_activate() -> void:
+	_ativa = true
+	# Descobrias já registradas antes da missão ficar ativa (ex: visitou a área
+	# numa sessão anterior ou antes desta missão ser liberada) contam para os objetivos.
+	# Sem isso, registrar_descoberta() ignora pontos já salvos e o sinal nunca é emitido.
+	var descobertas: Array = SaveSystem.dados.get("descobertas", [])
+	for obj in objetivos:
+		var oid: String = str(obj.get("id", ""))
+		var tipo: String = str(obj.get("tipo", "descoberta"))
+		var alvo: String = str(obj.get("alvo_id", ""))
+		if tipo == "descoberta" and not alvo.is_empty() and alvo in descobertas:
+			if _progresso_objetivos.get(oid, 0.0) < 1.0:
+				_marcar_objetivo_completo(oid)
+	_check_completion()
+
 
 func _on_descoberta_registrada(ponto_id: String) -> void:
 	if not _ativa or _concluida:
