@@ -74,7 +74,11 @@
 [ext_resource type="PackedScene" uid="uid://tgppk10v6yqd" path="res://assets/Farm Buildings - Sept 2018/FBX/Silo_House.fbx" id="73_fl6gn"]
 [ext_resource type="PackedScene" uid="uid://3vtasx27k5vv" path="res://assets/models/carroca.glb" id="73_p5g01"]
 [ext_resource type="Script" path="res://scripts/world/clima.gd" id="75_clima"]
+[ext_resource type="Script" path="res://scripts/world/area_plantio.gd" id="76_plantio"]
 [ext_resource type="PackedScene" uid="uid://bjwnevipuwu80" path="res://assets/Farm Buildings - Sept 2018/FBX/BigBarn.fbx" id="74_gjwlp"]
+
+[sub_resource type="BoxShape3D" id="AreaPlantioShape"]
+size = Vector3(30, 2, 50)
 
 [sub_resource type="Gradient" id="Gradient_gv5m4"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -848,6 +852,22 @@ show_prompt = false
 
 [node name="AreaSiloVisual" type="MeshInstance3D" parent="AreaSiloTrigger" unique_id=-1894967294]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+material_override = SubResource("AreaRingMaterial")
+mesh = SubResource("AreaRingMesh")
+
+[node name="AreaPlantio" type="Area3D" parent="." unique_id=1234567890]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 186, 11, 136)
+script = ExtResource("76_plantio")
+mission_id = "plantio_milho"
+objective_id = "plantar_milho"
+quantidade_necessaria = 30
+distancia_max_plantio = 20.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaPlantio" unique_id=1234567891]
+shape = SubResource("AreaPlantioShape")
+
+[node name="AreaPlantioVisual" type="MeshInstance3D" parent="AreaPlantio" unique_id=1234567892]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 material_override = SubResource("AreaRingMaterial")
 mesh = SubResource("AreaRingMesh")
 
