@@ -369,7 +369,15 @@ func _on_missao(missao_id: String) -> void:
 	if m.is_empty() or not m:
 		m = Missoes.por_id.get(missao_id, {})
 	
-	popup_texto.text = str(m.get("titulo", missao_id))
+	var titulo_missao := str(m.get("titulo", missao_id))
+	
+	# Verifica se há próxima missão disponível
+	var prox_missao := MissionManager.get_proxima_pendente()
+	var texto_extra := ""
+	if prox_missao:
+		texto_extra = "\n\nNova missão disponível no caderno do campo."
+	
+	popup_texto.text = titulo_missao + texto_extra
 	popup_missao.show()
 	scrim.show()
 	get_tree().paused = true
