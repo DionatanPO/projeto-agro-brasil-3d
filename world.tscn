@@ -871,6 +871,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 material_override = SubResource("AreaRingMaterial")
 mesh = SubResource("AreaRingMesh")
 
+[node name="AreaPlantioDialogueTrigger" type="Area3D" parent="AreaPlantio" unique_id=1234567893]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("70_trigger")
+mission_id = "plantio_milho"
+dialogue_area_id = "area_plantio_milho"
+trigger_type = 0
+radius = 25.0
+height = 4.0
+collision_offset_y = 2.0
+show_prompt = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaPlantioDialogueTrigger" unique_id=1234567894]
+shape = SubResource("AreaPlantioShape")
+
 [node name="galpao" parent="." unique_id=1305804623 instance=ExtResource("72_yy5nj")]
 transform = Transform3D(0.7969278, 0.0121222325, -0.6039528, -0.06384537, 0.995889, -0.06425627, 0.600691, 0.0897672, 0.79442567, 184.06227, 12.213152, 159.90755)
 

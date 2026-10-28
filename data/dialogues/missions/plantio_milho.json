@@ -1,12 +1,32 @@
 {
   "dialogues": [
     {
-      "id": "plantio_milho_inicio",
+      "id": "plantio_milho_inicio_player",
       "speaker": "player",
       "audio": "player/m3_plantio_inicio.wav",
       "once": true,
       "triggers": [
         { "type": "mission_activated", "mission_id": "plantio_milho" }
+      ],
+      "conditions": { "intro_seen": true }
+    },
+    {
+      "id": "plantio_milho_inicio_agrobot",
+      "speaker": "agrobot",
+      "audio": "agrobot/m3_agrobot_plantio_1.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "plantio_milho" }
+      ],
+      "conditions": { "intro_seen": true }
+    },
+    {
+      "id": "plantio_milho_area_plantio",
+      "speaker": "agrobot",
+      "audio": "agrobot/m3_area_plantio.wav",
+      "once": true,
+      "triggers": [
+        { "type": "area_entered", "area_id": "area_plantio_milho", "mission_id": "plantio_milho" }
       ],
       "conditions": { "intro_seen": true }
     },
