@@ -5,9 +5,6 @@ signal descoberta_registrada(ponto_id: String)
 signal dialogo_solicitado(conteudo_id: String)
 signal alternar_diario
 
-# Processa mesmo com jogo pausado (para abrir caderno durante popups)
-process_mode = Node.PROCESS_MODE_ALWAYS
-
 const CAMINHO_CONTEUDOS := "res://data/configs/conteudos.json"
 
 var conteudos: Dictionary = {}
@@ -15,6 +12,7 @@ var tempo_sessao: float = 0.0
 
 
 func _ready() -> void:
+	set_process_mode(Node.PROCESS_MODE_ALWAYS)
 	_carregar_conteudos()
 	# Autosave periódico (a cada 10 segundos) para manter posição e progresso atualizados
 	var timer = Timer.new()
