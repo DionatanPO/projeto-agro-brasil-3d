@@ -50,12 +50,18 @@ var _vinheta: TextureRect
 var _vento: AudioStreamPlayer3D
 var _tremor_suave := 0.0
 
+signal pulverizando(posicao: Vector3)
+
 const HOME_DRONE := Vector3(69.664, 11.197, 192.916)  # agrupamento da fazenda
 const RAIO_ESTACAO := 4.5
+
+## Nível mínimo do jogador para poder pilotar o drone agrícola.
+@export var nivel_necessario: int = 3
 
 var _jogador: CharacterBody3D
 var _jogador_perto := false
 var _prompt: Label3D
+var _xp_manager: Node
 @onready var estacao: Area3D = $Estacao
 
 const POSICOES := [
@@ -65,6 +71,13 @@ const POSICOES := [
 	Vector3(-1.803, 3.05, -1.803),
 ]
 
+
+func _pode_usar_drone() -> bool:
+	"""Só libera o drone quando o jogador atingir o nível necessário."""
+	var xm: Variant = get_node_or_null("/root/XPManager")
+	if xm == null:
+		return false
+	return int(xm.get_level()) >= nivel_necessario
 
 func _ready() -> void:
 	add_to_group("drone_jogador")
@@ -122,7 +135,8 @@ func _ready() -> void:
 	ligado = false
 	_spool = 0.0
 	_jogador = get_tree().get_first_node_in_group("jogador") as CharacterBody3D
-	if not modo_tutorial and SaveSystem != null and str(SaveSystem.dados.get("veiculo", "jogador")) == "drone":
+	# Só entra automaticamente se já tiver o nível exigido.
+	if not modo_tutorial and SaveSystem != null and str(SaveSystem.dados.get("veiculo", "jogador")) == "drone" and _pode_usar_drone():
 		_entrar(true)
 
 
@@ -157,7 +171,10 @@ func _on_corpo_entrou(corpo: Node3D) -> void:
 	if corpo.is_in_group("jogador"):
 		_jogador = corpo as CharacterBody3D
 		_jogador_perto = true
-		_prompt.text = "Pressione E para pilotar o drone  •  T tutorial"
+		if _pode_usar_drone():
+			_prompt.text = "Pressione E para pilotar o drone  •  T tutorial"
+		else:
+			_prompt.text = "Drone bloqueado: nível %d necessário" % nivel_necessario
 		_prompt.visible = true
 
 
@@ -191,7 +208,7 @@ func _unhandled_input(evento: InputEvent) -> void:
 		if ligado:
 			_sair()
 			get_viewport().set_input_as_handled()
-		elif _jogador != null and _jogador.visible and global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0:
+		elif _jogador != null and _jogador.visible and global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0 and _pode_usar_drone():
 			_entrar(false)
 			get_viewport().set_input_as_handled()
 
@@ -234,6 +251,9 @@ func _entrar(silencioso: bool) -> void:
 	if not silencioso and SaveSystem != null:
 		SaveSystem.dados["veiculo"] = "drone"
 		SaveSystem.salvar()
+	# Registra descoberta para a missão 4 (pegar o drone)
+	if is_instance_valid(Jogo):
+		Jogo.registrar_descoberta("drone_agricola")
 
 
 func _sair() -> void:
@@ -253,6 +273,11 @@ func _sair() -> void:
 	if SaveSystem != null:
 		SaveSystem.dados["veiculo"] = "jogador"
 		SaveSystem.salvar()
+
+
+func _avisar_pulverizacao(posicao: Vector3) -> void:
+	"""Emite sinal para a área de plantio saber que o drone está pulverizando nesta posição."""
+	pulverizando.emit(posicao)
 
 
 func _physics_process(delta: float) -> void:
@@ -316,14 +341,25 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("ui_cancel") and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if not modo_tutorial and not ligado and _jogador != null and is_instance_valid(_jogador) and _prompt != null:
-		_prompt.text = "Pressione E para pilotar o drone (%.1f m)  •  T tutorial" % global_position.distance_to(_jogador.global_position)
-		if _jogador.visible:
-			var perto := global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0
-			if perto and not _jogador_perto:
-				_on_corpo_entrou(_jogador)
-			elif not perto and _jogador_perto and estacao != null and estacao.get_overlapping_bodies().is_empty():
-				_jogador_perto = false
-				_prompt.visible = false
+		if _pode_usar_drone():
+			_prompt.text = "Pressione E para pilotar o drone (%.1f m)  •  T tutorial" % global_position.distance_to(_jogador.global_position)
+			if _jogador.visible:
+				var perto := global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0
+				if perto and not _jogador_perto:
+					_on_corpo_entrou(_jogador)
+				elif not perto and _jogador_perto and estacao != null and estacao.get_overlapping_bodies().is_empty():
+					_jogador_perto = false
+					_prompt.visible = false
+		else:
+			_prompt.text = "Drone bloqueado: nível %d necessário" % nivel_necessario
+			if _jogador.visible:
+				var perto := global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0
+				if perto and not _jogador_perto:
+					_jogador_perto = true
+					_prompt.visible = true
+				elif not perto and _jogador_perto:
+					_jogador_perto = false
+					_prompt.visible = false
 	_olhar_stick(delta)
 	spray.emitting = ligado and Input.is_action_pressed("pulverizar")
 	_efeitos_velocidade(delta)
@@ -345,6 +381,9 @@ func _process(delta: float) -> void:
 		var eff := _acelerador * _spool
 		_som.pitch_scale = 0.5 + 0.7 * eff
 		_som.volume_db = lerpf(-30.0, -8.0, eff)
+	# Se está pulverizando, avisa a área de plantio (para missão 4)
+	if ligado and spray.emitting:
+		_avisar_pulverizacao(global_position)
 
 
 func _olhar(dx: float, dy: float) -> void:

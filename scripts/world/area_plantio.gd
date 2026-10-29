@@ -23,6 +23,8 @@ var _milhos_plantados: int = 0
 var _cena_milho: PackedScene
 var _player: Node3D = null
 var _camera: Camera3D = null
+var _drone: Node3D = null
+var _milho_pulverizado: bool = false
 
 
 func _ready() -> void:
@@ -35,6 +37,9 @@ func _ready() -> void:
 	# Referências
 	_player = get_tree().get_first_node_in_group("jogador") as Node3D
 	_camera = get_viewport().get_camera_3d()
+	_drone = get_tree().get_first_node_in_group("drone_jogador") as Node3D
+	if _drone != null and _drone.has_signal("pulverizando") and not _drone.is_connected("pulverizando", _on_drone_pulverizando):
+		_drone.pulverizando.connect(_on_drone_pulverizando)
 	
 	set_process_input(true)
 
@@ -179,3 +184,14 @@ func get_quantidade_plantada() -> int:
 
 func resetar() -> void:
 	_milhos_plantados = 0
+	_milho_pulverizado = false
+
+
+func _on_drone_pulverizando(posicao: Vector3) -> void:
+	if _milho_pulverizado:
+		return
+	if _ponto_dentro_da_area(posicao):
+		_milho_pulverizado = true
+		if is_instance_valid(Jogo):
+			Jogo.registrar_descoberta("milho_pulverizado")
+		print("[AreaPlantio] Milho pulverizado pelo drone!")
