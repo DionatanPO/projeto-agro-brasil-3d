@@ -85,6 +85,34 @@
 			"ordem": 3
 		},
 		{
+			"id": "operacao_drone_milho",
+			"tipo": "discovery",
+			"titulo": "Operação Drone: Pulverização",
+			"descricao": "Retorne à fazenda e pegue o drone agrícola. Em seguida, pulverize a plantação de milho entre o silo e o parque solar.",
+			"objetivos": [
+				{
+					"id": "pegar_drone",
+					"tipo": "descoberta",
+					"alvo_id": "drone_agricola",
+					"texto": "Pegue o drone agrícola na fazenda"
+				},
+				{
+					"id": "pulverizar_milho",
+					"tipo": "descoberta",
+					"alvo_id": "milho_pulverizado",
+					"texto": "Pulverize a plantação de milho com o drone"
+				}
+			],
+			"recompensas": [
+				{
+					"tipo": "xp",
+					"valor": 100
+				}
+			],
+			"requer": ["plantio_milho"],
+			"ordem": 4
+		},
+		{
 			"id": "conhecer_agua",
 			"tipo": "discovery",
 			"titulo": "Água Consciente",
@@ -103,8 +131,8 @@
 					"valor": 100
 				}
 			],
-			"requer": ["plantio_milho"],
-			"ordem": 4
+			"requer": ["operacao_drone_milho"],
+			"ordem": 5
 		},
 		{
 			"id": "conhecer_culturas",
@@ -132,34 +160,6 @@
 				}
 			],
 			"requer": ["conhecer_agua"],
-			"ordem": 5
-		},
-		{
-			"id": "operacao_drone_milho",
-			"tipo": "discovery",
-			"titulo": "Operação Drone: Pulverização",
-			"descricao": "Retorne à fazenda e pegue o drone agrícola. Em seguida, pulverize a plantação de milho entre o silo e o parque solar.",
-			"objetivos": [
-				{
-					"id": "pegar_drone",
-					"tipo": "descoberta",
-					"alvo_id": "drone_agricola",
-					"texto": "Pegue o drone agrícola na fazenda"
-				},
-				{
-					"id": "pulverizar_milho",
-					"tipo": "descoberta",
-					"alvo_id": "milho_pulverizado",
-					"texto": "Pulverize a plantação de milho com o drone"
-				}
-			],
-			"recompensas": [
-				{
-					"tipo": "xp",
-					"valor": 100
-				}
-			],
-			"requer": ["plantio_milho"],
 			"ordem": 6
 		}
 	]
