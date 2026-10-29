@@ -49,6 +49,16 @@
         { "type": "mission_activated", "mission_id": "operacao_drone_milho" }
       ],
       "conditions": { "intro_seen": true }
+    },
+    {
+      "id": "M4ABot4",
+      "speaker": "agrobot",
+      "audio": "agrobot/m4_agrobot__4.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_completed", "mission_id": "operacao_drone_milho" }
+      ],
+      "conditions": { "intro_seen": true }
     }
   ]
 }

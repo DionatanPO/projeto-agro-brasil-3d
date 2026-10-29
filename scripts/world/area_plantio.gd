@@ -11,9 +11,14 @@ class_name AreaPlantio
 
 signal milho_plantado(posicao: Vector3)
 signal plantio_completo(quantidade: int)
+signal pulverizacao_progresso(percentual: float)
 
 @export var mission_id: String = ""
 @export var objective_id: String = ""
+# Para a missão 4 (pulverização), qual missão deve ser considerada ativa.
+# Deixe vazio para usar o mesmo mission_id. Ex: "operacao_drone_milho".
+@export var mission_id_pulverizacao: String = "operacao_drone_milho"
+@export var objective_id_pulverizacao: String = "pulverizar_milho"
 @export var quantidade_necessaria: int = 5
 @export var quantidade_maxima: int = 400
 @export var cena_milho: String = "res://scenes/world/milho_plantavel.tscn"
@@ -24,10 +29,11 @@ var _cena_milho: PackedScene
 var _player: Node3D = null
 var _camera: Camera3D = null
 var _drone: Node3D = null
-var _milho_pulverizado: bool = false
+var _milhos_pulverizados: Array = []       # Posições dos milhos já pulverizados (para evitar duplicatas)
 var _nos_milhos: Array[Node3D] = []           # Referências aos nós de milho criados
-var _posicoes_pulverizadas: Array = []       # Posições dos milhos já pulverizados
+var _posicoes_pulverizadas: Array = []       # Posições dos milhos já pulverizados (legacy, mantido por compatibilidade)
 @export var raio_pulverizacao: float = 3.0   # Raio de alcance da pulverização do drone
+@export var percentual_necessario: float = 0.8   # Percentual da área que deve ser pulverizada (0.0 a 1.0). 1.0 = 100%, 0.8 = 80%.
 var material_pulverizado: StandardMaterial3D = null  # Material aplicado ao milho pulverizado (configurar no inspector)
 
 
@@ -42,8 +48,7 @@ func _ready() -> void:
 	_player = get_tree().get_first_node_in_group("jogador") as Node3D
 	_camera = get_viewport().get_camera_3d()
 	_drone = get_tree().get_first_node_in_group("drone_jogador") as Node3D
-	if _drone != null and _drone.has_signal("pulverizando") and not _drone.is_connected("pulverizando", _on_drone_pulverizando):
-		_drone.pulverizando.connect(_on_drone_pulverizando)
+	_conectar_drone()
 	
 	# Restaura os milhos já plantados (persistência entre sessões)
 	# Usa call_deferred para garantir que a cena esteja totalmente carregada
@@ -51,6 +56,17 @@ func _ready() -> void:
 		call_deferred("_restaurar_milhos_salvos")
 	
 	set_process_input(true)
+	# Tenta conectar ao drone após um frame (garante que o drone já entrou no grupo)
+	call_deferred("_conectar_drone")
+
+func _conectar_drone() -> void:
+	_drone = get_tree().get_first_node_in_group("drone_jogador") as Node3D
+	if _drone != null and _drone.has_signal("pulverizando") and not _drone.is_connected("pulverizando", _on_drone_pulverizando):
+		_drone.pulverizando.connect(_on_drone_pulverizando)
+		print("[AreaPlantio] Conectado ao sinal de pulverização do drone")
+	elif _drone == null:
+		# Tenta novamente daqui a 1 segundo se o drone ainda não apareceu
+		call_deferred("_conectar_drone")
 
 func _notification(what: int) -> void:
 	# Salva as posições dos milhos ao fechar o jogo
@@ -215,27 +231,74 @@ func get_quantidade_plantada() -> int:
 
 func resetar() -> void:
 	_milhos_plantados = 0
-	_milho_pulverizado = false
+	_milhos_pulverizados.clear()
+
+
+func _ja_foi_pulverizado(posicao: Vector3) -> bool:
+	for p in _milhos_pulverizados:
+		if p.distance_to(posicao) < 0.05:
+			return true
+	return false
+
+
+func _percentual_pulverizado() -> float:
+	if _milhos_plantados == 0:
+		return 0.0
+	return float(_milhos_pulverizados.size()) / float(_milhos_plantados)
+
+
+func _atualizar_progresso_pulverizacao() -> void:
+	var percentual := _percentual_pulverizado()
+	pulverizacao_progresso.emit(percentual)
+
+	# Determina qual missão/objetivo atualizar baseado na missão ativa
+	var mm: Variant = get_node_or_null("/root/MissionManager")
+	if mm == null:
+		return
+	var ativa: Variant = mm.get_missao_ativa()
+	var mid_ativa: String = str(ativa.mission_id) if ativa != null else ""
+
+	# Se a missão ativa for a de pulverização, usa os IDs de pulverização
+	var mid_usar: String = mission_id
+	var obj_usar: String = objective_id
+	if not mission_id_pulverizacao.is_empty() and mid_ativa == mission_id_pulverizacao:
+		mid_usar = mission_id_pulverizacao
+		obj_usar = objective_id_pulverizacao
+
+	if not mid_usar.is_empty() and not obj_usar.is_empty():
+		var m = mm.get_mission(mid_usar)
+		if m != null and m.has_method("atualizar_progresso_objetivo"):
+			m.atualizar_progresso_objetivo(obj_usar, percentual)
+
+	# Só completa o objetivo quando atingir o percentual necessário
+	if percentual >= percentual_necessario:
+		if is_instance_valid(Jogo):
+			Jogo.registrar_descoberta("milho_pulverizado")
+		print("[AreaPlantio] Pulverizacao completa (", int(percentual * 100), "%)!")
 
 
 func _on_drone_pulverizando(posicao: Vector3) -> void:
-	if _milho_pulverizado:
+	# Ativo se a missão atual for a de plantio OU a de pulverização
+	var mm: Variant = get_node_or_null("/root/MissionManager")
+	var ativa: Variant = mm.get_missao_ativa() if mm != null else null
+	var mid_ativa: String = str(ativa.mission_id) if ativa != null else ""
+	var ativo_para_pulverizacao := (mid_ativa == mission_id_pulverizacao) if not mission_id_pulverizacao.is_empty() else false
+	if not _esta_ativa() and not ativo_para_pulverizacao:
 		return
 	if _ponto_dentro_da_area(posicao):
-		# Encontra milhos próximos à posição do drone e marca como pulverizado
 		var pulverizou_algo := false
 		for milho in _nos_milhos:
 			if milho == null or not is_instance_valid(milho):
 				continue
 			var dist := milho.global_position.distance_to(posicao)
 			if dist <= raio_pulverizacao:
-				_marcar_milho_pulverizado(milho)
-				pulverizou_algo = true
+				if not _ja_foi_pulverizado(milho.global_position):
+					_marcar_milho_pulverizado(milho)
+					_milhos_pulverizados.append(milho.global_position)
+					pulverizou_algo = true
 		if pulverizou_algo:
-			_milho_pulverizado = true
-			if is_instance_valid(Jogo):
-				Jogo.registrar_descoberta("milho_pulverizado")
-			print("[AreaPlantio] Milho pulverizado pelo drone!")
+			_atualizar_progresso_pulverizacao()
+			print("[AreaPlantio] Milho pulverizado! Progresso: ", round(_percentual_pulverizado() * 100), "% / ", round(percentual_necessario * 100), "%")
 
 
 func _marcar_milho_pulverizado(milho: Node3D) -> void:
@@ -371,10 +434,12 @@ func _restaurar_milhos_salvos() -> void:
 		restaurados += 1
 
 		# Restaura o estado pulverizado se este milho foi pulverizado anteriormente
-		if _posicao_foi_pulverizada(pos) and material_pulverizado != null:
-			var corpo := milho.get_node_or_null("Milho")
-			if corpo == null:
-				corpo = milho
-			corpo.material_override = material_pulverizado
+		if _posicao_foi_pulverizada(pos):
+			_milhos_pulverizados.append(pos)
+			if material_pulverizado != null:
+				var corpo := milho.get_node_or_null("Milho")
+				if corpo == null:
+					corpo = milho
+				corpo.material_override = material_pulverizado
 
-	print("[AreaPlantio] Milhos restaurados do save: ", restaurados, " / ", _milhos_plantados)
+	print("[AreaPlantio] Milhos restaurados do save: ", restaurados, " / ", _milhos_plantados, " | Pulverizados: ", _milhos_pulverizados.size())

@@ -222,6 +222,11 @@ func _atualizar_progresso_objetivo(objective_id: String, progresso: float) -> vo
 		_progresso_objetivos[objective_id] = clampf(progresso, 0.0, 1.0)
 
 
+func atualizar_progresso_objetivo(objective_id: String, progresso: float) -> void:
+	"""Atualiza o progresso de um objetivo (0.0 a 1.0). Chamado por sistemas externos (ex: AreaPlantio)."""
+	_atualizar_progresso_objetivo(objective_id, progresso)
+
+
 func _verificar_todos_objetivos() -> bool:
 	for obj in objetivos:
 		var oid: String = str(obj.get("id", ""))

@@ -37,6 +37,10 @@ var _botoes_abas: Array = []
 @onready var popup_texto: Label = $MissaoCompleta/Inset/Conteudo/Texto
 @onready var fps_label: Label = $FPS
 
+# Indicador de pulverização (missão 4)
+var lbl_pulverizacao: Label
+var _pulverizacao_ativa: bool = false
+
 var _fps_tempo := 0.0
 
 var _som_ui_click: AudioStreamPlayer
@@ -134,6 +138,69 @@ func _ready() -> void:
 		MissionManager.mission_changed.connect(_on_mission_changed)
 	# Legado (compatibilidade)
 	Missoes.missao_concluida.connect(_on_missao)
+
+	# Indicador de pulverização da missão 4 (criado dinamicamente)
+	_criar_indicador_pulverizacao()
+	_conectar_area_plantio()
+	# Tenta reconectar se a área ainda não entrou no grupo
+	call_deferred("_conectar_area_plantio")
+
+func _criar_indicador_pulverizacao() -> void:
+	lbl_pulverizacao = Label.new()
+	lbl_pulverizacao.name = "PulverizacaoProgresso"
+	lbl_pulverizacao.text = ""
+	lbl_pulverizacao.visible = false
+	# Posiciona no centro superior da tela
+	lbl_pulverizacao.anchor_left = 0.5
+	lbl_pulverizacao.anchor_right = 0.5
+	lbl_pulverizacao.anchor_top = 0.0
+	lbl_pulverizacao.anchor_bottom = 0.0
+	lbl_pulverizacao.offset_left = -200
+	lbl_pulverizacao.offset_right = 200
+	lbl_pulverizacao.offset_top = 40
+	lbl_pulverizacao.offset_bottom = 80
+	lbl_pulverizacao.add_theme_font_size_override("font_size", 20)
+	lbl_pulverizacao.add_theme_color_override("font_color", Color("#ffffff"))
+	lbl_pulverizacao.add_theme_color_override("shadow_color", Color("#000000"))
+	add_child(lbl_pulverizacao)
+
+func _conectar_area_plantio() -> void:
+	var area = get_tree().get_first_node_in_group("area_plantio")
+	if area != null and area.has_signal("pulverizacao_progresso") and not area.is_connected("pulverizacao_progresso", _on_pulverizacao_progresso):
+		area.pulverizacao_progresso.connect(_on_pulverizacao_progresso)
+		# Inicializa visibilidade com base na missão ativa
+		_atualizar_visibilidade_pulverizacao(MissionManager.get_missao_ativa())
+
+func _on_pulverizacao_progresso(percentual: float) -> void:
+	if not _pulverizacao_ativa:
+		return
+	var pct := int(round(percentual * 100))
+	lbl_pulverizacao.text = "Pulverização: %d%%" % pct
+	if percentual >= 1.0:
+		lbl_pulverizacao.add_theme_color_override("font_color", Color("#4caf50"))
+	elif percentual >= 0.5:
+		lbl_pulverizacao.add_theme_color_override("font_color", Color("#ffeb3b"))
+	else:
+		lbl_pulverizacao.add_theme_color_override("font_color", Color("#f44336"))
+
+func _atualizar_visibilidade_pulverizacao(mission) -> void:
+	var ativo := false
+	if mission != null and str(mission.mission_id) == "operacao_drone_milho":
+		ativo = true
+	_pulverizacao_ativa = ativo
+	lbl_pulverizacao.visible = ativo
+	if not ativo:
+		lbl_pulverizacao.text = ""
+
+func _on_mission_changed(mission_id) -> void:
+	# Missão ativa mudou - atualiza diário se aberto
+	if diario.visible:
+		call_deferred("_preencher_diario")
+	# Atualiza visibilidade do indicador de pulverização
+	var m: Variant = null
+	if MissionManager != null:
+		m = MissionManager.get_missao_ativa()
+	_atualizar_visibilidade_pulverizacao(m)
 
 func _configurar_espacamento() -> void:
 	for inset in [$Dialogo/Inset, $Diario/Inset]:
@@ -387,11 +454,6 @@ func _on_missao(missao_id: String) -> void:
 	# Focar no botão OK único
 	$MissaoCompleta/Inset/Conteudo/BotaoOK.grab_focus()
 
-
-func _on_mission_changed(mission_id) -> void:
-	# Missão ativa mudou - atualiza diário se aberto
-	if diario.visible:
-		call_deferred("_preencher_diario")
 
 func _on_ok_missao() -> void:
 	# Apenas fechar o popup e continuar - missão já foi registrada no SaveSystem
