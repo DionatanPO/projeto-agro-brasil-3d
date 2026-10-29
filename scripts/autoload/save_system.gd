@@ -72,6 +72,7 @@ func _dados_padrao() -> Dictionary:
 		"xp": 0,
 		"nivel": 1,
 		"agrobot_coletado": false,
+		"milhos_plantados_posicoes": [],
 	}
 
 

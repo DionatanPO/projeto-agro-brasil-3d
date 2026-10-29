@@ -41,6 +41,9 @@ func _ready() -> void:
 	if _drone != null and _drone.has_signal("pulverizando") and not _drone.is_connected("pulverizando", _on_drone_pulverizando):
 		_drone.pulverizando.connect(_on_drone_pulverizando)
 	
+	# Restaura os milhos já plantados (persistência entre sessões)
+	_restaurar_milhos_salvos()
+	
 	set_process_input(true)
 
 
@@ -152,6 +155,9 @@ func _plantar_milho(ponto: Vector3) -> void:
 		milho_plantado.emit(pos)
 		print("[AreaPlantio] Milho plantado: ", _milhos_plantados, " / ", quantidade_necessaria)
 
+		# Persiste a posição do milho para sobreviver ao fechamento do jogo
+		_salvar_posicao_milho(pos, milho.rotation)
+
 		if _milhos_plantados >= quantidade_necessaria:
 			plantio_completo.emit(_milhos_plantados)
 			_completar_objetivo()
@@ -195,3 +201,60 @@ func _on_drone_pulverizando(posicao: Vector3) -> void:
 		if is_instance_valid(Jogo):
 			Jogo.registrar_descoberta("milho_pulverizado")
 		print("[AreaPlantio] Milho pulverizado pelo drone!")
+
+
+## Persistência de milhos ──────────────────────────────────────────────
+
+func _salvar_posicao_milho(posicao: Vector3, rotacao: Vector3) -> void:
+	"""Adiciona a posição do milho ao save para persistir entre sessões."""
+	var posicoes: Array = SaveSystem.dados.get("milhos_plantados_posicoes", [])
+	if posicoes == null:
+		posicoes = []
+	var entrada: Dictionary = {
+		"x": posicao.x,
+		"y": posicao.y,
+		"z": posicao.z,
+		"rx": rotacao.x,
+		"ry": rotacao.y,
+		"rz": rotacao.z,
+	}
+	posicoes.append(entrada)
+	SaveSystem.dados["milhos_plantados_posicoes"] = posicoes
+	SaveSystem.salvar()
+
+
+func _restaurar_milhos_salvos() -> void:
+	"""Recria os milhos salvos no disco ao carregar o jogo."""
+	var posicoes: Array = SaveSystem.dados.get("milhos_plantados_posicoes", [])
+	if posicoes == null or posicoes.is_empty():
+		return
+	if _cena_milho == null:
+		return
+
+	var pai := get_tree().current_scene
+	if pai == null:
+		pai = get_parent()
+
+	for entrada in posicoes:
+		if not (entrada is Dictionary):
+			continue
+		var milho := _cena_milho.instantiate()
+		if milho == null:
+			continue
+		var pos := Vector3(
+			float(entrada.get("x", 0)),
+			float(entrada.get("y", 0)),
+			float(entrada.get("z", 0)),
+		)
+		var rot := Vector3(
+			float(entrada.get("rx", 0)),
+			float(entrada.get("ry", 0)),
+			float(entrada.get("rz", 0)),
+		)
+		milho.global_position = pos + Vector3(0, 0.1, 0)
+		milho.rotation = rot
+		if pai:
+			pai.add_child(milho)
+		_milhos_plantados += 1
+
+	print("[AreaPlantio] Milhos restaurados do save: ", _milhos_plantados)
