@@ -858,7 +858,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 186, 11, 136)
 script = ExtResource("76_plantio")
 mission_id = "plantio_milho"
 objective_id = "plantar_milho"
-quantidade_necessaria = 80
+quantidade_necessaria = 400
 distancia_max_plantio = 50.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AreaPlantio" unique_id=1234567891]

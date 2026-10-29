@@ -72,7 +72,7 @@
 					"id": "plantar_milho",
 					"tipo": "descoberta",
 					"alvo_id": "area_plantio_milho",
-					"texto": "Plante até 80 pés de milho na área entre o silo e o parque solar. Objetivo: 80. Limite da área: 150 pés."
+					"texto": "Plante até 400 pés de milho na área entre o silo e o parque solar. Objetivo: 400. Limite da área: 400 pés."
 				}
 			],
 			"recompensas": [

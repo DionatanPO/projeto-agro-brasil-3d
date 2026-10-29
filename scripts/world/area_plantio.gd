@@ -15,7 +15,7 @@ signal plantio_completo(quantidade: int)
 @export var mission_id: String = ""
 @export var objective_id: String = ""
 @export var quantidade_necessaria: int = 5
-@export var quantidade_maxima: int = 150
+@export var quantidade_maxima: int = 400
 @export var cena_milho: String = "res://scenes/world/milho_plantavel.tscn"
 @export var distancia_max_plantio: float = 15.0
 
@@ -114,33 +114,42 @@ func _plantar_milho(ponto: Vector3) -> void:
 		return
 	if _cena_milho == null:
 		return
-	
-	var milho := _cena_milho.instantiate()
-	if milho == null:
-		push_error("AreaPlantio: falha ao instanciar milho")
-		return
-	
-	# Ajusta a posição para ficar no chão (um pouco acima da superfície do raio)
-	milho.global_position = ponto + Vector3(0, 0.1, 0)
-	
-	# Pequena variação aleatória na rotação para ficar mais natural
-	var rng := RandomNumberGenerator.new()
-	rng.randomize()
-	milho.rotation = Vector3(0, rng.randf_range(0, TAU), 0)
-	
-	var pai := get_tree().current_scene
-	if pai == null:
-		pai = get_parent()
-	if pai:
-		pai.add_child(milho)
-	
-	_milhos_plantados += 1
-	milho_plantado.emit(ponto)
-	print("[AreaPlantio] Milho plantado: ", _milhos_plantados, " / ", quantidade_necessaria)
-	
-	if _milhos_plantados >= quantidade_necessaria:
-		plantio_completo.emit(_milhos_plantados)
-		_completar_objetivo()
+
+	# Espaçamento entre os milhos da fileirinha (metros).
+	var espacamento := 1.0
+
+	# Direção da fileira ao longo do eixo X do mundo.
+	var direcao := Vector3.RIGHT
+
+	for i in 3:
+		if _milhos_plantados >= quantidade_maxima:
+			break
+
+		var pos := ponto + direcao * (i - 1) * espacamento
+		var milho := _cena_milho.instantiate()
+		if milho == null:
+			push_error("AreaPlantio: falha ao instanciar milho")
+			return
+
+		milho.global_position = pos + Vector3(0, 0.1, 0)
+
+		var rng := RandomNumberGenerator.new()
+		rng.randomize()
+		milho.rotation = Vector3(0, rng.randf_range(0, TAU), 0)
+
+		var pai := get_tree().current_scene
+		if pai == null:
+			pai = get_parent()
+		if pai:
+			pai.add_child(milho)
+
+		_milhos_plantados += 1
+		milho_plantado.emit(pos)
+		print("[AreaPlantio] Milho plantado: ", _milhos_plantados, " / ", quantidade_necessaria)
+
+		if _milhos_plantados >= quantidade_necessaria:
+			plantio_completo.emit(_milhos_plantados)
+			_completar_objetivo()
 
 
 func _esta_ativa() -> bool:
