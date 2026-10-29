@@ -42,9 +42,16 @@ func _ready() -> void:
 		_drone.pulverizando.connect(_on_drone_pulverizando)
 	
 	# Restaura os milhos já plantados (persistência entre sessões)
-	_restaurar_milhos_salvos()
+	# Usa call_deferred para garantir que a cena esteja totalmente carregada
+	if SaveSystem != null and SaveSystem.dados.has("milhos_plantados_posicoes"):
+		call_deferred("_restaurar_milhos_salvos")
 	
 	set_process_input(true)
+
+func _notification(what: int) -> void:
+	# Salva as posições dos milhos ao fechar o jogo
+	if what == Node.NOTIFICATION_WM_CLOSE_REQUEST:
+		_salvar_todas_posicoes()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -210,6 +217,16 @@ func _salvar_posicao_milho(posicao: Vector3, rotacao: Vector3) -> void:
 	var posicoes: Array = SaveSystem.dados.get("milhos_plantados_posicoes", [])
 	if posicoes == null:
 		posicoes = []
+	
+	# Evita duplicatas: não salva a mesma posição duas vezes
+	for entrada in posicoes:
+		if entrada is Dictionary:
+			var ex: float = float(entrada.get("x", 0))
+			var ey: float = float(entrada.get("y", 0))
+			var ez: float = float(entrada.get("z", 0))
+			if abs(ex - posicao.x) < 0.01 and abs(ey - posicao.y) < 0.01 and abs(ez - posicao.z) < 0.01:
+				return  # Já existe, não salva novamente
+	
 	var entrada: Dictionary = {
 		"x": posicao.x,
 		"y": posicao.y,
@@ -223,18 +240,27 @@ func _salvar_posicao_milho(posicao: Vector3, rotacao: Vector3) -> void:
 	SaveSystem.salvar()
 
 
+func _salvar_todas_posicoes() -> void:
+	"""Força o salvamento de todas as posições no disco (chamado ao fechar o jogo)."""
+	if SaveSystem != null and SaveSystem.dados.has("milhos_plantados_posicoes"):
+		SaveSystem.salvar()
+
+
 func _restaurar_milhos_salvos() -> void:
 	"""Recria os milhos salvos no disco ao carregar o jogo."""
 	var posicoes: Array = SaveSystem.dados.get("milhos_plantados_posicoes", [])
+	print("[AreaPlantio DEBUG] _restaurar_milhos_salvos chamado, posicoes: ", posicoes.size())
 	if posicoes == null or posicoes.is_empty():
 		return
 	if _cena_milho == null:
+		print("[AreaPlantio DEBUG] _cena_milho é null!")
 		return
 
 	var pai := get_tree().current_scene
 	if pai == null:
 		pai = get_parent()
 
+	var restaurados := 0
 	for entrada in posicoes:
 		if not (entrada is Dictionary):
 			continue
@@ -256,5 +282,6 @@ func _restaurar_milhos_salvos() -> void:
 		if pai:
 			pai.add_child(milho)
 		_milhos_plantados += 1
+		restaurados += 1
 
-	print("[AreaPlantio] Milhos restaurados do save: ", _milhos_plantados)
+	print("[AreaPlantio] Milhos restaurados do save: ", restaurados, " / ", _milhos_plantados)
