@@ -1,0 +1,54 @@
+{
+  "dialogues": [
+    {
+      "id": "operacao_drone_milho_inicio_player_1",
+      "speaker": "player",
+      "audio": "player/m4_player_1.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "operacao_drone_milho" }
+      ],
+      "conditions": { "intro_seen": true }
+    },
+    {
+      "id": "operacao_drone_milho_inicio_agrobot_1",
+      "speaker": "agrobot",
+      "audio": "agrobot/m4_agrobot__1.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "operacao_drone_milho" }
+      ],
+      "conditions": { "intro_seen": true }
+    },
+    {
+      "id": "operacao_drone_milho_inicio_player_2",
+      "speaker": "player",
+      "audio": "player/m4_player_2.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "operacao_drone_milho" }
+      ],
+      "conditions": { "intro_seen": true }
+    },
+    {
+      "id": "operacao_drone_milho_agrobot_2",
+      "speaker": "agrobot",
+      "audio": "agrobot/m4_agrobot__2.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "operacao_drone_milho" }
+      ],
+      "conditions": { "intro_seen": true }
+    },
+    {
+      "id": "operacao_drone_milho_agrobot_3",
+      "speaker": "agrobot",
+      "audio": "agrobot/m4_agrobot__3.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "operacao_drone_milho" }
+      ],
+      "conditions": { "intro_seen": true }
+    }
+  ]
+}
