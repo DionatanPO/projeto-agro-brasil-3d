@@ -157,17 +157,21 @@ func _plantar_milho(ponto: Vector3) -> void:
 			push_error("AreaPlantio: falha ao instanciar milho")
 			return
 
+		var pai := get_tree().current_scene
+		if pai == null:
+			pai = get_parent()
+
+		if pai == null:
+			milho.queue_free()
+			return
+
+		# Adiciona o nó à cena PRIMEIRO, depois posiciona (mais seguro no Godot 4)
+		pai.add_child(milho)
 		milho.global_position = pos + Vector3(0, 0.1, 0)
 
 		var rng := RandomNumberGenerator.new()
 		rng.randomize()
 		milho.rotation = Vector3(0, rng.randf_range(0, TAU), 0)
-
-		var pai := get_tree().current_scene
-		if pai == null:
-			pai = get_parent()
-		if pai:
-			pai.add_child(milho)
 
 		_milhos_plantados += 1
 		milho.add_to_group("milho_plantado")
@@ -175,8 +179,9 @@ func _plantar_milho(ponto: Vector3) -> void:
 		milho_plantado.emit(pos)
 		print("[AreaPlantio] Milho plantado: ", _milhos_plantados, " / ", quantidade_necessaria)
 
-		# Persiste a posição do milho para sobreviver ao fechamento do jogo
-		_salvar_posicao_milho(pos, milho.rotation)
+		# Salva a posição FINAL do milho (já com o deslocamento de 0.1 de altura)
+		# para consistência com a pulverização, que usa milho.global_position
+		_salvar_posicao_milho(milho.global_position, milho.rotation)
 
 		if _milhos_plantados >= quantidade_necessaria:
 			plantio_completo.emit(_milhos_plantados)
@@ -310,7 +315,13 @@ func _posicao_foi_pulverizada(posicao: Vector3) -> bool:
 			var ex: float = float(entrada.get("x", 0))
 			var ey: float = float(entrada.get("y", 0))
 			var ez: float = float(entrada.get("z", 0))
-			if abs(ex - posicao.x) < 0.01 and abs(ey - posicao.y) < 0.01 and abs(ez - posicao.z) < 0.01:
+			# Tolerância maior na altura (eixo Y) para absorver diferenças de 0.1
+			# entre a posição do chão e a posição final do milho no chão
+			if (
+				abs(ex - posicao.x) < 0.05
+				and abs(ey - posicao.y) < 0.15
+				and abs(ez - posicao.z) < 0.05
+			):
 				return true
 	return false
 
@@ -347,10 +358,13 @@ func _restaurar_milhos_salvos() -> void:
 			float(entrada.get("ry", 0)),
 			float(entrada.get("rz", 0)),
 		)
-		milho.global_position = pos + Vector3(0, 0.1, 0)
-		milho.rotation = rot
+
+		# Adiciona ao pai PRIMEIRO, depois posiciona (mais seguro no Godot 4)
 		if pai:
 			pai.add_child(milho)
+		# A posição salva já inclui o deslocamento de 0.1 de altura (salvo no plantio)
+		milho.global_position = pos
+		milho.rotation = rot
 		milho.add_to_group("milho_plantado")
 		_nos_milhos.append(milho)
 		_milhos_plantados += 1
