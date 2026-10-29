@@ -60,22 +60,26 @@ func _notification(what: int) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not _esta_ativa():
+		print("[AreaPlantio] Missão não ativa para plantio")
 		return
 	if not event.is_action_pressed("interagir"):
 		return
 	
 	var player = get_tree().get_first_node_in_group("jogador") as Node3D
 	if player == null:
+		print("[AreaPlantio] Jogador não encontrado")
 		return
 	
 	# Verifica se o jogador está perto o suficiente da área
 	var dist := global_position.distance_to(player.global_position)
+	print("[AreaPlantio] Distância jogador-área: ", dist, " (máximo: ", distancia_max_plantio, ")")
 	if dist > distancia_max_plantio:
 		return
 	
 	# Raycast da câmera para o chão
 	var camera := get_viewport().get_camera_3d()
 	if camera == null:
+		print("[AreaPlantio] Câmera não encontrada")
 		return
 	
 	var origem := camera.global_position
@@ -90,14 +94,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	var resultado := space_state.intersect_ray(query)
 	
 	if resultado.is_empty():
+		print("[AreaPlantio] Raycast não atingiu nada")
 		return
 	
 	var ponto := resultado.position as Vector3
 	
 	# Verifica se o ponto está dentro da área de plantio (usando o raio do collision shape)
 	if not _ponto_dentro_da_area(ponto):
+		print("[AreaPlantio] Ponto fora da área de plantio: ", ponto)
 		return
 	
+	print("[AreaPlantio] Plantando milho em: ", ponto)
 	_plantar_milho(ponto)
 
 
