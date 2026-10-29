@@ -4,6 +4,7 @@
     { "category": "missions", "file": "missions/mostrar_fazenda_agrobot.json" },
     { "category": "missions", "file": "missions/plantio_milho.json" },
     { "category": "missions", "file": "missions/operacao_drone_milho.json" },
+    { "category": "missions", "file": "missions/conhecer_agua.json" },
     { "category": "player", "file": "player/monologues.json" }
   ]
 }

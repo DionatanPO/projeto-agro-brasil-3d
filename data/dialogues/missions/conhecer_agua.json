@@ -1,0 +1,14 @@
+{
+  "dialogues": [
+    {
+      "id": "conhecer_agua_inicio_agrobot_1",
+      "speaker": "agrobot",
+      "audio": "agrobot/m5_agrobot__1.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "conhecer_agua" }
+      ],
+      "conditions": { "intro_seen": true }
+    }
+  ]
+}
