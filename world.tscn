@@ -73,12 +73,9 @@
 [ext_resource type="PackedScene" uid="uid://cs2gv7sno7ivj" path="res://assets/models/galpao.glb" id="72_yy5nj"]
 [ext_resource type="PackedScene" uid="uid://tgppk10v6yqd" path="res://assets/Farm Buildings - Sept 2018/FBX/Silo_House.fbx" id="73_fl6gn"]
 [ext_resource type="PackedScene" uid="uid://3vtasx27k5vv" path="res://assets/models/carroca.glb" id="73_p5g01"]
-[ext_resource type="Script" path="res://scripts/world/clima.gd" id="75_clima"]
-[ext_resource type="Script" path="res://scripts/world/area_plantio.gd" id="76_plantio"]
 [ext_resource type="PackedScene" uid="uid://bjwnevipuwu80" path="res://assets/Farm Buildings - Sept 2018/FBX/BigBarn.fbx" id="74_gjwlp"]
-
-[sub_resource type="BoxShape3D" id="AreaPlantioShape"]
-size = Vector3(30, 2, 50)
+[ext_resource type="Script" uid="uid://dwlaalais2dpg" path="res://scripts/world/clima.gd" id="75_clima"]
+[ext_resource type="Script" uid="uid://cxqnlauh4ra0j" path="res://scripts/world/area_plantio.gd" id="76_plantio"]
 
 [sub_resource type="Gradient" id="Gradient_gv5m4"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -395,7 +392,7 @@ shader_parameter/starmap_flip_v = false
 shader_parameter/starmap_alignment = Vector3(2.68288, -0.25891, 0.40101)
 shader_parameter/star_rotation_offset = 9.38899
 shader_parameter/star_rotation = -10.98391440853701
-shader_parameter/star_tilt = -1.2915436464758039
+shader_parameter/star_tilt = -1.291543646475804
 shader_parameter/star_field_color = Color(1, 1, 1, 1)
 shader_parameter/star_field_texture = ExtResource("16_mc2jv")
 shader_parameter/star_scintillation = 0.75
@@ -467,6 +464,13 @@ emission = Color(1, 0.2, 0.2, 1)
 [sub_resource type="TorusMesh" id="AreaRingMesh"]
 inner_radius = 59.5
 outer_radius = 60.5
+
+[sub_resource type="BoxShape3D" id="AreaPlantioShape"]
+size = Vector3(50, 2, 80)
+
+[sub_resource type="CylinderShape3D" id="AreaPlantioDialogoShape"]
+height = 20.0
+radius = 55.0
 
 [node name="Node3D" type="Node3D" unique_id=2061065415]
 
@@ -664,14 +668,8 @@ metadata/_edit_lock_ = true
 environment = SubResource("Environment_jjr1n")
 camera_attributes = SubResource("CameraAttributesPractical_gggvi")
 script = ExtResource("18_4h6ng")
-editor_time_enabled = false
-game_time_enabled = false
-current_time = 10.49
 camera_exposure = 1.25
-sun_energy = 1.8
-sun_shadow_opacity = 0.87
 sky_contribution = 0.805
-wind_direction = 2.35619451204804
 metadata/_custom_type_script = "uid://deo0gxkmk2ahd"
 
 [node name="SunLight" type="DirectionalLight3D" parent="Sky3D" unique_id=1616938568]
@@ -860,8 +858,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 186, 11, 136)
 script = ExtResource("76_plantio")
 mission_id = "plantio_milho"
 objective_id = "plantar_milho"
-quantidade_necessaria = 30
-distancia_max_plantio = 20.0
+quantidade_necessaria = 80
+distancia_max_plantio = 50.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AreaPlantio" unique_id=1234567891]
 shape = SubResource("AreaPlantioShape")
@@ -872,18 +870,17 @@ material_override = SubResource("AreaRingMaterial")
 mesh = SubResource("AreaRingMesh")
 
 [node name="AreaPlantioDialogueTrigger" type="Area3D" parent="AreaPlantio" unique_id=1234567893]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("70_trigger")
 mission_id = "plantio_milho"
 dialogue_area_id = "area_plantio_milho"
-trigger_type = 0
-radius = 25.0
+radius = 55.0
 height = 4.0
 collision_offset_y = 2.0
 show_prompt = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaPlantioDialogueTrigger" unique_id=1234567894]
-shape = SubResource("AreaPlantioShape")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaPlantio/AreaPlantioDialogueTrigger" unique_id=1234567894]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+shape = SubResource("AreaPlantioDialogoShape")
 
 [node name="galpao" parent="." unique_id=1305804623 instance=ExtResource("72_yy5nj")]
 transform = Transform3D(0.7969278, 0.0121222325, -0.6039528, -0.06384537, 0.995889, -0.06425627, 0.600691, 0.0897672, 0.79442567, 184.06227, 12.213152, 159.90755)
@@ -912,5 +909,5 @@ transform = Transform3D(-0.07952008, 0, -0.99683326, 0, 1, 0, 0.99683326, 0, -0.
 [node name="BigBarn" parent="." unique_id=706689849 instance=ExtResource("74_gjwlp")]
 transform = Transform3D(-0.024764866, 0, -0.9996933, 0, 1, 0, 0.9996933, 0, -0.024764866, 126.16406, 9.70187, 46.83962)
 
-[node name="Clima" type="Node3D" parent="."]
+[node name="Clima" type="Node3D" parent="." unique_id=403151229]
 script = ExtResource("75_clima")

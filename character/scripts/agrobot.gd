@@ -21,6 +21,7 @@ var _ativo := true
 var _anel: MeshInstance3D
 var _anel_mat: StandardMaterial3D
 var _pulso := 1.0
+var _disparo_automatico_ativo := false
 
 # Referência ao modelo visual (para suavização opcional só no visual).
 var _modelo: Node3D = null
@@ -151,6 +152,22 @@ func disparar_pulso() -> void:
 	_anel.visible = true
 	_anel.scale = Vector3(0.05, 1.0, 0.05)
 	_anel.global_position = _posicao_no_chao()
+
+
+## Dispara o pulso do scanner automaticamente (sem precisar apertar LT/Q).
+## Usado quando o jogador chega a uma área ou o Agrobot detecta algo.
+## Os pulsos são sequenciais: só começa o próximo quando o anterior termina.
+func pulsar_automatico(vezes: int = 2) -> void:
+	if _disparo_automatico_ativo:
+		return
+	_disparo_automatico_ativo = true
+	var total := maxi(vezes, 1)
+	for i in total:
+		disparar_pulso()
+		await get_tree().create_timer(maxf(duracao_pulso, 0.1) + 0.15, false).timeout
+		if not is_inside_tree():
+			return
+	_disparo_automatico_ativo = false
 
 
 func _animar_pulso(delta: float) -> void:

@@ -15,6 +15,7 @@ signal plantio_completo(quantidade: int)
 @export var mission_id: String = ""
 @export var objective_id: String = ""
 @export var quantidade_necessaria: int = 5
+@export var quantidade_maxima: int = 150
 @export var cena_milho: String = "res://scenes/world/milho_plantavel.tscn"
 @export var distancia_max_plantio: float = 15.0
 
@@ -108,6 +109,9 @@ func _achar_collision_shape() -> CollisionShape3D:
 
 
 func _plantar_milho(ponto: Vector3) -> void:
+	if _milhos_plantados >= quantidade_maxima:
+		push_error("AreaPlantio: limite máximo de ", quantidade_maxima, " milhos atingido.")
+		return
 	if _cena_milho == null:
 		return
 	

@@ -467,9 +467,15 @@ func _contexto_de_area(area: Node, tipo: String) -> Dictionary:
 		return {}
 
 	var context: Dictionary = { "type": tipo, "area_id": area_id }
-	var mission_id: String = _string_da_propriedade(area, "mission_id")
-	if not mission_id.is_empty():
-		context["mission_id"] = mission_id
+	# Usa a missão ATIVA, e não a missão configurada no nó da área: um diálogo
+	# de área só deve tocar enquanto a missão dele estiver em andamento.
+	var mm: Variant = get_node_or_null("/root/MissionManager")
+	if mm != null:
+		var ativa: Variant = mm.get_missao_ativa()
+		if ativa != null:
+			var mid: String = str(ativa.mission_id)
+			if not mid.is_empty():
+				context["mission_id"] = mid
 	return context
 
 

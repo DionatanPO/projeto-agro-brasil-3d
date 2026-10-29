@@ -177,6 +177,8 @@ func _alternar_diario() -> void:
 		# caderno abre com o cursor preso/escondido e nao da para clicar.
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		$Diario/Inset/Conteudo/Acoes/BotaoFechar.grab_focus()
+	else:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _on_fechar_diario() -> void:
 	diario.hide()
@@ -372,7 +374,7 @@ func _on_missao(missao_id: String) -> void:
 	var titulo_missao := str(m.get("titulo", missao_id))
 	
 	# Verifica se há próxima missão disponível
-	var prox_missao := MissionManager.get_proxima_pendente()
+	var prox_missao = MissionManager.get_proxima_pendente()
 	var texto_extra := ""
 	if prox_missao:
 		texto_extra = "\n\nNova missão disponível no caderno do campo."
