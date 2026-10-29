@@ -165,16 +165,23 @@ func _montar_estacao() -> void:
 	estacao.body_exited.connect(_on_corpo_saiu)
 
 
+func _tutorial_concluido() -> bool:
+	if SaveSystem == null:
+		return false
+	return bool(SaveSystem.dados.get("tutorial_drone_concluido", false))
+
 func _on_corpo_entrou(corpo: Node3D) -> void:
 	if ligado or _jogador_perto:
 		return
 	if corpo.is_in_group("jogador"):
 		_jogador = corpo as CharacterBody3D
 		_jogador_perto = true
-		if _pode_usar_drone():
-			_prompt.text = "Pressione E para pilotar o drone  •  T tutorial"
-		else:
+		if not _pode_usar_drone():
 			_prompt.text = "Drone bloqueado: nível %d necessário" % nivel_necessario
+		elif not _tutorial_concluido():
+			_prompt.text = "Faça o tutorial do drone antes (T)"
+		else:
+			_prompt.text = "Pressione E para pilotar o drone  •  T tutorial"
 		_prompt.visible = true
 
 
@@ -200,6 +207,10 @@ func _unhandled_input(evento: InputEvent) -> void:
 	if modo_tutorial:
 		return
 	if evento.is_action_pressed("tutorial_drone"):
+		if not _pode_usar_drone():
+			_prompt.text = "Drone bloqueado: nível %d necessário" % nivel_necessario
+			_prompt.visible = true
+			return
 		if not ligado and _jogador != null and _jogador.visible and global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0:
 			get_viewport().set_input_as_handled()
 			_abrir_tutorial()
@@ -208,9 +219,13 @@ func _unhandled_input(evento: InputEvent) -> void:
 		if ligado:
 			_sair()
 			get_viewport().set_input_as_handled()
-		elif _jogador != null and _jogador.visible and global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0 and _pode_usar_drone():
+		elif _jogador != null and _jogador.visible and global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0 and _pode_usar_drone() and _tutorial_concluido():
 			_entrar(false)
 			get_viewport().set_input_as_handled()
+		elif _jogador != null and _jogador.visible and global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0:
+			if not _tutorial_concluido():
+				_prompt.text = "Faça o tutorial do drone antes (T)"
+				_prompt.visible = true
 
 
 ## Abre o tutorial pelo atalho T, perto do drone e a pe.
@@ -341,7 +356,27 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("ui_cancel") and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if not modo_tutorial and not ligado and _jogador != null and is_instance_valid(_jogador) and _prompt != null:
-		if _pode_usar_drone():
+		if not _pode_usar_drone():
+			_prompt.text = "Drone bloqueado: nível %d necessário" % nivel_necessario
+			if _jogador.visible:
+				var perto := global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0
+				if perto and not _jogador_perto:
+					_jogador_perto = true
+					_prompt.visible = true
+				elif not perto and _jogador_perto:
+					_jogador_perto = false
+					_prompt.visible = false
+		elif not _tutorial_concluido():
+			_prompt.text = "Faça o tutorial do drone antes (T)"
+			if _jogador.visible:
+				var perto := global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0
+				if perto and not _jogador_perto:
+					_jogador_perto = true
+					_prompt.visible = true
+				elif not perto and _jogador_perto:
+					_jogador_perto = false
+					_prompt.visible = false
+		else:
 			_prompt.text = "Pressione E para pilotar o drone (%.1f m)  •  T tutorial" % global_position.distance_to(_jogador.global_position)
 			if _jogador.visible:
 				var perto := global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0
@@ -350,11 +385,6 @@ func _process(delta: float) -> void:
 				elif not perto and _jogador_perto and estacao != null and estacao.get_overlapping_bodies().is_empty():
 					_jogador_perto = false
 					_prompt.visible = false
-		else:
-			_prompt.text = "Drone bloqueado: nível %d necessário" % nivel_necessario
-			if _jogador.visible:
-				var perto := global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0
-				if perto and not _jogador_perto:
 					_jogador_perto = true
 					_prompt.visible = true
 				elif not perto and _jogador_perto:
