@@ -418,12 +418,46 @@ func _preencher_diario() -> void:
 	
 	if prox.is_empty():
 		objetivo_missao.text = "Todas as missões concluídas! Parabéns!"
-	else:
-		objetivo_missao.text = _texto_missao_atual(prox)
+		_limpar_lista_box()
+		aviso_vazio.visible = false
+		lista_box.visible = false
+		missoes_info.visible = false
+		return
+
+	objetivo_missao.text = str(prox.get("titulo", "")) + "\n" + str(prox.get("descricao", ""))
+	_preencher_lista_box(prox)
 	# Apenas a missao atual e exibida no caderno: oculta descobertas e lista de missoes futuras.
 	aviso_vazio.visible = false
-	lista_box.visible = false
+	lista_box.visible = true
 	missoes_info.visible = false
+
+
+func _limpar_lista_box() -> void:
+	for child in lista_box.get_children():
+		if child is Node:
+			lista_box.remove_child(child)
+			child.queue_free()
+
+
+func _preencher_lista_box(prox: Dictionary) -> void:
+	_limpar_lista_box()
+	var objetivos_arr: Array = prox.get("objetivos", []) if prox is Dictionary else []
+	var descobertas: Array = SaveSystem.dados.get("descobertas", [])
+	var missao_id: String = str(prox.get("id", ""))
+	var m = MissionManager.get_mission(missao_id)
+	var concluida: bool = m != null and m.is_concluida()
+
+	for obj: Variant in objetivos_arr:
+		if not (obj is Dictionary):
+			continue
+		var o: Dictionary = obj as Dictionary
+		var ponto_id: String = str(o.get("alvo_id", o.get("ponto_id", "")))
+		var feito: bool = concluida or (ponto_id.is_empty()) or (descobertas is Array and ponto_id in descobertas)
+		var marca := "[x]" if feito else "[ ]"
+		var texto_objetivo: String = str(o.get("texto", ""))
+		var lbl: Label = Label.new()
+		lbl.text = "%s %s" % [marca, texto_objetivo]
+		lista_box.add_child(lbl)
 
 
 func _texto_missao_atual(prox: Dictionary) -> String:
