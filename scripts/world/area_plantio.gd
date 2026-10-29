@@ -25,6 +25,10 @@ var _player: Node3D = null
 var _camera: Camera3D = null
 var _drone: Node3D = null
 var _milho_pulverizado: bool = false
+var _nos_milhos: Array[Node3D] = []           # Referências aos nós de milho criados
+var _posicoes_pulverizadas: Array = []       # Posições dos milhos já pulverizados
+@export var raio_pulverizacao: float = 3.0   # Raio de alcance da pulverização do drone
+var material_pulverizado: StandardMaterial3D = null  # Material aplicado ao milho pulverizado (configurar no inspector)
 
 
 func _ready() -> void:
@@ -159,6 +163,8 @@ func _plantar_milho(ponto: Vector3) -> void:
 			pai.add_child(milho)
 
 		_milhos_plantados += 1
+		milho.add_to_group("milho_plantado")
+		_nos_milhos.append(milho)
 		milho_plantado.emit(pos)
 		print("[AreaPlantio] Milho plantado: ", _milhos_plantados, " / ", quantidade_necessaria)
 
@@ -204,10 +210,51 @@ func _on_drone_pulverizando(posicao: Vector3) -> void:
 	if _milho_pulverizado:
 		return
 	if _ponto_dentro_da_area(posicao):
-		_milho_pulverizado = true
-		if is_instance_valid(Jogo):
-			Jogo.registrar_descoberta("milho_pulverizado")
-		print("[AreaPlantio] Milho pulverizado pelo drone!")
+		# Encontra milhos próximos à posição do drone e marca como pulverizado
+		var pulverizou_algo := false
+		for milho in _nos_milhos:
+			if milho == null or not is_instance_valid(milho):
+				continue
+			var dist := milho.global_position.distance_to(posicao)
+			if dist <= raio_pulverizacao:
+				_marcar_milho_pulverizado(milho)
+				pulverizou_algo := true
+		if pulverizou_algo:
+			_milho_pulverizado = true
+			if is_instance_valid(Jogo):
+				Jogo.registrar_descoberta("milho_pulverizado")
+			print("[AreaPlantio] Milho pulverizado pelo drone!")
+
+
+func _marcar_milho_pulverizado(milho: Node3D) -> void:
+	"""Marca um milho específico como pulverizado (visual + persistência)."""
+	var corpo := milho.get_node_or_null("Milho")
+	if corpo == null:
+		corpo = milho
+	if material_pulverizado != null:
+		corpo.material_override = material_pulverizado
+	_salvar_milho_pulverizado(milho.global_position)
+
+
+func _salvar_milho_pulverizado(posicao: Vector3) -> void:
+	"""Salva a posição de um milho pulverizado para persistir entre sessões."""
+	var pulverizados: Array = SaveSystem.dados.get("milhos_pulverizados_posicoes", [])
+	if pulverizados == null:
+		pulverizados = []
+	for entrada in pulverizados:
+		if entrada is Dictionary:
+			var ex: float = float(entrada.get("x", 0))
+			var ey: float = float(entrada.get("y", 0))
+			var ez: float = float(entrada.get("z", 0))
+			if abs(ex - posicao.x) < 0.01 and abs(ey - posicao.y) < 0.01 and abs(ez - posicao.z) < 0.01:
+				return  # Já existe, não salva novamente
+	pulverizados.append({
+		"x": posicao.x,
+		"y": posicao.y,
+		"z": posicao.z,
+	})
+	SaveSystem.dados["milhos_pulverizados_posicoes"] = pulverizados
+	SaveSystem.salvar()
 
 
 ## Persistência de milhos ──────────────────────────────────────────────
@@ -246,6 +293,21 @@ func _salvar_todas_posicoes() -> void:
 		SaveSystem.salvar()
 
 
+func _posicao_foi_pulverizada(posicao: Vector3) -> bool:
+	"""Verifica se um milho nesta posição já foi pulverizado."""
+	var pulverizados: Array = SaveSystem.dados.get("milhos_pulverizados_posicoes", [])
+	if pulverizados == null:
+		return false
+	for entrada in pulverizados:
+		if entrada is Dictionary:
+			var ex: float = float(entrada.get("x", 0))
+			var ey: float = float(entrada.get("y", 0))
+			var ez: float = float(entrada.get("z", 0))
+			if abs(ex - posicao.x) < 0.01 and abs(ey - posicao.y) < 0.01 and abs(ez - posicao.z) < 0.01:
+				return true
+	return false
+
+
 func _restaurar_milhos_salvos() -> void:
 	"""Recria os milhos salvos no disco ao carregar o jogo."""
 	var posicoes: Array = SaveSystem.dados.get("milhos_plantados_posicoes", [])
@@ -261,6 +323,7 @@ func _restaurar_milhos_salvos() -> void:
 		pai = get_parent()
 
 	var restaurados := 0
+	var pulverizados_posicoes: Array = SaveSystem.dados.get("milhos_pulverizados_posicoes", [])
 	for entrada in posicoes:
 		if not (entrada is Dictionary):
 			continue
@@ -281,7 +344,16 @@ func _restaurar_milhos_salvos() -> void:
 		milho.rotation = rot
 		if pai:
 			pai.add_child(milho)
+		milho.add_to_group("milho_plantado")
+		_nos_milhos.append(milho)
 		_milhos_plantados += 1
 		restaurados += 1
+
+		# Restaura o estado pulverizado se este milho foi pulverizado anteriormente
+		if _posicao_foi_pulverizada(pos) and material_pulverizado != null:
+			var corpo := milho.get_node_or_null("Milho")
+			if corpo == null:
+				corpo = milho
+			corpo.material_override = material_pulverizado
 
 	print("[AreaPlantio] Milhos restaurados do save: ", restaurados, " / ", _milhos_plantados)
