@@ -230,7 +230,7 @@ func _on_drone_pulverizando(posicao: Vector3) -> void:
 			var dist := milho.global_position.distance_to(posicao)
 			if dist <= raio_pulverizacao:
 				_marcar_milho_pulverizado(milho)
-				pulverizou_algo := true
+				pulverizou_algo = true
 		if pulverizou_algo:
 			_milho_pulverizado = true
 			if is_instance_valid(Jogo):
