@@ -32,13 +32,14 @@ extends Node3D
 
 @export_group("Clima")
 ## Velocidade (s) da transição do céu entre normal e chuvoso.
-@export var tempo_transicao: float = 2.5
+@export var tempo_transicao: float = 6.0
 
 # --- Nós criados em runtime ---
 var _particulas: GPUParticles3D
 var _audio: AudioStreamPlayer
 var _relampago: DirectionalLight3D
 var _timer_raio: Timer
+var _timer_chuva_dialogo: Timer  # Liga a chuva 10s após o áudio do Agrobot da missão 6
 
 # --- Referências do mundo ---
 var _sky3d: Node
@@ -49,6 +50,7 @@ var _sol: DirectionalLight3D
 # --- Estado ---
 var _chovendo: bool = false
 var _tween_clima: Tween
+var _dialogo_agrobot_m6_terminado: bool = false
 
 # Valores originais (para voltar ao normal)
 var _originais: Dictionary = {}
@@ -59,8 +61,20 @@ func _ready() -> void:
 	_criar_audio()
 	_criar_relampago()
 	_criar_timer_raio()
+	_criar_timer_chuva_dialogo()
 	_capturar_ambiente()
 	_mostrar_chuva(false, true)
+
+	# Conecta ao DialogueManager para detectar fim da fala do Agrobot (missão 6)
+	var dm: Variant = get_node_or_null("/root/DialogueManager")
+	if dm != null and dm.has_signal("dialogue_finished") and not dm.is_connected("dialogue_finished", _on_dialogue_finished):
+		dm.dialogue_finished.connect(_on_dialogue_finished)
+
+	# Conecta ao MissionManager para desligar a chuva quando a missão 7 iniciar
+	var mm: Variant = get_node_or_null("/root/MissionManager")
+	if mm != null and mm.has_signal("mission_changed") and not mm.is_connected("mission_changed", _on_mission_changed):
+		mm.mission_changed.connect(_on_mission_changed)
+
 	print("[Clima] Pronto. Pressione a tecla 'chuva' (F1) para alternar a chuva.")
 
 
@@ -87,6 +101,18 @@ func alternar_chuva() -> void:
 
 func esta_chovendo() -> bool:
 	return _chovendo
+
+func iniciar_chuva() -> void:
+	"""Liga a chuva (partículas, som, relâmpagos, céu chuvoso)."""
+	if _chovendo:
+		return
+	_mostrar_chuva(true)
+
+func parar_chuva() -> void:
+	"""Desliga a chuva e restaura o tempo normal."""
+	if not _chovendo:
+		return
+	_mostrar_chuva(false)
 
 
 ## Interno ────────────────────────────────────────────────────────────────────
@@ -230,6 +256,15 @@ func _criar_timer_raio() -> void:
 	add_child(_timer_raio)
 
 
+func _criar_timer_chuva_dialogo() -> void:
+	_timer_chuva_dialogo = Timer.new()
+	_timer_chuva_dialogo.name = "TimerChuvaDialogo"
+	_timer_chuva_dialogo.one_shot = true
+	_timer_chuva_dialogo.wait_time = 10.0
+	_timer_chuva_dialogo.timeout.connect(_on_timer_chuva_dialogo_timeout)
+	add_child(_timer_chuva_dialogo)
+
+
 func _agendar_proximo_raio() -> void:
 	_timer_raio.wait_time = randf_range(intervalo_min, intervalo_max)
 	_timer_raio.start()
@@ -257,6 +292,30 @@ func _flash_relampago() -> void:
 		tf.tween_property(_environment, "background_energy_multiplier", bg + 1.5, 0.04)
 		tf.tween_property(_environment, "background_energy_multiplier", bg, 0.35)
 
+
+## Handlers de missão e diálogo ──────────────────────────────────────────────
+
+func _on_dialogue_finished(dialogue_id: String) -> void:
+	# 10 segundos após o término da fala do Agrobot na missão 6, inicia a chuva.
+	if dialogue_id == "conhecer_agua_inicio_agrobot":
+		_dialogo_agrobot_m6_terminado = true
+		_timer_chuva_dialogo.start()
+		print("[Clima] Diálogo da missão 6 finalizado. Chuva iniciará em 10s.")
+
+
+func _on_timer_chuva_dialogo_timeout() -> void:
+	if _dialogo_agrobot_m6_terminado and not _chovendo:
+		iniciar_chuva()
+		print("[Clima] Chuva iniciada após o aviso do Agrobot.")
+
+
+func _on_mission_changed(mission_id: Variant) -> void:
+	# Desliga a chuva quando a missão 7 (proteger_equipamentos) iniciar.
+	var mid: String = str(mission_id)
+	if mid == "proteger_equipamentos" and _chovendo:
+		parar_chuva()
+		_dialogo_agrobot_m6_terminado = false
+		print("[Clima] Missão 7 iniciada. Chuva parada.")
 
 ## Clima / céu ────────────────────────────────────────────────────────────────
 

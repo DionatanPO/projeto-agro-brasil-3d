@@ -113,44 +113,66 @@
 			"ordem": 4
 		},
 		{
-			"id": "conhecer_agua",
+			"id": "colocar_estacao",
 			"tipo": "discovery",
-			"titulo": "Água Consciente",
-			"descricao": "Visite a placa sobre o uso da água no campo.",
+			"titulo": "Instale a Estação Meteorológica",
+			"descricao": "A instituição de ensino enviou uma estação meteorológica completa. Primeiro, encontre a área de instalação próxima aos galpões e celeiros (marcada no mapa com um anel vermelho). Lá, o Agrobot indicará o local ideal. Depois, instale a estação naquele ponto.",
 			"objetivos": [
 				{
-					"id": "visitar_agua",
+					"id": "encontrar_area_estacao",
 					"tipo": "descoberta",
-					"alvo_id": "agua",
-					"texto": "Visite a placa sobre a água"
+					"alvo_id": "area_estacao",
+					"texto": "Encontre a área de instalação da estação próxima aos galpões"
+				},
+				{
+					"id": "colocar_estacao",
+					"tipo": "descoberta",
+					"alvo_id": "estacao_colocada",
+					"texto": "Instale a estação meteorológica na área encontrada"
 				}
 			],
 			"recompensas": [
 				{
 					"tipo": "xp",
-					"valor": 100
+					"valor": 200
 				}
 			],
 			"requer": ["operacao_drone_milho"],
 			"ordem": 5
 		},
 		{
-			"id": "conhecer_culturas",
+			"id": "conhecer_agua",
 			"tipo": "discovery",
-			"titulo": "Culturas do Brasil",
-			"descricao": "Visite as placas da soja e do milho.",
+			"titulo": "Chuva Detectada",
+			"descricao": "A estação meteorológica detectou que está vindo uma chuva forte. Retorne imediatamente à sede da fazenda para se abrigar e proteger os equipamentos.",
 			"objetivos": [
 				{
-					"id": "visitar_soja",
+					"id": "retornar_sede",
 					"tipo": "descoberta",
-					"alvo_id": "soja",
-					"texto": "Visite a placa da soja"
-				},
+					"alvo_id": "sede",
+					"texto": "Retorne à sede da fazenda"
+				}
+			],
+			"recompensas": [
 				{
-					"id": "visitar_milho",
+					"tipo": "xp",
+					"valor": 150
+				}
+			],
+			"requer": ["colocar_estacao"],
+			"ordem": 6
+		},
+		{
+			"id": "proteger_equipamentos",
+			"tipo": "discovery",
+			"titulo": "Proteja os Equipamentos",
+			"descricao": "Com a chuva caindo, abrigue os equipamentos da fazenda sob a sede para evitar danos.",
+			"objetivos": [
+				{
+					"id": "abrigar_equipamentos",
 					"tipo": "descoberta",
-					"alvo_id": "milho",
-					"texto": "Visite a placa do milho"
+					"alvo_id": "sede",
+					"texto": "Abrigue os equipamentos na sede"
 				}
 			],
 			"recompensas": [
@@ -160,7 +182,7 @@
 				}
 			],
 			"requer": ["conhecer_agua"],
-			"ordem": 6
+			"ordem": 7
 		}
 	]
 }

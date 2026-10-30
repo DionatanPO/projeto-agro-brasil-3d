@@ -1,12 +1,22 @@
 {
   "dialogues": [
     {
-      "id": "conhecer_agua_inicio_agrobot_1",
+      "id": "conhecer_agua_inicio_agrobot",
       "speaker": "agrobot",
-      "audio": "agrobot/m5_agrobot__1.wav",
+      "audio": "agrobot/m6_agrobot__1.wav",
       "once": true,
       "triggers": [
         { "type": "mission_activated", "mission_id": "conhecer_agua" }
+      ],
+      "conditions": { "intro_seen": true }
+    },
+    {
+      "id": "conhecer_agua_concluido",
+      "speaker": "agrobot",
+      "audio": "agrobot/m5_agrobot__3.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_completed", "mission_id": "conhecer_agua" }
       ],
       "conditions": { "intro_seen": true }
     }

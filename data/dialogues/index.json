@@ -5,6 +5,7 @@
     { "category": "missions", "file": "missions/plantio_milho.json" },
     { "category": "missions", "file": "missions/operacao_drone_milho.json" },
     { "category": "missions", "file": "missions/conhecer_agua.json" },
+    { "category": "missions", "file": "missions/colocar_estacao.json" },
     { "category": "player", "file": "player/monologues.json" }
   ]
 }

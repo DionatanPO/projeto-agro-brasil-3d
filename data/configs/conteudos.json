@@ -54,6 +54,16 @@
 			"titulo": "Plantio de Milho",
 			"texto": "O milho é uma das principais culturas do Brasil, cultivado em safra de verão e safrinha. É usado para ração animal, produção de etanol e alimentação humana. O plantio adequado requer solo preparado, espaçamento entre fileiras e boas práticas de manejo.",
 			"fonte": "Embrapa Milho e Sorgo"
+		},
+		"estacao_colocada": {
+			"titulo": "Estação Meteorológica Instalada",
+			"texto": "A estação meteorológica foi instalada com sucesso! Ela monitora temperatura, umidade, velocidade do vento, precipitação e radiação solar. Esses dados ajudam a decidir o melhor momento para plantar, irrigar, pulverizar e colher, otimizando a produção e reduzindo riscos climáticos.",
+			"fonte": "Instituto Nacional de Meteorologia (INMET) / Embrapa"
+		},
+		"area_estacao": {
+			"titulo": "Área para Estação Meteorológica",
+			"texto": "Esta área plana próxima aos galpões e celeiros é ideal para instalar a estação meteorológica. O local tem boa visibilidade do céu (sem sombreamento de árvores ou prédios), acesso fácil para manutenção e está longe de fontes de calor ou vento artificial (como exaustores). É o ponto perfeito para medições precisas.",
+			"fonte": "Guia de Boas Práticas Agrometeorológicas"
 		}
 	}
 }

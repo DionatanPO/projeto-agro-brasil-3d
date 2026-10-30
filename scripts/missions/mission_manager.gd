@@ -138,6 +138,7 @@ func _restaurar_do_save() -> void:
 			if mission.is_concluida():
 				print("[MissionManager] Missão restaurada como concluída: ", mid)
 			elif mission.is_ativa():
+				print("[MissionManager] Missão restaurada como ATIVA: ", mid)
 				_definir_missao_ativa(mission)
 	
 	# Se nenhuma ativa, ativa a primeira pendente

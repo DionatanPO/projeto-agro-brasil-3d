@@ -76,6 +76,7 @@
 [ext_resource type="PackedScene" uid="uid://bjwnevipuwu80" path="res://assets/Farm Buildings - Sept 2018/FBX/BigBarn.fbx" id="74_gjwlp"]
 [ext_resource type="Script" uid="uid://dwlaalais2dpg" path="res://scripts/world/clima.gd" id="75_clima"]
 [ext_resource type="Script" uid="uid://cxqnlauh4ra0j" path="res://scripts/world/area_plantio.gd" id="76_plantio"]
+[ext_resource type="Script" path="res://scripts/world/estacao_colocacao.gd" id="77_estacao_colocacao"]
 
 [sub_resource type="Gradient" id="Gradient_gv5m4"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -471,6 +472,14 @@ size = Vector3(50, 2, 80)
 [sub_resource type="CylinderShape3D" id="AreaPlantioDialogoShape"]
 height = 20.0
 radius = 55.0
+
+[sub_resource type="CylinderShape3D" id="AreaEstacaoShape"]
+height = 4.0
+radius = 20.0
+
+[sub_resource type="CylinderShape3D" id="AreaEstacaoDialogueShape"]
+height = 4.0
+radius = 25.0
 
 [node name="Node3D" type="Node3D" unique_id=2061065415]
 
@@ -911,3 +920,55 @@ transform = Transform3D(-0.024764866, 0, -0.9996933, 0, 1, 0, 0.9996933, 0, -0.0
 
 [node name="Clima" type="Node3D" parent="." unique_id=403151229]
 script = ExtResource("75_clima")
+
+[node name="AreaEstacaoColocacao" type="Area3D" parent="." unique_id=2200000001]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 160, 11, 180)
+script = ExtResource("77_estacao_colocacao")
+mission_id = "colocar_estacao"
+objective_id = "colocar_estacao"
+distancia_max_colocacao = 15.0
+requer_superficie_plana = true
+tolerancia_inclinacao = 15.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaEstacaoColocacao" unique_id=2200000002]
+shape = SubResource("AreaEstacaoShape")
+
+[node name="AreaEstacaoVisual" type="MeshInstance3D" parent="AreaEstacaoColocacao" unique_id=2200000003]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+material_override = SubResource("AreaRingMaterial")
+mesh = SubResource("AreaRingMesh")
+
+[node name="AreaEstacaoDialogueTrigger" type="Area3D" parent="AreaEstacaoColocacao" unique_id=2200000004]
+script = ExtResource("70_trigger")
+mission_id = "colocar_estacao"
+discovery_id = "area_estacao"
+dialogue_area_id = "area_estacao"
+radius = 25.0
+height = 4.0
+collision_offset_y = 2.0
+show_prompt = false
+auto_register_discovery = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaEstacaoColocacao/AreaEstacaoDialogueTrigger" unique_id=2200000005]
+shape = SubResource("AreaEstacaoDialogueShape")
+
+[node name="AreaSedeTrigger" type="Area3D" parent="." unique_id=2300000001]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61.45755, 11.0, 204.05148)
+script = ExtResource("70_trigger")
+mission_id = "conhecer_agua"
+objective_id = "retornar_sede"
+discovery_id = "sede"
+dialogue_area_id = "area_sede"
+radius = 25.0
+height = 6.0
+collision_offset_y = 2.0
+show_prompt = false
+auto_register_discovery = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaSedeTrigger" unique_id=2300000002]
+shape = SubResource("AreaEstacaoDialogueShape")
+
+[node name="AreaSedeVisual" type="MeshInstance3D" parent="AreaSedeTrigger" unique_id=2300000003]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+material_override = SubResource("AreaRingMaterial")
+mesh = SubResource("AreaRingMesh")

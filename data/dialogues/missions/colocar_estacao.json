@@ -1,0 +1,43 @@
+{
+  "dialogues": [
+    {
+      "id": "colocar_estacao_inicio_player",
+      "speaker": "player",
+      "audio": "player/m5_player_intro_1.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "colocar_estacao" }
+      ],
+      "conditions": { "intro_seen": true }
+    },
+    {
+      "id": "colocar_estacao_inicio_agrobot",
+      "speaker": "agrobot",
+      "audio": "agrobot/m5_agrobot_intro_1.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_activated", "mission_id": "colocar_estacao" }
+      ],
+      "conditions": { "intro_seen": true }
+    },
+    {
+      "id": "colocar_estacao_area_estacao",
+      "speaker": "agrobot",
+      "audio": "agrobot/m5_agrobot__2.wav",
+      "once": true,
+      "triggers": [
+        { "type": "area_entered", "area_id": "area_estacao", "mission_id": "colocar_estacao" }
+      ],
+      "conditions": { "intro_seen": true, "mission_active": "colocar_estacao" }
+    },
+    {
+      "id": "colocar_estacao_concluido",
+      "speaker": "agrobot",
+      "audio": "agrobot/m5_agrobot__3.wav",
+      "once": true,
+      "triggers": [
+        { "type": "mission_completed", "mission_id": "colocar_estacao" }
+      ]
+    }
+  ]
+}
