@@ -300,12 +300,23 @@ func _physics_process(delta: float) -> void:
 		position = HOME_DRONE
 		velocity = Vector3.ZERO
 
+	# Enforça teto de altura mesmo quando desligado, para não ser empurrado
+	# para cima por colisões nas bordas do mapa.
+	if position.y > altura_max:
+		position.y = altura_max
+		velocity.y = 0.0
+
 	if not ligado:
 		if not is_on_floor():
 			velocity.y -= gravidade * delta
 		else:
 			velocity = Vector3.ZERO
 		move_and_slide()
+		# Clamp de altura APÓS move_and_slide para corrigir possíveis
+		# empurrões de resolução de colisão que passem do teto.
+		if position.y > altura_max:
+			position.y = altura_max
+			velocity.y = 0.0
 		modelo.rotation.x = lerpf(modelo.rotation.x, 0.0, 1.0 - exp(-4.0 * delta))
 		modelo.rotation.z = lerpf(modelo.rotation.z, 0.0, 1.0 - exp(-4.0 * delta))
 		return

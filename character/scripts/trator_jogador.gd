@@ -255,6 +255,10 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0.0, freio * delta)
 		_sincronizar_proximidade()
 
+		# Para completamente quando inativo e no chão, para não deslizar em declives.
+		if is_on_floor():
+			velocity = Vector3.ZERO
+
 	# Gravidade simples (igual ao jogador)
 	if not is_on_floor():
 		velocity.y -= gravidade * delta

@@ -11,8 +11,10 @@ extends Node3D
 @export var limite_min := Vector2(2.0, 2.0)
 ## Canto máximo do mapa (x, z).
 @export var limite_max := Vector2(254.0, 254.0)
-## Distância mantida das paredes, para o alvo não raspar nelas.
-@export var folga: float = 0.0
+## Margem interna onde o clamp suave começa a agir (evita tremor na borda).
+@export var margem_suave: float = 1.5
+## Força do retorno suave (0..1 por frame de física). 0.5 = resposta rápida sem overshoot.
+@export var forca_retorno: float = 0.5
 ## Abaixo desta altura o alvo é considerado no limbo e volta ao último chão.
 @export var altura_limbo: float = -30.0
 ## Grupos dos nós que devem permanecer dentro do mapa.
@@ -55,22 +57,53 @@ func _conter(a: CharacterBody3D) -> void:
 	if a.is_on_floor():
 		_ultimo_chao[a] = p
 
-	var xmin := limite_min.x + folga
-	var xmax := limite_max.x - folga
-	var zmin := limite_min.y + folga
-	var zmax := limite_max.y - folga
-	var x := clampf(p.x, xmin, xmax)
-	var z := clampf(p.z, zmin, zmax)
-	var bateu_x := not is_equal_approx(x, p.x)
-	var bateu_z := not is_equal_approx(z, p.z)
-	if not (bateu_x or bateu_z):
+	# Limites duros (nunca ultrapassa).
+	var xmin := limite_min.x
+	var xmax := limite_max.x
+	var zmin := limite_min.y
+	var zmax := limite_max.y
+
+	# Clamp suave na margem interna + clamp duro nos limites absolutos.
+	var new_x := p.x
+	var new_z := p.z
+	var mudou := false
+
+	# Clamp duro primeiro (se já passou do limite absoluto).
+	if p.x < xmin:
+		new_x = xmin
+		mudou = true
+	elif p.x > xmax:
+		new_x = xmax
+		mudou = true
+	# Clamp suave na margem interna.
+	elif p.x < xmin + margem_suave:
+		new_x = lerpf(p.x, xmin + margem_suave, forca_retorno)
+		mudou = true
+	elif p.x > xmax - margem_suave:
+		new_x = lerpf(p.x, xmax - margem_suave, forca_retorno)
+		mudou = true
+
+	if p.z < zmin:
+		new_z = zmin
+		mudou = true
+	elif p.z > zmax:
+		new_z = zmax
+		mudou = true
+	elif p.z < zmin + margem_suave:
+		new_z = lerpf(p.z, zmin + margem_suave, forca_retorno)
+		mudou = true
+	elif p.z > zmax - margem_suave:
+		new_z = lerpf(p.z, zmax - margem_suave, forca_retorno)
+		mudou = true
+
+	if not mudou:
 		return
 
-	a.global_position = Vector3(x, p.y, z)
+	a.global_position = Vector3(new_x, p.y, new_z)
 	var v := a.velocity
-	if bateu_x:
+	if new_x != p.x:
 		v.x = 0.0
-	if bateu_z:
+	if new_z != p.z:
 		v.z = 0.0
 	a.velocity = v
 

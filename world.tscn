@@ -1020,5 +1020,5 @@ script = ExtResource("78_qm10a")
 alvo_path = NodePath("../Trator")
 distancia_pe = 0.0
 
-[node name="LimiteMapa" type="Node3D" parent="." unique_id=1536355626]
+[node name="LimiteMapa" type="Node3D" parent="." unique_id=153985086]
 script = ExtResource("79_7fs00")
