@@ -76,7 +76,9 @@
 [ext_resource type="PackedScene" uid="uid://bjwnevipuwu80" path="res://assets/Farm Buildings - Sept 2018/FBX/BigBarn.fbx" id="74_gjwlp"]
 [ext_resource type="Script" uid="uid://dwlaalais2dpg" path="res://scripts/world/clima.gd" id="75_clima"]
 [ext_resource type="Script" uid="uid://cxqnlauh4ra0j" path="res://scripts/world/area_plantio.gd" id="76_plantio"]
-[ext_resource type="Script" path="res://scripts/world/estacao_colocacao.gd" id="77_estacao_colocacao"]
+[ext_resource type="Script" uid="uid://c3k0e8gagqg03" path="res://scripts/world/estacao_colocacao.gd" id="77_estacao_colocacao"]
+[ext_resource type="Script" uid="uid://ceujun757vum1" path="res://scripts/world/rio_barreira.gd" id="78_qm10a"]
+[ext_resource type="Script" uid="uid://c1l5gosbi7kqe" path="res://scripts/world/limite_mapa.gd" id="79_7fs00"]
 
 [sub_resource type="Gradient" id="Gradient_gv5m4"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -354,6 +356,18 @@ shader_parameter/_refraction = 0.030000001425
 shader_parameter/_uv_scale = 0.246000011685
 shader_parameter/_foam_strength = 0.55600002641
 shader_parameter/_foam_size = 0.20000000298023
+
+[sub_resource type="BoxShape3D" id="RioParedeNorteShape"]
+size = Vector3(260, 200, 2)
+
+[sub_resource type="BoxShape3D" id="RioParedeSulShape"]
+size = Vector3(260, 200, 2)
+
+[sub_resource type="BoxShape3D" id="RioParedeLesteShape"]
+size = Vector3(2, 200, 260)
+
+[sub_resource type="BoxShape3D" id="RioParedeOesteShape"]
+size = Vector3(2, 200, 260)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qktwf"]
 shader = ExtResource("11_26xuy")
@@ -673,6 +687,34 @@ surface_material_override/0 = SubResource("ShaderMaterial_ic0uy")
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 
+[node name="LimiteParedeNorte" type="StaticBody3D" parent="." unique_id=-1894967286]
+collision_layer = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LimiteParedeNorte" unique_id=-1894967285]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 20, 256)
+shape = SubResource("RioParedeNorteShape")
+
+[node name="LimiteParedeSul" type="StaticBody3D" parent="." unique_id=-1894967276]
+collision_layer = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LimiteParedeSul" unique_id=-1894967275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128, 20, 0)
+shape = SubResource("RioParedeSulShape")
+
+[node name="LimiteParedeLeste" type="StaticBody3D" parent="." unique_id=-1894967266]
+collision_layer = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LimiteParedeLeste" unique_id=-1894967265]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256, 20, 128)
+shape = SubResource("RioParedeLesteShape")
+
+[node name="LimiteParedeOeste" type="StaticBody3D" parent="." unique_id=-1894967256]
+collision_layer = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LimiteParedeOeste" unique_id=-1894967255]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 128)
+shape = SubResource("RioParedeOesteShape")
+
 [node name="Sky3D" type="WorldEnvironment" parent="." unique_id=1211014161]
 environment = SubResource("Environment_jjr1n")
 camera_attributes = SubResource("CameraAttributesPractical_gggvi")
@@ -921,24 +963,22 @@ transform = Transform3D(-0.024764866, 0, -0.9996933, 0, 1, 0, 0.9996933, 0, -0.0
 [node name="Clima" type="Node3D" parent="." unique_id=403151229]
 script = ExtResource("75_clima")
 
-[node name="AreaEstacaoColocacao" type="Area3D" parent="." unique_id=2200000001]
+[node name="AreaEstacaoColocacao" type="Area3D" parent="." unique_id=1090265837]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 160, 11, 180)
 script = ExtResource("77_estacao_colocacao")
 mission_id = "colocar_estacao"
 objective_id = "colocar_estacao"
 distancia_max_colocacao = 15.0
-requer_superficie_plana = true
-tolerancia_inclinacao = 15.0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaEstacaoColocacao" unique_id=2200000002]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaEstacaoColocacao" unique_id=1766053293]
 shape = SubResource("AreaEstacaoShape")
 
-[node name="AreaEstacaoVisual" type="MeshInstance3D" parent="AreaEstacaoColocacao" unique_id=2200000003]
+[node name="AreaEstacaoVisual" type="MeshInstance3D" parent="AreaEstacaoColocacao" unique_id=-2094967293]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 material_override = SubResource("AreaRingMaterial")
 mesh = SubResource("AreaRingMesh")
 
-[node name="AreaEstacaoDialogueTrigger" type="Area3D" parent="AreaEstacaoColocacao" unique_id=2200000004]
+[node name="AreaEstacaoDialogueTrigger" type="Area3D" parent="AreaEstacaoColocacao" unique_id=-2094967292]
 script = ExtResource("70_trigger")
 mission_id = "colocar_estacao"
 discovery_id = "area_estacao"
@@ -947,13 +987,12 @@ radius = 25.0
 height = 4.0
 collision_offset_y = 2.0
 show_prompt = false
-auto_register_discovery = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaEstacaoColocacao/AreaEstacaoDialogueTrigger" unique_id=2200000005]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaEstacaoColocacao/AreaEstacaoDialogueTrigger" unique_id=-2094967291]
 shape = SubResource("AreaEstacaoDialogueShape")
 
-[node name="AreaSedeTrigger" type="Area3D" parent="." unique_id=2300000001]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61.45755, 11.0, 204.05148)
+[node name="AreaSedeTrigger" type="Area3D" parent="." unique_id=1439751470]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61.45755, 11, 204.05148)
 script = ExtResource("70_trigger")
 mission_id = "conhecer_agua"
 objective_id = "retornar_sede"
@@ -963,12 +1002,23 @@ radius = 25.0
 height = 6.0
 collision_offset_y = 2.0
 show_prompt = false
-auto_register_discovery = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaSedeTrigger" unique_id=2300000002]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaSedeTrigger" unique_id=108031227]
 shape = SubResource("AreaEstacaoDialogueShape")
 
-[node name="AreaSedeVisual" type="MeshInstance3D" parent="AreaSedeTrigger" unique_id=2300000003]
+[node name="AreaSedeVisual" type="MeshInstance3D" parent="AreaSedeTrigger" unique_id=-1994967293]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 material_override = SubResource("AreaRingMaterial")
 mesh = SubResource("AreaRingMesh")
+
+[node name="RioBarreira" type="Node3D" parent="." unique_id=1456120702]
+script = ExtResource("78_qm10a")
+recuo_margem = 0.0
+
+[node name="RioBarreiraTrator" type="Node3D" parent="." unique_id=1719822118]
+script = ExtResource("78_qm10a")
+alvo_path = NodePath("../Trator")
+distancia_pe = 0.0
+
+[node name="LimiteMapa" type="Node3D" parent="." unique_id=1536355626]
+script = ExtResource("79_7fs00")
