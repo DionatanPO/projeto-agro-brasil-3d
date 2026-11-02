@@ -281,6 +281,12 @@ func _adicionar_collider_se_precisar(node: Node3D) -> void:
 		if child is StaticBody3D:
 			return  # Já tem colisão
 	
+	# Antes de adicionar o colisor estático, afasta o drone e o trator se
+	# estiverem sobrepostos com a estação. Um StaticBody3D adicionado em cima
+	# de um CharacterBody3D empurra o veículo violentamente pela física,
+	# podendo lançar drone/trator para o limbo (y < -50).
+	_afastar_veiculos_da_estacao(node.global_position)
+	
 	# Cria um StaticBody3D simples com BoxShape3D aproximado
 	var static_body = StaticBody3D.new()
 	static_body.name = "EstacaoCollision"
@@ -298,6 +304,31 @@ func _adicionar_collider_se_precisar(node: Node3D) -> void:
 	node.add_child(static_body)
 	static_body.collision_layer = 1
 	static_body.collision_mask = 1
+
+
+func _afastar_veiculos_da_estacao(posicao_estacao: Vector3) -> void:
+	"""Move drone e trator para longe da estação antes de ativar o colisor estático.
+
+	Evita que o StaticBody3D recém-criado empurre os veículos fisicamente
+	quando há sobreposição, o que poderia lançá-los para o limbo (y < -50)."""
+	var drone = get_tree().get_first_node_in_group("drone_jogador") as Node3D
+	if drone != null and is_instance_valid(drone):
+		var dist_d := posicao_estacao.distance_to(drone.global_position)
+		if dist_d < 12.0:
+			drone.global_position = Vector3(drone.global_position.x, 40.0, drone.global_position.z)
+			drone.velocity = Vector3.ZERO
+			print("[EstacaoColocacao] Drone afastado da estação (estava a %.1f m)" % dist_d)
+
+	var trator = get_tree().get_first_node_in_group("trator_jogador") as Node3D
+	if trator != null and is_instance_valid(trator):
+		var dist_t := posicao_estacao.distance_to(trator.global_position)
+		if dist_t < 12.0:
+			var direcao := (trator.global_position - posicao_estacao).normalized()
+			if direcao == Vector3.ZERO:
+				direcao = Vector3(1.0, 0.0, 0.0)
+			trator.global_position = posicao_estacao + direcao * 15.0 + Vector3(0, 2.0, 0)
+			trator.velocity = Vector3.ZERO
+			print("[EstacaoColocacao] Trator afastado da estação (estava a %.1f m)" % dist_t)
 
 
 func _calcular_aabb(node: Node3D) -> AABB:
