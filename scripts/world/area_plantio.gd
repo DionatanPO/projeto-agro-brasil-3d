@@ -44,6 +44,8 @@ var _chaves_pulverizadas: Dictionary = {}
 var _salvar_agendado := false
 # Guarda se o objetivo de plantio já foi concluído (evita disparar 3x por clique).
 var _objetivo_concluido := false
+# Pulverização processa apenas durante a missão "operacao_drone_milho".
+var _em_missao_pulverizacao: bool = false
 
 
 func _ready() -> void:
@@ -69,15 +71,26 @@ func _ready() -> void:
 	_reindexar_pulverizados_salvos()
 	
 	set_process_input(true)
+	# Conecta ao MissionManager para ativar/desativar pulverização por missão
+	var mm: Variant = get_node_or_null("/root/MissionManager")
+	if mm != null and mm.has_signal("mission_changed") and not mm.is_connected("mission_changed", _on_missao_pulverizacao_mudou):
+		mm.mission_changed.connect(_on_missao_pulverizacao_mudou)
+	var ativa: Variant = mm.get_missao_ativa()
+	if ativa != null and str(ativa.mission_id) == "operacao_drone_milho":
+		_em_missao_pulverizacao = true
 	# Tenta conectar ao drone após um frame (garante que o drone já entrou no grupo)
 	call_deferred("_conectar_drone")
 
 
 func _conectar_drone() -> void:
 	_drone = get_tree().get_first_node_in_group("drone_jogador") as Node3D
-	if _drone != null and _drone.has_signal("pulverizando") and not _drone.is_connected("pulverizando", _on_drone_pulverizando):
-		_drone.pulverizando.connect(_on_drone_pulverizando)
-		print("[AreaPlantio] Conectado ao sinal de pulverização do drone")
+	if _drone != null and _drone.has_signal("pulverizando"):
+		if _em_missao_pulverizacao and not _drone.is_connected("pulverizando", _on_drone_pulverizando):
+			_drone.pulverizando.connect(_on_drone_pulverizando)
+			print("[AreaPlantio] Conectado ao sinal de pulverização do drone (missao ativa)")
+		elif not _em_missao_pulverizacao and _drone.is_connected("pulverizando", _on_drone_pulverizando):
+			_drone.pulverizando.disconnect(_on_drone_pulverizando)
+			print("[AreaPlantio] Desconectado do sinal de pulverização do drone (missao inativa)")
 	elif _drone == null:
 		# Tenta novamente daqui a 1 segundo se o drone ainda não apareceu
 		# Usa Timer one-shot em vez de call_deferred em loop.
@@ -90,33 +103,31 @@ func _conectar_drone() -> void:
 
 
 func _notification(what: int) -> void:
-	# Salva as posições dos milhos ao fechar o jogo
-	if what == Node.NOTIFICATION_WM_CLOSE_REQUEST:
-		_salvar_todas_posicoes()
+	# Sem salvamento automático ao fechar. O save ocorre apenas ao concluir missão/subobjetivo (via Jogo).
+	pass
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not _esta_ativa():
-		print("[AreaPlantio] Missão não ativa para plantio")
-		return
+	# Confere a ação PRIMEIRO: _unhandled_input recebe todo evento (inclusive
+	# movimento de mouse, que chega dezenas de vezes por segundo). Fazer
+	# consultas/prints antes daqui roda esse código a cada evento e derruba o FPS.
 	if not event.is_action_pressed("interagir"):
+		return
+	if not _esta_ativa():
 		return
 	
 	var player = get_tree().get_first_node_in_group("jogador") as Node3D
 	if player == null:
-		print("[AreaPlantio] Jogador não encontrado")
 		return
 	
 	# Verifica se o jogador está perto o suficiente da área
 	var dist := global_position.distance_to(player.global_position)
-	print("[AreaPlantio] Distância jogador-área: ", dist, " (máximo: ", distancia_max_plantio, ")")
 	if dist > distancia_max_plantio:
 		return
 	
 	# Raycast da câmera para o chão
 	var camera := get_viewport().get_camera_3d()
 	if camera == null:
-		print("[AreaPlantio] Câmera não encontrada")
 		return
 	
 	var origem := camera.global_position
@@ -304,12 +315,8 @@ func _atualizar_progresso_pulverizacao() -> void:
 
 
 func _on_drone_pulverizando(posicao: Vector3) -> void:
-	# Ativo se a missão atual for a de plantio OU a de pulverização
-	var mm: Variant = get_node_or_null("/root/MissionManager")
-	var ativa: Variant = mm.get_missao_ativa() if mm != null else null
-	var mid_ativa: String = str(ativa.mission_id) if ativa != null else ""
-	var ativo_para_pulverizacao := (mid_ativa == mission_id_pulverizacao) if not mission_id_pulverizacao.is_empty() else false
-	if not _esta_ativa() and not ativo_para_pulverizacao:
+	# Pulverização só processa durante a missão de pulverização de milho
+	if not _em_missao_pulverizacao:
 		return
 	if not _ponto_dentro_da_area(posicao):
 		return
@@ -397,9 +404,8 @@ func _salvar_posicao_milho(posicao: Vector3, rotacao: Vector3) -> void:
 
 
 func _salvar_todas_posicoes() -> void:
-	"""Força o salvamento de todas as posições no disco (chamado ao fechar o jogo)."""
-	if SaveSystem != null and SaveSystem.dados.has("milhos_plantados_posicoes"):
-		SaveSystem.salvar()
+	"""Sem salvamento automático ao fechar. O save ocorre apenas ao concluir missão/subobjetivo (via Jogo)."""
+	pass
 
 
 ## Agendamento de salvamento em disco ────────────────────────────────
@@ -412,8 +418,7 @@ func _agendar_salvar() -> void:
 
 func _fazer_salvar() -> void:
 	_salvar_agendado = false
-	if SaveSystem != null:
-		SaveSystem.salvar()
+	# Sem gravacao automática em disco. O save ocorre apenas ao concluir missao/subobjetivo (via Jogo).
 
 
 ## Retorna uma chave de string para uma posição (tolerância de 1 cm).
@@ -450,6 +455,15 @@ func _reindexar_pulverizados_salvos() -> void:
 				float(entrada.get("z", 0)),
 			)
 			_chaves_pulverizadas[_chave_posicao(p)] = true
+
+
+func _on_missao_pulverizacao_mudou(mission_id: Variant) -> void:
+	var mid: String = str(mission_id)
+	_em_missao_pulverizacao = (mid == "operacao_drone_milho")
+	# Reconecta/desconecta o sinal do drone baseado na missão
+	call_deferred("_conectar_drone")
+	if not _em_missao_pulverizacao:
+		print("[AreaPlantio] Missão de pulverização encerrada. Sinal de drone desconectado.")
 
 
 func _posicao_foi_pulverizada(posicao: Vector3) -> bool:

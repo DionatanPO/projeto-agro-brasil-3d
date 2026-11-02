@@ -37,10 +37,13 @@ const AUDIO_ROOT := "res://assets/audio/dialogues/"
 const SAVE_KEY := "dialogos_tocados"
 
 var _registry: Dictionary = {}   # dialogue_id -> dados do diálogo
+var _audio_cache: Dictionary = {}  # dialogue_id -> AudioStream (pre-carregado para evitar load() em runtime)
 var _played: Dictionary = {}     # dialogue_id -> true (persistido no save)
 var _queue: Array = []           # fila de {id, data, once}
 var _current_id: String = ""
 var _player: AudioStreamPlayer
+# Index por tipo de trigger para nao iterar sobre todos os dialgos a cada evento.
+var _trigger_index: Dictionary = {}  # "trigger_type:mission_id:objective_id" -> [dialogue_id, ...]
 
 
 func _ready() -> void:
@@ -122,6 +125,30 @@ func _carregar_arquivo(categoria: String, arquivo: String) -> void:
 		d["category"] = categoria
 		d["source"] = arquivo
 		_registry[id] = d
+
+		# Pre-carrega o áudio do diálogo para evitar load() síncrono em runtime.
+		var audio_rel: String = str(d.get("audio", ""))
+		if not audio_rel.is_empty():
+			var caminho_audio := AUDIO_ROOT + audio_rel
+			if ResourceLoader.exists(caminho_audio):
+				var stream: AudioStream = load(caminho_audio) as AudioStream
+				if stream != null:
+					_audio_cache[id] = stream
+
+		# Indexa o diálogo por tipo de trigger para avaliacao rapida.
+		var triggers_raw: Variant = d.get("triggers", [])
+		var triggers: Array = triggers_raw if triggers_raw is Array else []
+		for trigger_raw in triggers:
+			if not (trigger_raw is Dictionary):
+				continue
+			var trigger: Dictionary = trigger_raw
+			var tipo: String = str(trigger.get("type", ""))
+			var mid: String = str(trigger.get("mission_id", ""))
+			var oid: String = str(trigger.get("objective_id", ""))
+			var chave: String = "%s:%s:%s" % [tipo, mid, oid]
+			if not _trigger_index.has(chave):
+				_trigger_index[chave] = []
+			(_trigger_index[chave] as Array).append(id)
 
 
 ## Conexões com o mundo ───────────────────────────────────────────────────────
@@ -262,7 +289,34 @@ func _on_area_interaction(area: Node) -> void:
 ## Avaliação de triggers ─────────────────────────────────────────────────────
 
 func _avaliar_todos(context: Dictionary) -> void:
-	for dialogue_id in _registry.keys():
+	# Usa o índice de triggers para avaliar apenas diálogos relevantes ao evento.
+	var tipo: String = str(context.get("type", ""))
+	var mid: String = str(context.get("mission_id", ""))
+	var oid: String = str(context.get("objective_id", ""))
+	var chave: String = "%s:%s:%s" % [tipo, mid, oid]
+
+	var ids_para_avaliar: Array = []
+	if _trigger_index.has(chave):
+		ids_para_avaliar = (_trigger_index[chave] as Array).duplicate()
+
+	# Para triggers de area, tambem avalia sem mission_id (area_id so).
+	if tipo in ["area_entered", "area_exited"]:
+		var chave_sem_missao: String = "%s::" % tipo
+		if _trigger_index.has(chave_sem_missao):
+			for id in (_trigger_index[chave_sem_missao] as Array):
+				if not ids_para_avaliar.has(id):
+					ids_para_avaliar.append(id)
+
+	# Para custom_signal, avalia por signal.
+	if tipo == "custom_signal":
+		var sinal: String = str(context.get("signal", ""))
+		var chave_signal: String = "custom_signal::%s" % sinal
+		if _trigger_index.has(chave_signal):
+			for id in (_trigger_index[chave_signal] as Array):
+				if not ids_para_avaliar.has(id):
+					ids_para_avaliar.append(id)
+
+	for dialogue_id in ids_para_avaliar:
 		_avaliar_dialogo(str(dialogue_id), context)
 
 
@@ -398,14 +452,17 @@ func _iniciar(dialogue_id: String, data: Dictionary, once: bool) -> bool:
 		return false
 
 	var caminho: String = AUDIO_ROOT + audio_rel
-	if not ResourceLoader.exists(caminho):
-		push_warning("DialogueManager: áudio não encontrado: " + caminho + " (diálogo " + dialogue_id + ")")
-		return false
 
-	var stream: AudioStream = load(caminho) as AudioStream
+	# Usa o áudio pré-carregado em cache; fallback para load() apenas se não estiver em cache.
+	var stream: AudioStream = _audio_cache.get(dialogue_id)
 	if stream == null:
-		push_warning("DialogueManager: falha ao carregar áudio: " + caminho)
-		return false
+		if not ResourceLoader.exists(caminho):
+			push_warning("DialogueManager: áudio não encontrado: " + caminho + " (diálogo " + dialogue_id + ")")
+			return false
+		stream = load(caminho) as AudioStream
+		if stream == null:
+			push_warning("DialogueManager: falha ao carregar áudio: " + caminho)
+			return false
 
 	_player.stream = stream
 	_player.play()
@@ -439,7 +496,7 @@ func _marcar_tocado(dialogue_id: String) -> void:
 		return
 	_played[dialogue_id] = true
 	SaveSystem.dados[SAVE_KEY] = _played
-	SaveSystem.salvar()
+	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 
 
 func _reevaluar_missao_ativa() -> void:

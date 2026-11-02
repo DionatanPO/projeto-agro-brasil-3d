@@ -39,10 +39,6 @@ enum TriggerType {
 ## Se vazio, usa o nome do nó.
 @export var dialogue_area_id: String = ""
 
-@export_group("Scanner do Agrobot")
-## Quantos pulsos de scanner o Agrobot dispara automaticamente ao entrar.
-@export var pulsos_ao_entrar: int = 2
-
 @export_group("Colisão")
 @export var radius: float = 5.0
 @export var height: float = 2.0
@@ -130,12 +126,14 @@ func _on_body_entered(body: Node3D) -> void:
 	if not body.is_in_group("jogador"):
 		return
 
+	if _player_inside:
+		return
+
 	_player_inside = true
 	_player_ref = body
 	# Emitido antes de registrar a descoberta: diálogos de chegada ainda veem
 	# o objetivo como pendente.
 	player_entered.emit(self)
-	_pulsar_agrobot()
 
 	if trigger_type == TriggerType.ENTER_AREA:
 		_processar_enter_area()
@@ -153,22 +151,10 @@ func _on_mission_changed(_mission_id: Variant) -> void:
 	if not mission_id.is_empty() and not _missao_esta_ativa():
 		return
 	player_entered.emit(self)
-	_pulsar_agrobot()
 	if trigger_type == TriggerType.ENTER_AREA:
 		_processar_enter_area()
 	elif trigger_type == TriggerType.AUTO_COMPLETE:
 		_processar_auto_complete()
-
-
-func _pulsar_agrobot() -> void:
-	## Dispara o efeito de scanner do Agrobot (o mesmo do LT/Q), automaticamente.
-	var agrobot: Node = get_tree().get_first_node_in_group("agrobot")
-	if agrobot == null:
-		return
-	if agrobot.has_method("pulsar_automatico"):
-		agrobot.pulsar_automatico(pulsos_ao_entrar)
-	elif agrobot.has_method("disparar_pulso"):
-		agrobot.disparar_pulso()
 
 
 func _on_body_exited(body: Node3D) -> void:

@@ -25,7 +25,7 @@ const LISTA_CONTROLES := [
 	["Buzinar", "buzinar"],
 	["Diario", "diario"],
 	["Tutorial do drone", "tutorial_drone"],
-	["Chuva", "chuva"],
+	# ["Chuva", "chuva"],  # Removido: chuva não é mais alternável pelo jogador
 	["Camera", "camera"],
 ]
 
@@ -225,8 +225,7 @@ func _salvar() -> void:
 	var chk_vsync := _no("ChkVSync") as Button
 	if chk_vsync != null:
 		d["vsync"] = chk_vsync.button_pressed
-
-	SaveSystem.salvar()
+	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 
 
 # ------------------------------------------------------------------ controles
@@ -304,7 +303,7 @@ func _nome_botao_joypad(indice: int) -> String:
 
 func _definir_modo_toque(modo: String) -> void:
 	SaveSystem.dados["controles_toque"] = modo
-	SaveSystem.salvar()
+	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 	_atualizar_botoes_toque()
 
 

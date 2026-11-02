@@ -508,7 +508,7 @@ func _physics_process(delta: float) -> void:
 	# Animacao acompanha o fator: corpo e pernas na mesma proporcao.
 	if animador != null:
 		animador.speed_scale = fator_andar if animacao_alvo == "Walk" else 1.0
-	SaveSystem.dados["posicao_jogador"] = [position.x, position.y, position.z]
+	# Posicao so e salva ao concluir missao/subobjetivo (via Jogo), nunca aqui.
 
 
 func _process(delta: float) -> void:

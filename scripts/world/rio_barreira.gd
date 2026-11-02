@@ -41,6 +41,7 @@ var _terreno: Terrain3D
 var _alvo: CharacterBody3D
 var _pos_segura: Vector3
 var _tem_segura := false
+var _contador_fisica: int = 0  # Checa o terreno apenas a cada N frames de física
 
 
 func _ready() -> void:
@@ -114,6 +115,12 @@ func _physics_process(_delta: float) -> void:
 		_resolver_terreno()
 		if _terreno == null:
 			return
+
+	# Checa a altura do terreno apenas a cada 3 frames de física para reduzir
+	# chamadas a _terreno.data.get_height() (custo de acesso aos dados do Terrain3D).
+	_contador_fisica += 1
+	if _contador_fisica % 3 != 0:
+		return
 
 	var pos := _alvo.global_position
 	var pe := pos.y - distancia_pe

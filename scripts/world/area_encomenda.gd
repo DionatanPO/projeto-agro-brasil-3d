@@ -21,6 +21,7 @@ var _caixa: Node3D = null
 var _marcador: MeshInstance3D = null
 var _indicador: Label3D = null
 var _tempo_flutuacao := 0.0
+var _jogador_cache: Node3D = null  # Cache do jogador para evitar busca por grupo a cada frame
 
 
 func _ready() -> void:
@@ -34,6 +35,8 @@ func _ready() -> void:
 
 	_montar_marcador()
 	_criar_caixa()
+	# Cache da referencia do jogador (evita get_first_node_in_group a cada frame em _process).
+	_jogador_cache = get_tree().get_first_node_in_group("jogador") as Node3D
 
 
 func _montar_marcador() -> void:
@@ -197,7 +200,7 @@ func _instanciar_agrobot() -> void:
 
 	if not bool(SaveSystem.dados.get("agrobot_coletado", false)):
 		SaveSystem.dados["agrobot_coletado"] = true
-		SaveSystem.salvar()
+		# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 
 
 ## Restauração de progresso salvo ────────────────────────────────────────────
@@ -269,15 +272,20 @@ func _texto_indicador() -> String:
 func _process(delta: float) -> void:
 	"""Mostra o indicador quando o jogador está perto e o faz flutuar."""
 	if _indicador == null or not is_instance_valid(_indicador):
+		set_process(false)
 		return
 
-	# Caixa aberta ou jogador fora do alcance: indicador escondido.
+	# Caixa aberta: desativa o process e esconde o indicador.
 	if _pacote_aberto:
+		set_process(false)
 		_indicador.visible = false
 		return
 
-	var player := get_tree().get_first_node_in_group("jogador") as Node3D
-	if player == null or global_position.distance_to(player.global_position) > distancia_interacao:
+	# Atualiza cache do jogador se necessario.
+	if _jogador_cache == null or not is_instance_valid(_jogador_cache):
+		_jogador_cache = get_tree().get_first_node_in_group("jogador") as Node3D
+
+	if _jogador_cache == null or global_position.distance_to(_jogador_cache.global_position) > distancia_interacao:
 		_indicador.visible = false
 		return
 

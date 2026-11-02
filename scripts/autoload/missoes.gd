@@ -35,7 +35,7 @@ func verificar_progresso(descobertas: Array) -> void:
 		if ok:
 			(concluidas() as Array).append(missao_id)
 			SaveSystem.dados["missoes_concluidas"] = concluidas()
-			SaveSystem.salvar()
+			# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 			missao_concluida.emit(missao_id)
 	missoes_atualizadas.emit()
 

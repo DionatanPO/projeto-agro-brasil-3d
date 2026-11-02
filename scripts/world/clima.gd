@@ -46,11 +46,13 @@ var _sky3d: Node
 var _skydome: Node
 var _environment: Environment
 var _sol: DirectionalLight3D
+var _jogador_cache: Node3D = null  # Cache do jogador para evitar busca por grupo a cada frame
 
 # --- Estado ---
 var _chovendo: bool = false
 var _tween_clima: Tween
 var _dialogo_agrobot_m6_terminado: bool = false
+var _em_missao_clima: bool = false  # Clima processa apenas durante a missão "conhecer_agua"
 
 # Valores originais (para voltar ao normal)
 var _originais: Dictionary = {}
@@ -72,19 +74,26 @@ func _ready() -> void:
 
 	# Conecta ao MissionManager para desligar a chuva quando a missão 7 iniciar
 	var mm: Variant = get_node_or_null("/root/MissionManager")
-	if mm != null and mm.has_signal("mission_changed") and not mm.is_connected("mission_changed", _on_mission_changed):
-		mm.mission_changed.connect(_on_mission_changed)
+	if mm != null:
+		if mm.has_signal("mission_changed") and not mm.is_connected("mission_changed", _on_mission_changed):
+			mm.mission_changed.connect(_on_mission_changed)
+		if mm.has_signal("mission_changed") and not mm.is_connected("mission_changed", _on_missao_clima_mudou):
+			mm.mission_changed.connect(_on_missao_clima_mudou)
+		# Avalia imediatamente se ja estamos na missão de clima
+		var ativa: Variant = mm.get_missao_ativa()
+		if ativa != null and str(ativa.mission_id) == "conhecer_agua":
+			_em_missao_clima = true
 
-	print("[Clima] Pronto. Pressione a tecla 'chuva' (F1) para alternar a chuva.")
+	# Cache da referencia do jogador (evita get_first_node_in_group a cada frame).
+	_jogador_cache = get_tree().get_first_node_in_group("jogador") as Node3D
 
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("chuva"):
-		alternar_chuva()
-		get_viewport().set_input_as_handled()
+	print("[Clima] Pronto.")
 
 
 func _process(_delta: float) -> void:
+	# Processa apenas durante a missão de clima ("conhecer_agua").
+	if not _em_missao_clima:
+		return
 	# Mantém a área de chuva centrada no jogador (ou na câmera, sem jogador).
 	if _particulas == null:
 		return
@@ -96,6 +105,9 @@ func _process(_delta: float) -> void:
 ## API pública ────────────────────────────────────────────────────────────────
 
 func alternar_chuva() -> void:
+	if not _em_missao_clima:
+		print("[Clima] Chuva só pode ser alternada durante a missão 'conhecer_agua'.")
+		return
 	_mostrar_chuva(not _chovendo)
 
 
@@ -104,6 +116,8 @@ func esta_chovendo() -> bool:
 
 func iniciar_chuva() -> void:
 	"""Liga a chuva (partículas, som, relâmpagos, céu chuvoso)."""
+	if not _em_missao_clima:
+		return
 	if _chovendo:
 		return
 	_mostrar_chuva(true)
@@ -118,9 +132,11 @@ func parar_chuva() -> void:
 ## Interno ────────────────────────────────────────────────────────────────────
 
 func _posicao_jogador() -> Vector3:
-	var player := get_tree().get_first_node_in_group("jogador") as Node3D
-	if player != null and is_instance_valid(player):
-		return player.global_position
+	# Usa cache do jogador; atualiza se nao for mais valido.
+	if _jogador_cache == null or not is_instance_valid(_jogador_cache):
+		_jogador_cache = get_tree().get_first_node_in_group("jogador") as Node3D
+	if _jogador_cache != null and is_instance_valid(_jogador_cache):
+		return _jogador_cache.global_position
 	var cam := get_viewport().get_camera_3d()
 	if cam != null:
 		return cam.global_position
@@ -316,6 +332,15 @@ func _on_mission_changed(mission_id: Variant) -> void:
 		parar_chuva()
 		_dialogo_agrobot_m6_terminado = false
 		print("[Clima] Missão 7 iniciada. Chuva parada.")
+
+
+func _on_missao_clima_mudou(mission_id: Variant) -> void:
+	# Ativa o processamento do clima apenas enquanto a missão "conhecer_agua" estiver ativa.
+	var mid: String = str(mission_id)
+	_em_missao_clima = (mid == "conhecer_agua")
+	if not _em_missao_clima and _chovendo:
+		parar_chuva()
+		print("[Clima] Missão de clima encerrada. Chuva parada.")
 
 ## Clima / céu ────────────────────────────────────────────────────────────────
 

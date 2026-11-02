@@ -26,6 +26,7 @@ var _camera: Camera3D = null
 var _posicao_preview: Vector3 = Vector3.ZERO
 var _preview_instance: Node3D = null
 var _modo_preview: bool = false
+var _em_missao_estacao: bool = false  # Processa apenas durante a missão "colocar_estacao"
 
 
 func _ready() -> void:
@@ -42,11 +43,21 @@ func _ready() -> void:
 	if SaveSystem != null and SaveSystem.dados.has("estacao_posicao"):
 		call_deferred("_restaurar_estacao_salva")
 	
-	set_process_input(true)
-	set_process(true)
+	# Conecta ao MissionManager para ativar/desativar processamento por missão
+	var mm: Variant = get_node_or_null("/root/MissionManager")
+	if mm != null and mm.has_signal("mission_changed") and not mm.is_connected("mission_changed", _on_missao_estacao_mudou):
+		mm.mission_changed.connect(_on_missao_estacao_mudou)
+	var ativa: Variant = mm.get_missao_ativa()
+	if ativa != null and str(ativa.mission_id) == "colocar_estacao":
+		_em_missao_estacao = true
+	
+	set_process_input(_em_missao_estacao)
+	set_process(_em_missao_estacao)
 
 
 func _process(delta: float) -> void:
+	if not _em_missao_estacao:
+		return
 	if not _modo_preview or _estacao_colocada:
 		return
 	
@@ -306,6 +317,19 @@ func _calcular_aabb(node: Node3D) -> AABB:
 	return aabb
 
 
+func _on_missao_estacao_mudou(mission_id: Variant) -> void:
+	var mid: String = str(mission_id)
+	_em_missao_estacao = (mid == "colocar_estacao")
+	set_process_input(_em_missao_estacao)
+	set_process(_em_missao_estacao)
+	if not _em_missao_estacao:
+		_modo_preview = false
+		if _preview_instance != null:
+			_preview_instance.queue_free()
+			_preview_instance = null
+		_posicao_preview = Vector3.ZERO
+
+
 func _esta_ativa() -> bool:
 	if mission_id.is_empty():
 		return true
@@ -336,7 +360,7 @@ func _salvar_posicao_estacao(posicao: Vector3, rotacao: Vector3) -> void:
 	}
 	SaveSystem.dados["estacao_posicao"] = entrada
 	SaveSystem.dados["estacao_rotacao"] = entrada
-	SaveSystem.salvar()
+	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 
 
 func _restaurar_estacao_salva() -> void:

@@ -243,11 +243,7 @@ func _physics_process(delta: float) -> void:
 		velocity.x = frente_chao.x * _vel
 		velocity.z = frente_chao.z * _vel
 
-		SaveSystem.dados["posicao_trator"] = [
-			position.x,
-			position.y,
-			position.z
-		]
+	# Posicao so e salva ao concluir missao/subobjetivo (via Jogo), nunca aqui.
 	else:
 		_vel = move_toward(_vel, 0.0, freio * delta)
 		_esterco = lerpf(_esterco, 0.0, 1.0 - exp(-6.0 * delta))
@@ -492,7 +488,6 @@ func _entrar(silencioso: bool) -> void:
 	_jogador_perto = false
 	if not silencioso:
 		SaveSystem.dados["veiculo"] = "trator"
-		SaveSystem.salvar()
 
 
 func _sair() -> void:
@@ -510,7 +505,6 @@ func _sair() -> void:
 	if _som_motor.playing:
 		_som_motor.stop()
 	SaveSystem.dados["veiculo"] = "jogador"
-	SaveSystem.salvar()
 
 
 ## Diesel 4 tempos: serra grave 55 Hz + harmonicos, pulsacao de 13 Hz e

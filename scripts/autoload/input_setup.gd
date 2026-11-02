@@ -16,9 +16,7 @@ const ACOES: Dictionary = {
 	"tutorial_drone": [KEY_T],
 	"buzinar": [KEY_H],
 	"diario": [KEY_TAB],
-	"chuva": [KEY_F1],  # Ativar/desativar simulacao de chuva
 	"camera": [KEY_Y],  # Alternar distancia da camera (fase da descida)
-	"escanear": [KEY_Q],  # Teclado: Q para escanear (teste)
 }
 
 ## Botoes do controle (Xbox): A pula, LB corre, X interage, Y abre o caderno.
@@ -35,7 +33,6 @@ const BOTOES_PAD: Dictionary = {
 
 ## Gatilhos (analógicos) - LT/RT para ações contínuas
 const GATILHOS_PAD: Dictionary = {
-	"escanear": [JOY_AXIS_TRIGGER_LEFT],  # LT (gatilho esquerdo) para escanear
 	"pulverizar": [JOY_AXIS_TRIGGER_RIGHT],  # RT já existia no EIXOS_PAD
 }
 

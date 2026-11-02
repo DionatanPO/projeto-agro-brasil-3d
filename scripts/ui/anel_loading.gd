@@ -7,10 +7,18 @@ var velocidade := 4.5
 var cor_fundo := Color(1.0, 1.0, 1.0, 0.12)
 var cor_frente := Color(0.38, 1.0, 0.62, 0.95)
 var espessura := 3.5
+var _ultimo_angulo_redraw: float = 0.0
+
+func _ready() -> void:
+	# So processa quando estiver visivel (durante a tela de loading).
+	set_process(visible)
 
 func _process(delta: float) -> void:
 	angulo = fmod(angulo + delta * velocidade, TAU)
-	queue_redraw()
+	# Redesenha apenas se o angulo mudou o suficiente para ser perceptível (reduz chamadas de queue_redraw).
+	if abs(angulo - _ultimo_angulo_redraw) > 0.05:
+		queue_redraw()
+		_ultimo_angulo_redraw = angulo
 
 func _draw() -> void:
 	var c := size * 0.5

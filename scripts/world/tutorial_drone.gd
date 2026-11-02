@@ -413,7 +413,7 @@ func sair_tutorial() -> void:
 	_saindo_tutorial = true
 	SaveSystem.dados["posicao_drone"] = SaveSystem.dados.get("posicao_drone_backup", [69.664, 11.197, 192.916])
 	SaveSystem.dados.erase("posicao_drone_backup")
-	SaveSystem.salvar()
+	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 
 	Loading.proxima_cena = CENA_MAPA
 	Loading.titulo_carga = "Retornando à fazenda..."
@@ -472,7 +472,7 @@ func _vencer() -> void:
 	_estado = Estado.FIM
 	SaveSystem.dados["tutorial_drone_concluido"] = true
 	SaveSystem.dados["tutorial_drone_visto"] = true
-	SaveSystem.salvar()
+	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 	_congelar_drone(true)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_fim_titulo.text = "Tutorial concluido!"
@@ -597,7 +597,7 @@ func _gerar_sequencia(notas: Array) -> AudioStreamWAV:
 func _configurar_musica() -> void:
 	_som_musica = AudioStreamPlayer.new()
 	_som_musica.name = "SomMusica"
-	_som_musica.stream = load("res://assets/audio/musicas/Engineered_Ascent.mp3")
+	_som_musica.stream = preload("res://assets/audio/musicas/Engineered_Ascent.mp3")
 	_som_musica.finished.connect(_reiniciar_musica)
 	if AudioServer.get_bus_index("Musica") >= 0:
 		_som_musica.bus = "Musica"

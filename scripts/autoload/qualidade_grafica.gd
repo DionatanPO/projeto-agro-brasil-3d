@@ -81,7 +81,7 @@ func definir(nivel: String) -> void:
 	if not NIVEIS.has(nivel):
 		nivel = PADRAO
 	SaveSystem.dados["grafico"] = nivel
-	SaveSystem.salvar()
+	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 	aplicar(nivel)
 
 

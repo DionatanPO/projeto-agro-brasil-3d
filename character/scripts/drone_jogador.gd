@@ -233,7 +233,7 @@ func _unhandled_input(evento: InputEvent) -> void:
 func _abrir_tutorial() -> void:
 	if SaveSystem != null:
 		SaveSystem.dados["posicao_drone"] = [global_position.x, global_position.y, global_position.z]
-		SaveSystem.salvar()
+	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 	get_tree().change_scene_to_file("res://scenes/world/tutorial_drone.tscn")
 
 
@@ -265,7 +265,6 @@ func _entrar(silencioso: bool) -> void:
 		_vento.play()
 	if not silencioso and SaveSystem != null:
 		SaveSystem.dados["veiculo"] = "drone"
-		SaveSystem.salvar()
 	# Registra descoberta para a missão 4 (pegar o drone)
 	if is_instance_valid(Jogo):
 		Jogo.registrar_descoberta("drone_agricola")
@@ -287,7 +286,6 @@ func _sair() -> void:
 		_vento.stop()
 	if SaveSystem != null:
 		SaveSystem.dados["veiculo"] = "jogador"
-		SaveSystem.salvar()
 
 
 func _avisar_pulverizacao(posicao: Vector3) -> void:
@@ -347,9 +345,6 @@ func _physics_process(delta: float) -> void:
 	# A frente do modelo e +X: arfagem (pitch) e rotation.z, rolagem e rotation.x.
 	modelo.rotation.z = lerpf(modelo.rotation.z, entrada.y * 0.15, 1.0 - exp(-6.0 * delta))
 	modelo.rotation.x = lerpf(modelo.rotation.x, entrada.x * 0.15, 1.0 - exp(-6.0 * delta))
-	SaveSystem.dados["posicao_drone"] = [position.x, position.y, position.z]
-
-
 ## Motor desligado: sem comando, gravidade puxa ate pousar e o modelo nivela.
 func _descer_desligado(delta: float) -> void:
 	velocity.x = lerpf(velocity.x, 0.0, 1.0 - exp(-3.0 * delta))
@@ -388,7 +383,7 @@ func _process(delta: float) -> void:
 					_jogador_perto = false
 					_prompt.visible = false
 		else:
-			_prompt.text = "Pressione E para pilotar o drone (%.1f m)  •  T tutorial" % global_position.distance_to(_jogador.global_position)
+			_prompt.text = "Pressione E para pilotar o drone  •  T tutorial"
 			if _jogador.visible:
 				var perto := global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0
 				if perto and not _jogador_perto:

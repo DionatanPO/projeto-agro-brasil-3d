@@ -212,7 +212,7 @@ func _finalizar() -> void:
 
 	if SaveSystem != null:
 		SaveSystem.dados["intro_mundo_vista"] = true
-		SaveSystem.salvar()
+		# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 
 	# Dispara o monólogo pós-cutscene da missão ativa (dialogo 1)
 	if is_instance_valid(DialogueManager) and DialogueManager.has_method("on_intro_finished"):

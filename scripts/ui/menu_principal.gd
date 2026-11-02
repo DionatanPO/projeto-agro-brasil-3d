@@ -208,7 +208,6 @@ func _on_novo_jogo() -> void:
 
 	# Reseta e apaga todo o save anterior, criando o estado padrão inicial
 	SaveSystem.apagar()
-	SaveSystem.salvar()
 
 	Loading.proxima_cena = CENA_MUNDO
 	Loading.titulo_carga = "Iniciando nova jornada..."

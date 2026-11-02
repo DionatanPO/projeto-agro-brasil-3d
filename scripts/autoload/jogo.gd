@@ -14,17 +14,43 @@ var tempo_sessao: float = 0.0
 func _ready() -> void:
 	set_process_mode(Node.PROCESS_MODE_ALWAYS)
 	_carregar_conteudos()
-	# Autosave periódico (a cada 10 segundos) para manter posição e progresso atualizados
-	var timer = Timer.new()
-	timer.wait_time = 10.0
-	timer.timeout.connect(SaveSystem.salvar)
-	add_child(timer)
-	timer.start()
+	# Salvamento so ocorre ao concluir missao/subobjetivo (via sinais do MissionManager).
+	# Nao há autosave periodico nem gravacao de posicao/tempo a cada frame.
+	var mm: Variant = get_node_or_null("/root/MissionManager")
+	if mm != null:
+		if mm.has_signal("mission_completed") and not mm.is_connected("mission_completed", _on_missao_concluida):
+			mm.mission_completed.connect(_on_missao_concluida)
+		if mm.has_signal("objective_completed") and not mm.is_connected("objective_completed", _on_objetivo_concluido):
+			mm.objective_completed.connect(_on_objetivo_concluido)
 
 
-func _process(delta: float) -> void:
-	tempo_sessao += delta
-	SaveSystem.dados["tempo_jogado_seg"] = float(SaveSystem.dados.get("tempo_jogado_seg", 0.0)) + delta
+func _process(_delta: float) -> void:
+	# Apenas acumula tempo local. O tempo e gravado no save apenas ao concluir missao.
+	tempo_sessao += _delta
+
+
+func _on_missao_concluida(mission_id: String) -> void:
+	_salvar_progresso_missao()
+
+
+func _on_objetivo_concluido(mission_id: String, objective_id: String) -> void:
+	_salvar_progresso_missao()
+
+
+func _salvar_progresso_missao() -> void:
+	"""Grava posicao do jogador, drone, trator e tempo jogado no save e salva em disco.
+	Chamado apenas ao concluir uma missao ou subobjetivo."""
+	var player = get_tree().get_first_node_in_group("jogador")
+	if player is Node3D:
+		SaveSystem.dados["posicao_jogador"] = [player.global_position.x, player.global_position.y, player.global_position.z]
+	var drone = get_tree().get_first_node_in_group("drone_jogador")
+	if drone is Node3D:
+		SaveSystem.dados["posicao_drone"] = [drone.global_position.x, drone.global_position.y, drone.global_position.z]
+	var trator = get_tree().get_first_node_in_group("trator_jogador")
+	if trator is Node3D:
+		SaveSystem.dados["posicao_trator"] = [trator.global_position.x, trator.global_position.y, trator.global_position.z]
+	SaveSystem.dados["tempo_jogado_seg"] = float(SaveSystem.dados.get("tempo_jogado_seg", 0.0)) + tempo_sessao
+	SaveSystem.salvar()
 
 
 func _unhandled_input(evento: InputEvent) -> void:
@@ -46,7 +72,6 @@ func registrar_descoberta(ponto_id: String) -> void:
 		return
 	descobertas.append(ponto_id)
 	SaveSystem.dados["descobertas"] = descobertas
-	SaveSystem.salvar()
 	descoberta_registrada.emit(ponto_id)
 	# MissionManager (via DiscoveryMission) ouve descoberta_registrada e verifica progresso
 	# Missoes.verificar_progresso(descobertas)  # LEGADO - agora via MissionManager

@@ -30,14 +30,14 @@ func definir_volume_efeitos(valor_0_100: float, salvar := true) -> void:
 	_definir_volume(BUS_EFEITOS, valor_0_100)
 	if salvar:
 		SaveSystem.dados["volume_efeitos"] = clampf(valor_0_100, 0.0, 100.0)
-		SaveSystem.salvar()
+		# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 
 
 func definir_volume_musica(valor_0_100: float, salvar := true) -> void:
 	_definir_volume(BUS_MUSICA, valor_0_100)
 	if salvar:
 		SaveSystem.dados["volume_musica"] = clampf(valor_0_100, 0.0, 100.0)
-		SaveSystem.salvar()
+		# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 
 
 func volume_efeitos() -> float:

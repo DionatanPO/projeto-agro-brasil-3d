@@ -79,6 +79,7 @@ func _dados_padrao() -> Dictionary:
 
 func _notification(what: int) -> void:
 	# Salva progresso ao fechar a janela ou pausar a aplicação (mobile)
+	# Usa call_deferred para nao travar a thread principal com I/O de disco síncrono.
 	match what:
 		NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_WM_GO_BACK_REQUEST:
-			salvar()
+			call_deferred("salvar")

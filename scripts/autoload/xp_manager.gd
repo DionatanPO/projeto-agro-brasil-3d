@@ -137,11 +137,10 @@ func add_xp(amount: int) -> void:
 	
 	emit_signal("xp_changed", amount, _xp)
 	
-	# Atualiza o SaveSystem
+	# Atualiza o SaveSystem (gravacao em disco ocorre apenas ao concluir missao/subobjetivo via Jogo)
 	var save_data = SaveSystem.dados
 	save_data["xp"] = _xp
 	save_data["nivel"] = _level
-	SaveSystem.salvar()
 
 func _play_level_up_sound() -> void:
 	"""Toca som de nível up (se disponível)"""

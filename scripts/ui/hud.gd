@@ -294,7 +294,7 @@ func _atualizar_botoes_grafico(nivel: String) -> void:
 
 func _on_upscaling(modo: String) -> void:
 	SaveSystem.dados["upscaling"] = modo
-	SaveSystem.salvar()
+	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 	_atualizar_botoes_upscaling(modo)
 	_aplicar_upscaling(modo, _escala_do_preset(int(SaveSystem.dados.get("upscaling_preset", 1))))
 
@@ -303,7 +303,7 @@ func _on_upscaling_escala(preset: float) -> void:
 	var p := int(round(preset))
 	SaveSystem.dados["upscaling_preset"] = p
 	SaveSystem.dados["upscaling_scale"] = _escala_do_preset(p)
-	SaveSystem.salvar()
+	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 	_atualizar_rotulo_escala(p)
 	_aplicar_upscaling(str(SaveSystem.dados.get("upscaling", "off")), _escala_do_preset(p))
 
@@ -330,7 +330,7 @@ func _atualizar_rotulo_escala(p: int) -> void:
 
 func _on_vsync(ativado: bool) -> void:
 	SaveSystem.dados["vsync"] = ativado
-	SaveSystem.salvar()
+	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 	_aplicar_vsync(ativado)
 
 
@@ -412,7 +412,7 @@ func _on_aba(indice: int) -> void:
 
 func _on_voltar_menu() -> void:
 	get_tree().paused = false
-	SaveSystem.salvar()
+	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	get_tree().change_scene_to_file("res://scenes/ui/menus/menu_inicial.tscn")
 
@@ -457,12 +457,11 @@ func _on_missao(missao_id: String) -> void:
 
 func _on_ok_missao() -> void:
 	# Apenas fechar o popup e continuar - missão já foi registrada no SaveSystem
+	# O salvamento em disco ocorre via sinal mission_completed (Jogo._salvar_progresso_missao)
 	popup_missao.hide()
 	if not diario.visible and not dialogo.visible:
 		scrim.hide()
 		get_tree().paused = false
-	# Garante que o save seja escrito ao fechar o popup de missão
-	SaveSystem.salvar()
 
 func _preencher_diario() -> void:
 	var prox: Dictionary
