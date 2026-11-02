@@ -383,17 +383,17 @@ text = "Menu principal"
 
 [node name="MissaoCompleta" type="PanelContainer" parent="." unique_id=1540448631]
 visible = false
-z_index = 5
-custom_minimum_size = Vector2(380, 220)
+z_index = 6
+custom_minimum_size = Vector2(560, 430)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -190.0
-offset_top = -110.0
-offset_right = 190.0
-offset_bottom = 110.0
+offset_left = -280.0
+offset_top = -215.0
+offset_right = 280.0
+offset_bottom = 215.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -402,10 +402,22 @@ layout_mode = 2
 
 [node name="Conteudo" type="VBoxContainer" parent="MissaoCompleta/Inset" unique_id=1331826986]
 layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Selo" type="Label" parent="MissaoCompleta/Inset/Conteudo" unique_id=901122334]
+layout_mode = 2
+text = "🎯  MISSÃO CONCLUÍDA"
+horizontal_alignment = 1
 
 [node name="Titulo" type="Label" parent="MissaoCompleta/Inset/Conteudo" unique_id=1162824982]
 layout_mode = 2
-text = "Missão concluída!"
+text = "Título da missão"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Subtitulo" type="Label" parent="MissaoCompleta/Inset/Conteudo" unique_id=1162824985]
+layout_mode = 2
+text = "Parabéns!"
 horizontal_alignment = 1
 
 [node name="Texto" type="Label" parent="MissaoCompleta/Inset/Conteudo" unique_id=1404032700]
@@ -413,11 +425,20 @@ layout_mode = 2
 text = "..."
 horizontal_alignment = 1
 autowrap_mode = 3
+size_flags_vertical = 3
+
+[node name="Linha" type="HSeparator" parent="MissaoCompleta/Inset/Conteudo" unique_id=1404032701]
+layout_mode = 2
+
+[node name="InfoRecompensa" type="Label" parent="MissaoCompleta/Inset/Conteudo" unique_id=1404032702]
+layout_mode = 2
+text = ""
+horizontal_alignment = 1
 
 [node name="BotaoOK" type="Button" parent="MissaoCompleta/Inset/Conteudo" unique_id=160085651]
 layout_mode = 2
-text = "OK"
-custom_minimum_size = Vector2(0, 48)
+text = "Próxima missão"
+custom_minimum_size = Vector2(0, 60)
 
 [node name="FPS" type="Label" parent="." unique_id=900100200]
 z_index = 5

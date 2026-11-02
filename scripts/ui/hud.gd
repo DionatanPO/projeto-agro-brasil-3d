@@ -34,8 +34,16 @@ var _dialogo_aberto_para := ""
 var _botoes_abas: Array = []
 @onready var scrim: ColorRect = $Scrim
 @onready var popup_missao: PanelContainer = $MissaoCompleta
+@onready var popup_titulo: Label = $MissaoCompleta/Inset/Conteudo/Titulo
+@onready var popup_selo: Label = $MissaoCompleta/Inset/Conteudo/Selo
+@onready var popup_subtitulo: Label = $MissaoCompleta/Inset/Conteudo/Subtitulo
 @onready var popup_texto: Label = $MissaoCompleta/Inset/Conteudo/Texto
+@onready var popup_recompensa: Label = $MissaoCompleta/Inset/Conteudo/InfoRecompensa
 @onready var fps_label: Label = $FPS
+
+var _som_conclusao: AudioStreamPlayer
+var _popup_tween: Tween
+const COR_DOURADA := Color("#d4af37")
 
 # Indicador de pulverização (missão 4)
 var lbl_pulverizacao: Label
@@ -58,7 +66,31 @@ func _ready() -> void:
 	AgroUITheme.style_panel(diario, "glass")
 	AgroUITheme.apply_to(popup_missao)
 	AgroUITheme.style_panel(popup_missao, "glass")
-	$MissaoCompleta/Inset/Conteudo/Titulo.add_theme_font_size_override("font_size", 20)
+	# Estilo da janela de missão concluída (maior e mais destacada)
+	$MissaoCompleta/Inset/Conteudo/Selo.add_theme_font_size_override("font_size", 15)
+	$MissaoCompleta/Inset/Conteudo/Selo.add_theme_color_override("font_color", AgroUITheme.MUTED_INK)
+	popup_titulo.add_theme_font_size_override("font_size", 30)
+	popup_titulo.add_theme_color_override("font_color", AgroUITheme.FIELD_GREEN)
+	popup_subtitulo.add_theme_font_size_override("font_size", 22)
+	popup_subtitulo.add_theme_color_override("font_color", AgroUITheme.ACCENT_GREEN)
+	popup_texto.add_theme_font_size_override("font_size", 17)
+	popup_texto.add_theme_color_override("font_color", AgroUITheme.INK)
+	popup_recompensa.add_theme_font_size_override("font_size", 15)
+	popup_recompensa.add_theme_color_override("font_color", AgroUITheme.MUTED_INK)
+	AgroUITheme.style_primary_button($MissaoCompleta/Inset/Conteudo/BotaoOK)
+	$MissaoCompleta/Inset/Conteudo/BotaoOK.add_theme_font_size_override("font_size", 17)
+	# Som de conclusão de missão
+	_som_conclusao = AudioStreamPlayer.new()
+	_som_conclusao.name = "SomConclusaoMissao"
+	_som_conclusao.bus = "Efeitos"
+	var stream_conclusao = load("res://assets/audio/ui/toast.wav")
+	if stream_conclusao:
+		_som_conclusao.stream = stream_conclusao
+	add_child(_som_conclusao)
+	# Janela começa encolhida para animar ao abrir
+	popup_missao.scale = Vector2.ZERO
+	# Subtítulo com ícone de troféu e cor dourada
+	popup_subtitulo.add_theme_color_override("font_color", COR_DOURADA)
 	_configurar_espacamento()
 	dialogo_titulo.add_theme_font_size_override("font_size", 16)
 	dialogo_texto.add_theme_font_size_override("font_size", 11)
@@ -90,7 +122,7 @@ func _ready() -> void:
 	$Dialogo/Inset/Conteudo/BotaoEntendi.pressed.connect(_on_entendi)
 	$Diario/Inset/Conteudo/Acoes/BotaoFechar.pressed.connect(_on_fechar_diario)
 	$Diario/Inset/Conteudo/Acoes/BotaoVoltar.pressed.connect(_on_voltar_menu)
-	$MissaoCompleta/Inset/Conteudo/BotaoOK.pressed.connect(_on_ok_missao)
+	$MissaoCompleta/Inset/Conteudo/BotaoOK.pressed.connect(_on_acao_missao)
 	AgroUITheme.style_primary_button($Dialogo/Inset/Conteudo/BotaoEntendi)
 	AgroUITheme.style_secondary_button($Diario/Inset/Conteudo/Acoes/BotaoFechar)
 	AgroUITheme.style_secondary_button($Diario/Inset/Conteudo/Acoes/BotaoVoltar)
@@ -254,6 +286,11 @@ func _on_fechar_diario() -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _input(event: InputEvent) -> void:
+	# Abrir/fechar o caderno com Tab ou Start, mesmo que o sinal do Jogo não chegue.
+	if event.is_action_pressed("diario") and not dialogo.visible and not popup_missao.visible:
+		_alternar_diario()
+		get_viewport().set_input_as_handled()
+		return
 	if diario.visible and (event.is_action_pressed("diario") or event.is_action_pressed("ui_cancel")):
 		_on_fechar_diario()
 		get_viewport().set_input_as_handled()
@@ -432,34 +469,86 @@ func _on_missao(missao_id: String) -> void:
 			"descricao": mission.descricao,
 			"objetivos": mission.objetivos,
 			"ordem": mission.ordem,
+			"recompensas": mission.recompensas,
 		}
 	if m.is_empty() or not m:
 		m = {}
 
 	var titulo_missao := str(m.get("titulo", missao_id))
+	var descricao_missao := str(m.get("descricao", ""))
+	
+	# Calcula recompensa total de XP
+	var xp_total := 0
+	var recompensas: Array = m.get("recompensas", [])
+	if recompensas is Array:
+		for r in recompensas:
+			if r is Dictionary and str(r.get("tipo", "")) == "xp":
+				xp_total += int(r.get("valor", 0))
 	
 	# Verifica se há próxima missão disponível
 	var prox_missao = MissionManager.get_proxima_pendente()
-	var texto_extra := ""
-	if prox_missao:
-		texto_extra = "\n\nNova missão disponível no caderno do campo."
+	var tem_proxima := prox_missao != null
 	
-	popup_texto.text = titulo_missao + texto_extra
+	# Monta os textos da janela
+	popup_selo.text = "🎯  MISSÃO CONCLUÍDA"
+	popup_titulo.text = titulo_missao
+	popup_subtitulo.text = "🏆  Parabéns!"
+	
+	var corpo := descricao_missao
+	if not corpo.is_empty():
+		corpo = corpo + "\n\n"
+	corpo = corpo + "Você cumpriu todos os objetivos desta missão."
+	popup_texto.text = corpo
+	
+	if xp_total > 0:
+		popup_recompensa.text = "✨ Recompensa: +%d XP" % xp_total
+	else:
+		popup_recompensa.text = ""
+	
+	# Botão muda conforme há próxima missão ou não
+	if tem_proxima:
+		var prox_titulo := str(prox_missao.titulo)
+		$MissaoCompleta/Inset/Conteudo/BotaoOK.text = "Ir para: " + prox_titulo
+	else:
+		$MissaoCompleta/Inset/Conteudo/BotaoOK.text = "Concluir tudo"
+	
+	# Som de conclusão
+	if _som_conclusao.stream:
+		_som_conclusao.play()
+	
+	# Animação de entrada: escala 0 -> 1
+	# Mantém referência do tween para não ser coletado pelo garbage collector
+	if _popup_tween != null and _popup_tween.is_running():
+		_popup_tween.kill()
+	
+	# Mostra o popup já com escala 1 para garantir que fique visível,
+	# mesmo que o tween não processe enquanto o jogo estiver pausado.
+	popup_missao.scale = Vector2.ONE
 	popup_missao.show()
 	scrim.show()
 	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	# Focar no botão OK único
+	_popup_tween = get_tree().create_tween()
+	_popup_tween.tween_property(popup_missao, "scale", Vector2.ONE, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	# Focar no botão de ação
 	$MissaoCompleta/Inset/Conteudo/BotaoOK.grab_focus()
 
 
-func _on_ok_missao() -> void:
-	# Apenas fechar o popup e continuar - missão já foi registrada no SaveSystem
-	# O salvamento em disco ocorre via sinal mission_completed (Jogo._salvar_progresso_missao)
+func _on_acao_missao() -> void:
+	# Fecha o popup de missão concluída e retorna ao jogo.
+	# A missão já foi registrada no SaveSystem e o salvamento em disco ocorre
+	# via sinal mission_completed (Jogo._salvar_progresso_missao).
+	if _popup_tween != null and _popup_tween.is_running():
+		_popup_tween.kill()
 	popup_missao.hide()
 	if not diario.visible and not dialogo.visible:
 		scrim.hide()
 		get_tree().paused = false
+	
+	# Se há próxima missão, abre o caderno para o jogador ver o próximo objetivo.
+	var prox = MissionManager.get_proxima_pendente()
+	if prox != null:
+		Jogo.alternar_diario.emit()
 
 func _preencher_diario() -> void:
 	var prox: Dictionary
