@@ -40,7 +40,6 @@ var _som_buzina: AudioStreamPlayer3D
 var _som_re: AudioStreamPlayer3D
 var _poeira_roda_te: GPUParticles3D
 var _poeira_roda_td: GPUParticles3D
-var _fuma_chamine: GPUParticles3D
 var _tempo_beep := 0.0
 var _angulo_vertical := -0.32
 
@@ -64,7 +63,6 @@ func _ready() -> void:
 	_montar_estacao()
 	_poeira_roda_te = _criar_poeira_roda("PoeiraRodaTE", Vector3(0.8, 0.15, 1.08))
 	_poeira_roda_td = _criar_poeira_roda("PoeiraRodaTD", Vector3(0.8, 0.15, -1.08))
-	_fuma_chamine = _criar_fumaca_chamine()
 	_som_motor = AudioStreamPlayer3D.new()
 	_som_motor.name = "SomMotor"
 	# Motor do trator: arquivo real (assets/audio/som_trator.mp3) em loop continuo.
@@ -338,61 +336,6 @@ func _criar_poeira_roda(nome: String, posicao: Vector3) -> GPUParticles3D:
 	return poeira
 
 
-func _criar_fumaca_chamine() -> GPUParticles3D:
-	var fumaca := GPUParticles3D.new()
-	fumaca.name = "FumacaChamine"
-	# Frente do trator (eixo -X), logo acima do capo. Lado direito = -Z.
-	fumaca.position = Vector3(-0.65, 2.50, -0.50)
-	fumaca.amount = 32
-	fumaca.lifetime = 0.6
-	fumaca.explosiveness = 0.0
-	fumaca.emitting = false
-	fumaca.local_coords = false
-	fumaca.visibility_aabb = AABB(Vector3(-4.0, -1.0, -4.0), Vector3(8.0, 9.0, 8.0))
-
-	var processo := ParticleProcessMaterial.new()
-	processo.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
-	processo.emission_sphere_radius = 0.03
-	processo.direction = Vector3(0.0, 1.0, 0.0)
-	processo.spread = 4.0
-	processo.initial_velocity_min = 0.35
-	processo.initial_velocity_max = 0.8
-	processo.gravity = Vector3(0.0, 0.35, 0.0)
-	processo.damping_min = 0.05
-	processo.damping_max = 0.2
-	processo.scale_min = 0.8
-	processo.scale_max = 1.2
-	var curva_scale := Curve.new()
-	curva_scale.add_point(Vector2(0.0, 1.5))
-	curva_scale.add_point(Vector2(1.0, 0.1))
-	var textura_scale := CurveTexture.new()
-	textura_scale.curve = curva_scale
-	processo.scale_curve = textura_scale
-	processo.color = Color(0.48, 0.47, 0.45, 1.0)
-	var curva_alpha := Curve.new()
-	curva_alpha.add_point(Vector2(0.0, 0.0))
-	curva_alpha.add_point(Vector2(0.1, 0.02))
-	curva_alpha.add_point(Vector2(1.0, 0.0))
-	var textura_alpha := CurveTexture.new()
-	textura_alpha.curve = curva_alpha
-	processo.alpha_curve = textura_alpha
-	fumaca.process_material = processo
-
-	var malha := SphereMesh.new()
-	malha.radius = 0.055
-	malha.height = 0.11
-	var visual := StandardMaterial3D.new()
-	visual.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	visual.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	visual.cull_mode = BaseMaterial3D.CULL_DISABLED
-	visual.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
-	visual.albedo_color = Color(0.48, 0.47, 0.45, 1.0)
-	malha.material = visual
-	fumaca.draw_pass_1 = malha
-	modelo.add_child(fumaca)
-	return fumaca
-
-
 ## Redundancia por distancia: mostra o prompt mesmo se o sinal da Area falhar.
 func _sincronizar_proximidade() -> void:
 	if ativo:
@@ -480,8 +423,6 @@ func _set_jogador(ativo_jogador: bool) -> void:
 func _entrar(silencioso: bool) -> void:
 	_set_jogador(false)
 	ativo = true
-	if _fuma_chamine:
-		_fuma_chamine.emitting = true
 	rig.rotation.y = BASE_RIG_Y
 	cam.current = true
 	_prompt.visible = false
@@ -498,8 +439,6 @@ func _sair() -> void:
 		_jogador.velocity = Vector3.ZERO
 	_set_jogador(true)
 	ativo = false
-	if _fuma_chamine:
-		_fuma_chamine.emitting = false
 	_vel = 0.0
 	cam.current = false
 	if _som_motor.playing:
