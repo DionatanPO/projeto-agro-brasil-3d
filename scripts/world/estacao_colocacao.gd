@@ -51,8 +51,8 @@ func _ready() -> void:
 	if ativa != null and str(ativa.mission_id) == "colocar_estacao":
 		_em_missao_estacao = true
 	
-	set_process_input(_em_missao_estacao)
-	set_process(_em_missao_estacao)
+	set_process_input(true)  # Sempre recebe input; _esta_ativa() filtra dentro de _unhandled_input
+	set_process(_em_missao_estacao)  # _process só roda se a missão estiver ativa (atualiza preview)
 
 
 func _process(delta: float) -> void:
@@ -333,8 +333,8 @@ func _calcular_aabb(node: Node3D) -> AABB:
 func _on_missao_estacao_mudou(mission_id: Variant) -> void:
 	var mid: String = str(mission_id)
 	_em_missao_estacao = (mid == "colocar_estacao")
-	set_process_input(_em_missao_estacao)
-	set_process(_em_missao_estacao)
+	set_process_input(true)  # Mantém input ativo; _esta_ativa() filtra dentro de _unhandled_input
+	set_process(_em_missao_estacao)  # _process só roda se a missão estiver ativa (atualiza preview)
 	if not _em_missao_estacao:
 		_modo_preview = false
 		if _preview_instance != null:
