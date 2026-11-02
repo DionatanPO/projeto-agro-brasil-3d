@@ -10,7 +10,6 @@ extends Node
 
 signal mission_changed(mission_id)      # Missão ativa mudou (String or null)
 signal mission_completed(mission_id: String)           # Missão concluída
-signal mission_failed(mission_id: String, reason: String)
 signal objective_completed(mission_id: String, objective_id: String)
 signal missions_updated                                # Lista de missões mudou (para UI)
 
@@ -39,8 +38,7 @@ func _ready() -> void:
 	# objective_completed só envia o objective_id, então este mantém o bind.
 	for m in _todas_missoes:
 		m.mission_completed.connect(_on_mission_completed)
-		m.mission_failed.connect(_on_mission_failed)
-		m.objective_completed.connect(_on_objective_completed.bind(m.mission_id))
+		m.objective_completed.connect(func(oid): _on_objective_completed(oid, m.mission_id))
 
 
 func _carregar_missoes() -> void:
@@ -79,6 +77,7 @@ func _carregar_missoes() -> void:
 			mission._on_register()
 	
 	_carregado = true
+	_validar_missoes()
 	missions_updated.emit()
 	print("[MissionManager] Carregadas ", _todas_missoes.size(), " missões")
 
@@ -110,6 +109,73 @@ func _criar_missao_de_dict(data: Dictionary) -> MissionBase:
 	mission.requer = data.get("requer", [])
 	
 	return mission
+
+
+func _validar_missoes() -> void:
+	"""Valida o JSON de missões para evitar erros silenciosos."""
+	var ids_vistos: Dictionary = {}
+	var nomes_requer: Array = []
+	
+	for m in _todas_missoes:
+		var mid: String = m.mission_id
+		
+		# ID de missão duplicado
+		if ids_vistos.has(mid):
+			push_error("MissionManager: ID de missão duplicado: '" + mid + "'")
+			continue
+		ids_vistos[mid] = true
+		
+		# Missão sem ordem
+		if m.ordem <= 0:
+			push_warning("MissionManager: missão '" + mid + "' sem ordem válida.")
+		
+		# Missão sem objetivos
+		if m.objetivos.is_empty():
+			push_warning("MissionManager: missão '" + mid + "' sem objetivos.")
+		
+		var objetivos_vistos: Dictionary = {}
+		for obj in m.objetivos:
+			if not (obj is Dictionary):
+				continue
+			var oid: String = str(obj.get("id", ""))
+			var tipo: String = str(obj.get("tipo", ""))
+			var alvo: String = str(obj.get("alvo_id", ""))
+			
+			# Objetivo sem ID
+			if oid.is_empty():
+				push_error("MissionManager: missão '" + mid + "' tem objetivo sem ID.")
+				continue
+			
+			# ID de objetivo duplicado dentro da missão
+			if objetivos_vistos.has(oid):
+				push_error("MissionManager: missão '" + mid + "' tem objetivo duplicado: '" + oid + "'")
+			objetivos_vistos[oid] = true
+			
+			# Tipo de objetivo desconhecido
+			if tipo not in ["descoberta", "area_enter", "interacao"]:
+				push_warning("MissionManager: missão '" + mid + "', objetivo '" + oid + "' tem tipo desconhecido: '" + tipo + "'")
+			
+			# alvo_id vazio
+			if alvo.is_empty():
+				push_warning("MissionManager: missão '" + mid + "', objetivo '" + oid + "' sem alvo_id.")
+	
+		# Pré-requisitos apontando para missão inexistente
+		for req_id in m.requer:
+			var req_missao = get_mission(req_id)
+			if not req_missao:
+				push_error("MissionManager: missão '" + mid + "' requer missão inexistente: '" + str(req_id) + "'")
+			elif not ids_vistos.has(str(req_id)):
+				push_error("MissionManager: missão '" + mid + "' requer missão não carregada: '" + str(req_id) + "'")
+	
+	# Verifica se há ciclo de pré-requisitos (simplificado: detecta A->B->A)
+	for i in range(_todas_missoes.size()):
+		var mi = _todas_missoes[i]
+		for req_id in mi.requer:
+			var req_m = get_mission(req_id)
+			if req_m:
+				for req2_id in req_m.requer:
+					if str(req2_id) == mi.mission_id:
+						push_error("MissionManager: ciclo de pré-requisitos detectado: '" + mi.mission_id + "' <-> '" + req_m.mission_id + "'")
 
 
 func _restaurar_do_save() -> void:
@@ -165,17 +231,19 @@ func _migrar_save_antigo(save_data: Dictionary) -> void:
 	_ativar_proxima_pendente()
 
 
+func _prerequisitos_ok(missao: MissionBase) -> bool:
+	"""Verifica se todos os pré-requisitos de uma missão estão concluídos."""
+	for req_id in missao.requer:
+		var req_mission = get_mission(req_id)
+		if not req_mission or not req_mission.is_concluida():
+			return false
+	return true
+
+
 func _ativar_proxima_pendente() -> void:
 	for m in _todas_missoes:
-		if not m.is_concluida() and not m.is_falhada():
-			# Verifica pré-requisitos
-			var prereqs_ok: bool = true
-			for req_id in m.requer:
-				var req_mission = get_mission(req_id)
-				if not req_mission or not req_mission.is_concluida():
-					prereqs_ok = false
-					break
-			if prereqs_ok:
+		if not m.is_concluida():
+			if _prerequisitos_ok(m):
 				_definir_missao_ativa(m)
 				return
 	# Nenhuma pendente disponível
@@ -208,16 +276,12 @@ func _on_mission_completed(mission_id: String) -> void:
 	call_deferred("_ativar_proxima_pendente")
 
 
-func _on_mission_failed(mission_id: String, reason: String) -> void:
-	print("[MissionManager] Missão falhou: ", mission_id, " - ", reason)
-	_save_missoes_estado()
-	mission_failed.emit(mission_id, reason)
-
-
 func _on_objective_completed(objective_id: String, mission_id: String) -> void:
-	# Nota: ordem invertida porque Godot 4 passa os args do signal ANTES dos bound args
-	objective_completed.emit(mission_id, objective_id)
+	# Atualiza o estado interno PRIMEIRO, depois emite o signal.
+	# Assim, quando o Jogo salvar em disco ao receber objective_completed,
+	# o progresso ja esta gravado em SaveSystem.dados e nao sera perdido.
 	_save_missoes_estado()
+	objective_completed.emit(mission_id, objective_id)
 
 
 func _on_save_loaded(data: Dictionary) -> void:
@@ -258,14 +322,8 @@ func get_todas_missoes():
 
 func get_proxima_pendente():
 	for m in _todas_missoes:
-		if not m.is_concluida() and not m.is_falhada():
-			var prereqs_ok: bool = true
-			for req_id in m.requer:
-				var req_m = get_mission(req_id)
-				if not req_m or not req_m.is_concluida():
-					prereqs_ok = false
-					break
-			if prereqs_ok:
+		if not m.is_concluida():
+			if _prerequisitos_ok(m):
 				return m
 	return null
 
@@ -285,6 +343,16 @@ func total_concluidas() -> int:
 
 func total_missoes() -> int:
 	return _todas_missoes.size()
+
+
+func completar_objetivo(mission_id: String, objective_id: String) -> bool:
+	"""API pública para completar um objetivo de missão.
+	Usado por sistemas do mundo (AreaPlantio, EstacaoColocacao, etc.)."""
+	var m = get_mission(mission_id)
+	if m == null:
+		push_warning("MissionManager.completar_objetivo: missão não encontrada: " + mission_id)
+		return false
+	return m.completar_objetivo(objective_id)
 
 
 ## Para compatibilidade com código antigo (Missoes autoload) ────────────────

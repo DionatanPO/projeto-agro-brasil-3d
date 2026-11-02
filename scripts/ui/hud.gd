@@ -136,8 +136,6 @@ func _ready() -> void:
 		MissionManager.mission_completed.connect(_on_missao)
 	if not MissionManager.mission_changed.is_connected(_on_mission_changed):
 		MissionManager.mission_changed.connect(_on_mission_changed)
-	# Legado (compatibilidade)
-	Missoes.missao_concluida.connect(_on_missao)
 
 	# Indicador de pulverização da missão 4 (criado dinamicamente)
 	_criar_indicador_pulverizacao()
@@ -424,7 +422,7 @@ func _on_missao(missao_id: String) -> void:
 	if diario.visible:
 		_preencher_diario()
 	
-	# Usa MissionManager se disponível, senão fallback para Missoes
+	# Usa MissionManager
 	var m: Dictionary
 	var mission = MissionManager.get_mission(missao_id)
 	if mission:
@@ -436,8 +434,8 @@ func _on_missao(missao_id: String) -> void:
 			"ordem": mission.ordem,
 		}
 	if m.is_empty() or not m:
-		m = Missoes.por_id.get(missao_id, {})
-	
+		m = {}
+
 	var titulo_missao := str(m.get("titulo", missao_id))
 	
 	# Verifica se há próxima missão disponível
@@ -475,8 +473,8 @@ func _preencher_diario() -> void:
 			"ordem": mission.ordem,
 		}
 	if not prox:
-		prox = Missoes.proxima_pendente()
-	
+		prox = {}
+
 	if prox.is_empty():
 		objetivo_missao.text = "Todas as missões concluídas! Parabéns!"
 		_limpar_lista_box()
@@ -503,7 +501,6 @@ func _limpar_lista_box() -> void:
 func _preencher_lista_box(prox: Dictionary) -> void:
 	_limpar_lista_box()
 	var objetivos_arr: Array = prox.get("objetivos", []) if prox is Dictionary else []
-	var descobertas: Array = SaveSystem.dados.get("descobertas", [])
 	var missao_id: String = str(prox.get("id", ""))
 	var m = MissionManager.get_mission(missao_id)
 	var concluida: bool = m != null and m.is_concluida()
@@ -512,8 +509,8 @@ func _preencher_lista_box(prox: Dictionary) -> void:
 		if not (obj is Dictionary):
 			continue
 		var o: Dictionary = obj as Dictionary
-		var ponto_id: String = str(o.get("alvo_id", o.get("ponto_id", "")))
-		var feito: bool = concluida or (ponto_id.is_empty()) or (descobertas is Array and ponto_id in descobertas)
+		var oid: String = str(o.get("id", ""))
+		var feito: bool = concluida or (m != null and m.get_progresso_objetivo(oid) >= 1.0)
 		var marca := "[x]" if feito else "[ ]"
 		var texto_objetivo: String = str(o.get("texto", ""))
 		var lbl: Label = Label.new()
@@ -528,7 +525,6 @@ func _texto_missao_atual(prox: Dictionary) -> String:
 	linhas.append("")
 	linhas.append("Objetivos:")
 	
-	var descobertas: Array = SaveSystem.dados.get("descobertas", [])
 	var missao_id: String = str(prox.get("id", ""))
 	var concluida: bool = false
 	var m = MissionManager.get_mission(missao_id)
@@ -542,8 +538,8 @@ func _texto_missao_atual(prox: Dictionary) -> String:
 		if not (obj is Dictionary):
 			continue
 		var o: Dictionary = obj as Dictionary
-		var ponto_id: String = str(o.get("alvo_id", o.get("ponto_id", "")))
-		var feito: bool = concluida or (ponto_id.is_empty()) or (descobertas is Array and ponto_id in descobertas)
+		var oid: String = str(o.get("id", ""))
+		var feito: bool = concluida or (m2 != null and m2.get_progresso_objetivo(oid) >= 1.0)
 		var marca := "[x]" if feito else "[ ]"
 		linhas.append("%s %s" % [marca, str(o.get("texto", ""))])
 	return "\n".join(linhas)

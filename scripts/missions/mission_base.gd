@@ -8,7 +8,6 @@ class_name MissionBase
 
 signal objective_completed(objective_id: String)
 signal mission_completed(mission_id: String)
-signal mission_failed(mission_id: String, reason: String)
 
 # Identificador único da missão (deve bater com o JSON)
 @export var mission_id: String = ""
@@ -35,7 +34,6 @@ signal mission_failed(mission_id: String, reason: String)
 var _progresso_objetivos: Dictionary = {}  # objective_id -> progresso (float 0..1 ou int)
 var _ativa: bool = false
 var _concluida: bool = false
-var _falhou: bool = false
 
 
 func _ready() -> void:
@@ -58,10 +56,6 @@ func is_ativa() -> bool:
 
 func is_concluida() -> bool:
 	return _concluida
-
-
-func is_falhada() -> bool:
-	return _falhou
 
 
 func get_progresso_objetivo(objective_id) -> float:
@@ -179,7 +173,6 @@ func get_save_data() -> Dictionary:
 		"mission_id": mission_id,
 		"ativa": _ativa,
 		"concluida": _concluida,
-		"falhou": _falhou,
 		"progresso_objetivos": _progresso_objetivos,
 	}
 
@@ -188,7 +181,6 @@ func load_save_data(data: Dictionary) -> void:
 	"""Restaura estado da missão a partir do save."""
 	_ativa = data.get("ativa", false)
 	_concluida = data.get("concluida", false)
-	_falhou = data.get("falhou", false)
 	_progresso_objetivos = data.get("progresso_objetivos", {})
 	
 	# Se já concluída, garante que recompensas não sejam dadas de novo
@@ -200,7 +192,6 @@ func resetar_estado() -> void:
 	"""Zera o estado da missão (usado ao iniciar um Novo Jogo)."""
 	_ativa = false
 	_concluida = false
-	_falhou = false
 	_progresso_objetivos.clear()
 	for obj in objetivos:
 		var oid: String = str(obj.get("id", ""))
@@ -235,6 +226,28 @@ func _verificar_todos_objetivos() -> bool:
 	return true
 
 
+## API pública ──────────────────────────────────────────────────────────────────
+
+func completar_objetivo(objective_id: String) -> bool:
+	"""Marca um objetivo como completo. Retorna true se a missão foi concluída."""
+	if not _ativa or _concluida:
+		return false
+	if not _progresso_objetivos.has(objective_id):
+		return false
+	_marcar_objetivo_completo(objective_id)
+	if _verificar_todos_objetivos():
+		_concluir_missao()
+		return true
+	return false
+
+
+func concluir() -> void:
+	"""Conclui a missão imediatamente."""
+	if _concluida:
+		return
+	_concluir_missao()
+
+
 func _concluir_missao() -> void:
 	if _concluida:
 		return
@@ -243,12 +256,3 @@ func _concluir_missao() -> void:
 	_aplicar_recompensas()
 	mission_completed.emit(mission_id)
 	print("[MissionBase] Missão CONCLUÍDA: ", mission_id)
-
-
-func _falhar_missao(reason: String) -> void:
-	if _falhou or _concluida:
-		return
-	_falhou = true
-	_ativa = false
-	mission_failed.emit(mission_id, reason)
-	print("[MissionBase] Missão FALHOU: ", mission_id, " - ", reason)

@@ -149,11 +149,11 @@ func _carregar_configuracoes() -> void:
 
 	var slider_efeitos := _no("SliderEfeitos") as HSlider
 	if slider_efeitos != null:
-		slider_efeitos.value = float(d.get("volume_efeitos", 70.0))
+		slider_efeitos.value = float(d.get("volume_efeitos", 100.0))
 
 	var slider_musica := _no("SliderMusica") as HSlider
 	if slider_musica != null:
-		slider_musica.value = float(d.get("volume_musica", 70.0))
+		slider_musica.value = float(d.get("volume_musica", 100.0))
 
 	var chk_vsync := _no("ChkVSync") as Button
 	if chk_vsync != null:

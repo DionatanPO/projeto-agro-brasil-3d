@@ -19,7 +19,6 @@ config/features=PackedStringArray("4.7")
 InputSetup="*res://scripts/autoload/input_setup.gd"
 PhantomCameraManager="*uid://duq6jhf6unyis"
 SaveSystem="*res://scripts/autoload/save_system.gd"
-Missoes="*res://scripts/autoload/missoes.gd"
 MissionManager="*res://scripts/missions/mission_manager.gd"
 AudioConfig="*res://scripts/autoload/audio_config.gd"
 Jogo="*res://scripts/autoload/jogo.gd"

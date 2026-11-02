@@ -255,8 +255,8 @@ func _completar_objetivo() -> void:
 		Jogo.registrar_descoberta("area_plantio_milho")
 	
 	var mm: Variant = get_node_or_null("/root/MissionManager")
-	if mm != null and mm.has_method("check_progress"):
-		mm.check_progress({"mission_id": mission_id, "objective_id": objective_id})
+	if mm != null:
+		mm.completar_objetivo(mission_id, objective_id)
 
 
 ## API pública

@@ -74,7 +74,7 @@ func registrar_descoberta(ponto_id: String) -> void:
 	SaveSystem.dados["descobertas"] = descobertas
 	descoberta_registrada.emit(ponto_id)
 	# MissionManager (via DiscoveryMission) ouve descoberta_registrada e verifica progresso
-	# Missoes.verificar_progresso(descobertas)  # LEGADO - agora via MissionManager
+	# LEGADO - agora via MissionManager
 
 
 func total_descobertas() -> int:

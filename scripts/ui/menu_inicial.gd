@@ -10,7 +10,7 @@ func _ready() -> void:
 	if SaveSystem.tem_save() and descobertas.size() > 0:
 		botao_continuar.disabled = false
 		info.text = "Progresso: %d descoberta(s), %d/%d missoes concluidas." % [
-			descobertas.size(), Missoes.total_concluidas(), Missoes.total_missoes()
+			descobertas.size(), MissionManager.total_concluidas(), MissionManager.total_missoes()
 		]
 	else:
 		botao_continuar.disabled = true
