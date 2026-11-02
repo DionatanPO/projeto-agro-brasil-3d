@@ -41,7 +41,10 @@ func _ready() -> void:
 	
 	# Restaura estação já colocada (persistência)
 	if SaveSystem != null and SaveSystem.dados.has("estacao_posicao"):
+		print("[EstacaoColocacao] _ready: estação já salva, restaurando do save")
 		call_deferred("_restaurar_estacao_salva")
+	else:
+		print("[EstacaoColocacao] _ready: nenhuma estação salva, aguardando colocação")
 	
 	# Conecta ao MissionManager para ativar/desativar processamento por missão
 	var mm: Variant = get_node_or_null("/root/MissionManager")
@@ -50,9 +53,12 @@ func _ready() -> void:
 	var ativa: Variant = mm.get_missao_ativa()
 	if ativa != null and str(ativa.mission_id) == "colocar_estacao":
 		_em_missao_estacao = true
+		print("[EstacaoColocacao] _ready: missão colocar_estacao já está ativa")
 	
-	set_process_input(true)  # Sempre recebe input; _esta_ativa() filtra dentro de _unhandled_input
+	set_process_unhandled_input(true)  # Sempre recebe input não tratado; _esta_ativa() filtra dentro de _unhandled_input
 	set_process(_em_missao_estacao)  # _process só roda se a missão estiver ativa (atualiza preview)
+	
+	print("[EstacaoColocacao] _ready: estacao_colocada=", _estacao_colocada, " em_missao=", _em_missao_estacao)
 
 
 func _process(delta: float) -> void:
@@ -66,15 +72,19 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _estacao_colocada:
-		return
+	print("[EstacaoColocacao] _unhandled_input: evento recebido. estacao_colocada=", _estacao_colocada, " ativa=", _esta_ativa(), " modo_preview=", _modo_preview)
 	
 	if not _esta_ativa():
+		print("[EstacaoColocacao] _unhandled_input: NÃO ativa (mission_id=", mission_id, ")")
 		return
+	
+	print("[EstacaoColocacao] _unhandled_input: evento recebido, ativa=true")
 	
 	if not _modo_preview:
 		# Fora do preview: pressionar "interagir" (E/X) entra no modo preview
+		# (mesmo se a estação já foi colocada, permite reposicionar)
 		if event.is_action_pressed("interagir"):
+			print("[EstacaoColocacao] Interagir pressionado, iniciando preview")
 			_iniciar_preview()
 	else:
 		# Dentro do preview:
@@ -93,13 +103,17 @@ func _unhandled_input(event: InputEvent) -> void:
 func _iniciar_preview() -> void:
 	var player = get_tree().get_first_node_in_group("jogador") as Node3D
 	if player == null:
+		print("[EstacaoColocacao] _iniciar_preview: jogador não encontrado")
 		return
 	
 	var dist := global_position.distance_to(player.global_position)
+	print("[EstacaoColocacao] _iniciar_preview: dist=", dist, " distancia_max=", distancia_max_colocacao)
 	if dist > distancia_max_colocacao:
+		print("[EstacaoColocacao] _iniciar_preview: jogador muito longe")
 		return
 	
 	_modo_preview = true
+	print("[EstacaoColocacao] _iniciar_preview: modo_preview ativado")
 	
 	# Instancia o preview (versão semitransparente/ghost)
 	_preview_instance = _cena_estacao.instantiate()
@@ -108,24 +122,34 @@ func _iniciar_preview() -> void:
 		_modo_preview = false
 		return
 	
+	print("[EstacaoColocacao] _iniciar_preview: preview instanciado com sucesso")
+	
 	# Torna o preview semitransparente (ghost)
 	_tornar_ghost(_preview_instance)
 	
+	# Adiciona o preview na árvore de cena (fallback para root se current_scene falhar)
 	var pai := get_tree().current_scene
 	if pai == null:
 		pai = get_parent()
+	if pai == null:
+		pai = get_tree().root
 	if pai:
 		pai.add_child(_preview_instance)
+		print("[EstacaoColocacao] _iniciar_preview: preview adicionado à cena")
+	else:
+		push_error("[EstacaoColocacao] _iniciar_preview: não foi possível adicionar preview à cena (pai null)")
 	
 	_atualizar_preview()
 
 
 func _atualizar_preview() -> void:
 	if _preview_instance == null:
+		print("[EstacaoColocacao] _atualizar_preview: preview_instance é null")
 		return
 	
 	var camera := get_viewport().get_camera_3d()
 	if camera == null:
+		print("[EstacaoColocacao] _atualizar_preview: câmera não encontrada no viewport")
 		return
 	
 	var origem := camera.global_position
@@ -140,15 +164,20 @@ func _atualizar_preview() -> void:
 	var resultado := space_state.intersect_ray(query)
 	
 	if resultado.is_empty():
+		print("[EstacaoColocacao] _atualizar_preview: raycast não acertou nada")
+		_definir_cor_preview(Color.RED)
+		_posicao_preview = Vector3.ZERO
 		return
 	
 	var ponto := resultado.position as Vector3
+	print("[EstacaoColocacao] _atualizar_preview: raycast acertou em ", ponto)
 	
 	# Verifica se está dentro da área
 	if not _ponto_dentro_da_area(ponto):
 		# Mostra preview vermelho (inválido)
 		_definir_cor_preview(Color.RED)
 		_posicao_preview = Vector3.ZERO
+		print("[EstacaoColocacao] _atualizar_preview: ponto FORA da área")
 		return
 	
 	# Verifica inclinação do terreno
@@ -158,12 +187,14 @@ func _atualizar_preview() -> void:
 		if angulo > tolerancia_inclinacao:
 			_definir_cor_preview(Color.YELLOW)
 			_posicao_preview = Vector3.ZERO
+			print("[EstacaoColocacao] _atualizar_preview: terreno muito inclinado (", angulo, " graus)")
 			return
 	
 	# Posição válida - verde
 	_definir_cor_preview(Color.GREEN)
 	_posicao_preview = ponto
 	_preview_instance.global_position = ponto + Vector3(0, 0.1, 0)
+	print("[EstacaoColocacao] _atualizar_preview: POSIÇÃO VÁLIDA. Preview em ", _preview_instance.global_position)
 
 
 func _tentar_colocar_estacao() -> void:
@@ -282,9 +313,9 @@ func _adicionar_collider_se_precisar(node: Node3D) -> void:
 			return  # Já tem colisão
 	
 	# Cria o StaticBody com colisão DESABILITADA inicialmente (layer 0, mask 0).
-	// Isso evita que o colisor estático recém-criado empurre o drone ou o
-	// trator fisicamente caso estejam sobrepostos com a estação. Eles ficam
-	// exatamente onde estão, sem ser movidos.
+	# Isso evita que o colisor estático recém-criado empurre o drone ou o
+	# trator fisicamente caso estejam sobrepostos com a estação. Eles ficam
+	# exatamente onde estão, sem ser movidos.
 	var static_body = StaticBody3D.new()
 	static_body.name = "EstacaoCollision"
 	static_body.collision_layer = 0
@@ -303,14 +334,16 @@ func _adicionar_collider_se_precisar(node: Node3D) -> void:
 	node.add_child(static_body)
 	
 	# Habilita a colisão no próximo frame, depois que a posição já está
-	// estabelecida e não há risco de empurrão físico nos veículos.
+	# estabelecida e não há risco de empurrão físico nos veículos.
 	call_deferred("_habilitar_colisao_estacao", static_body)
 
 
 func _habilitar_colisao_estacao(static_body: StaticBody3D) -> void:
 	if is_instance_valid(static_body):
-		static_body.collision_layer = 1
-		static_body.collision_mask = 1
+		# Camada 2 = estruturas/ambiente (mesma de pedras e árvores)
+		# Mask 4 = colide apenas com o terreno, nunca com jogador/trator/drone (camada 1)
+		static_body.collision_layer = 2
+		static_body.collision_mask = 4
 
 
 func _calcular_aabb(node: Node3D) -> AABB:
@@ -333,7 +366,7 @@ func _calcular_aabb(node: Node3D) -> AABB:
 func _on_missao_estacao_mudou(mission_id: Variant) -> void:
 	var mid: String = str(mission_id)
 	_em_missao_estacao = (mid == "colocar_estacao")
-	set_process_input(true)  # Mantém input ativo; _esta_ativa() filtra dentro de _unhandled_input
+	set_process_unhandled_input(true)  # Mantém input ativo; _esta_ativa() filtra dentro de _unhandled_input
 	set_process(_em_missao_estacao)  # _process só roda se a missão estiver ativa (atualiza preview)
 	if not _em_missao_estacao:
 		_modo_preview = false
@@ -413,6 +446,11 @@ func _restaurar_estacao_salva() -> void:
 		estacao.add_to_group("estacao_meteorologica")
 		_estacao_colocada = true
 		print("[EstacaoColocacao] Estação restaurada do save: ", pos)
+		
+		# Completa o objetivo da missão se ainda não estiver completo
+		var mm: Variant = get_node_or_null("/root/MissionManager")
+		if mm != null:
+			mm.completar_objetivo(mission_id, objective_id)
 
 
 func get_estacao_colocada() -> bool:
