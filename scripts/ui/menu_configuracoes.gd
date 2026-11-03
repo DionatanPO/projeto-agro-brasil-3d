@@ -197,8 +197,9 @@ func _carregar_configuracoes() -> void:
 		slider_musica.value = float(d.get("volume_musica", 100.0))
 
 	var chk_vsync := _no("ChkVSync") as Button
+	var ativo := false
 	if chk_vsync != null:
-		var ativo := bool(d.get("vsync", true))
+		ativo := bool(d.get("vsync", true))
 		chk_vsync.button_pressed = ativo
 		if ativo:
 			DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
