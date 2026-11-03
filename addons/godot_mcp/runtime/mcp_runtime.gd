@@ -64,6 +64,14 @@ func _ready() -> void:
 		set_process(false)
 		set_physics_process(false)
 		return
+	# Runtime helper so existe para depuracao pelo editor. Em builds exportadas
+	# (celular inclusive) ele ficaria tentando conectar num WebSocket local que
+	# nao existe, recriando o peer a cada 2s — custo e travadas sem utilidade.
+	# Para depurar um export, passe `--mcp` nos argumentos do app.
+	if not OS.has_feature("editor") and not OS.get_cmdline_user_args().has("--mcp"):
+		set_process(false)
+		set_physics_process(false)
+		return
 	_project_path = ProjectSettings.globalize_path("res://")
 	_started_at_msec = Time.get_ticks_msec()
 	process_mode = Node.PROCESS_MODE_ALWAYS

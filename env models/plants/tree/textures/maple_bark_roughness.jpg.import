@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://2k4kuut4j6iy"
 path.s3tc="res://.godot/imported/maple_bark_roughness.jpg-8ba48d152756186cbdf263c03c5bb63e.s3tc.ctex"
+path.etc2="res://.godot/imported/maple_bark_roughness.jpg-8ba48d152756186cbdf263c03c5bb63e.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://env models/plants/tree/textures/maple_bark_roughness.jpg"
-dest_files=["res://.godot/imported/maple_bark_roughness.jpg-8ba48d152756186cbdf263c03c5bb63e.s3tc.ctex"]
+dest_files=["res://.godot/imported/maple_bark_roughness.jpg-8ba48d152756186cbdf263c03c5bb63e.s3tc.ctex", "res://.godot/imported/maple_bark_roughness.jpg-8ba48d152756186cbdf263c03c5bb63e.etc2.ctex"]
 
 [params]
 

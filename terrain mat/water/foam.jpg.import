@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dotmx0aur6c7w"
 path.s3tc="res://.godot/imported/foam.jpg-2fb0d48b372e8e9f479c1a9c94926c80.s3tc.ctex"
+path.etc2="res://.godot/imported/foam.jpg-2fb0d48b372e8e9f479c1a9c94926c80.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://terrain mat/water/foam.jpg"
-dest_files=["res://.godot/imported/foam.jpg-2fb0d48b372e8e9f479c1a9c94926c80.s3tc.ctex"]
+dest_files=["res://.godot/imported/foam.jpg-2fb0d48b372e8e9f479c1a9c94926c80.s3tc.ctex", "res://.godot/imported/foam.jpg-2fb0d48b372e8e9f479c1a9c94926c80.etc2.ctex"]
 
 [params]
 

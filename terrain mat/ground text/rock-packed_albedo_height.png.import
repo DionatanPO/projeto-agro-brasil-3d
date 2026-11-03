@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://djyuk2urqr8cc"
 path.s3tc="res://.godot/imported/rock-packed_albedo_height.png-858281be25db9470a3084359554b29e9.s3tc.ctex"
+path.etc2="res://.godot/imported/rock-packed_albedo_height.png-858281be25db9470a3084359554b29e9.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://terrain mat/ground text/rock-packed_albedo_height.png"
-dest_files=["res://.godot/imported/rock-packed_albedo_height.png-858281be25db9470a3084359554b29e9.s3tc.ctex"]
+dest_files=["res://.godot/imported/rock-packed_albedo_height.png-858281be25db9470a3084359554b29e9.s3tc.ctex", "res://.godot/imported/rock-packed_albedo_height.png-858281be25db9470a3084359554b29e9.etc2.ctex"]
 
 [params]
 

@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://gghp00ncjh3k"
 path.s3tc="res://.godot/imported/trator_ORM_78faf384-eba7-4b36-81ef-3e5441ca6f68.jpg-4663629ebb5db30b14789b8d1b8ae107.s3tc.ctex"
+path.etc2="res://.godot/imported/trator_ORM_78faf384-eba7-4b36-81ef-3e5441ca6f68.jpg-4663629ebb5db30b14789b8d1b8ae107.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/trator/trator_ORM_78faf384-eba7-4b36-81ef-3e5441ca6f68.jpg"
-dest_files=["res://.godot/imported/trator_ORM_78faf384-eba7-4b36-81ef-3e5441ca6f68.jpg-4663629ebb5db30b14789b8d1b8ae107.s3tc.ctex"]
+dest_files=["res://.godot/imported/trator_ORM_78faf384-eba7-4b36-81ef-3e5441ca6f68.jpg-4663629ebb5db30b14789b8d1b8ae107.s3tc.ctex", "res://.godot/imported/trator_ORM_78faf384-eba7-4b36-81ef-3e5441ca6f68.jpg-4663629ebb5db30b14789b8d1b8ae107.etc2.ctex"]
 
 [params]
 

@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dofah3nk4c5cb"
 path.s3tc="res://.godot/imported/maple_bark_normal.jpg-aa5b285c58b6331e0f9fc46a2f7530f2.s3tc.ctex"
+path.etc2="res://.godot/imported/maple_bark_normal.jpg-aa5b285c58b6331e0f9fc46a2f7530f2.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://env models/plants/tree/textures/maple_bark_normal.jpg"
-dest_files=["res://.godot/imported/maple_bark_normal.jpg-aa5b285c58b6331e0f9fc46a2f7530f2.s3tc.ctex"]
+dest_files=["res://.godot/imported/maple_bark_normal.jpg-aa5b285c58b6331e0f9fc46a2f7530f2.s3tc.ctex", "res://.godot/imported/maple_bark_normal.jpg-aa5b285c58b6331e0f9fc46a2f7530f2.etc2.ctex"]
 
 [params]
 

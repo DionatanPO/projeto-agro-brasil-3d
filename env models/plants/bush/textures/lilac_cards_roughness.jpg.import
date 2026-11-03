@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://ckal6jhaf3hnr"
 path.s3tc="res://.godot/imported/lilac_cards_roughness.jpg-89fa7064ca5c1dd3d163aea3334960be.s3tc.ctex"
+path.etc2="res://.godot/imported/lilac_cards_roughness.jpg-89fa7064ca5c1dd3d163aea3334960be.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://env models/plants/bush/textures/lilac_cards_roughness.jpg"
-dest_files=["res://.godot/imported/lilac_cards_roughness.jpg-89fa7064ca5c1dd3d163aea3334960be.s3tc.ctex"]
+dest_files=["res://.godot/imported/lilac_cards_roughness.jpg-89fa7064ca5c1dd3d163aea3334960be.s3tc.ctex", "res://.godot/imported/lilac_cards_roughness.jpg-89fa7064ca5c1dd3d163aea3334960be.etc2.ctex"]
 
 [params]
 

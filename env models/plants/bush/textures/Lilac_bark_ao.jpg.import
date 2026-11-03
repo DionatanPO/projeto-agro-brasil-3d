@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://5ebal4mnbm1f"
 path.s3tc="res://.godot/imported/Lilac_bark_ao.jpg-78be2dd0eef9439f613136638c2abe61.s3tc.ctex"
+path.etc2="res://.godot/imported/Lilac_bark_ao.jpg-78be2dd0eef9439f613136638c2abe61.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://env models/plants/bush/textures/Lilac_bark_ao.jpg"
-dest_files=["res://.godot/imported/Lilac_bark_ao.jpg-78be2dd0eef9439f613136638c2abe61.s3tc.ctex"]
+dest_files=["res://.godot/imported/Lilac_bark_ao.jpg-78be2dd0eef9439f613136638c2abe61.s3tc.ctex", "res://.godot/imported/Lilac_bark_ao.jpg-78be2dd0eef9439f613136638c2abe61.etc2.ctex"]
 
 [params]
 

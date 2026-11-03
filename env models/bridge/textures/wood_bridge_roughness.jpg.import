@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://c8pkmvjxsfr"
 path.s3tc="res://.godot/imported/wood_bridge_roughness.jpg-ebee3f124c58261bd7a8e32d9f80a6fe.s3tc.ctex"
+path.etc2="res://.godot/imported/wood_bridge_roughness.jpg-ebee3f124c58261bd7a8e32d9f80a6fe.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://env models/bridge/textures/wood_bridge_roughness.jpg"
-dest_files=["res://.godot/imported/wood_bridge_roughness.jpg-ebee3f124c58261bd7a8e32d9f80a6fe.s3tc.ctex"]
+dest_files=["res://.godot/imported/wood_bridge_roughness.jpg-ebee3f124c58261bd7a8e32d9f80a6fe.s3tc.ctex", "res://.godot/imported/wood_bridge_roughness.jpg-ebee3f124c58261bd7a8e32d9f80a6fe.etc2.ctex"]
 
 [params]
 

@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dr40no80mnr6"
 path.s3tc="res://.godot/imported/pine_bark_base.jpg-d7c099f41bd41c8c0d3b07030a27c65e.s3tc.ctex"
+path.etc2="res://.godot/imported/pine_bark_base.jpg-d7c099f41bd41c8c0d3b07030a27c65e.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://env models/plants/tree/textures/pine_bark_base.jpg"
-dest_files=["res://.godot/imported/pine_bark_base.jpg-d7c099f41bd41c8c0d3b07030a27c65e.s3tc.ctex"]
+dest_files=["res://.godot/imported/pine_bark_base.jpg-d7c099f41bd41c8c0d3b07030a27c65e.s3tc.ctex", "res://.godot/imported/pine_bark_base.jpg-d7c099f41bd41c8c0d3b07030a27c65e.etc2.ctex"]
 
 [params]
 

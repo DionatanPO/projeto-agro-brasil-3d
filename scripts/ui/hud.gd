@@ -41,9 +41,12 @@ var _botoes_abas: Array = []
 @onready var popup_recompensa: Label = $MissaoCompleta/Inset/Conteudo/InfoRecompensa
 @onready var fps_label: Label = $FPS
 
-var _som_conclusao: AudioStreamPlayer
 var _popup_tween: Tween
 const COR_DOURADA := Color("#d4af37")
+
+## No celular o 3D comeca com upscaling FSR 1.0 em 0.67 para economizar fill rate
+## (a cena renderiza em ~1/2 dos pixels e o FSR devolve nitidez).
+const UPSCALING_PRESET_MOBILE := 1
 
 # Indicador de pulverização (missão 4)
 var lbl_pulverizacao: Label
@@ -79,14 +82,6 @@ func _ready() -> void:
 	popup_recompensa.add_theme_color_override("font_color", AgroUITheme.MUTED_INK)
 	AgroUITheme.style_primary_button($MissaoCompleta/Inset/Conteudo/BotaoOK)
 	$MissaoCompleta/Inset/Conteudo/BotaoOK.add_theme_font_size_override("font_size", 17)
-	# Som de conclusão de missão
-	_som_conclusao = AudioStreamPlayer.new()
-	_som_conclusao.name = "SomConclusaoMissao"
-	_som_conclusao.bus = "Efeitos"
-	var stream_conclusao = load("res://assets/audio/ui/toast.wav")
-	if stream_conclusao:
-		_som_conclusao.stream = stream_conclusao
-	add_child(_som_conclusao)
 	# Janela começa encolhida para animar ao abrir
 	popup_missao.scale = Vector2.ZERO
 	# Subtítulo com ícone de troféu e cor dourada
@@ -147,11 +142,11 @@ func _ready() -> void:
 	btn_fsr_off.pressed.connect(_on_upscaling.bind("off"))
 	btn_fsr1.pressed.connect(_on_upscaling.bind("fsr1"))
 	btn_fsr2.pressed.connect(_on_upscaling.bind("fsr2"))
-	slider_upscaling.set_value_no_signal(float(SaveSystem.dados.get("upscaling_preset", 1)))
+	slider_upscaling.set_value_no_signal(float(SaveSystem.dados.get("upscaling_preset", _preset_upscaling_padrao())))
 	slider_upscaling.value_changed.connect(_on_upscaling_escala)
-	_atualizar_botoes_upscaling(str(SaveSystem.dados.get("upscaling", "off")))
-	_atualizar_rotulo_escala(int(SaveSystem.dados.get("upscaling_preset", 1)))
-	_aplicar_upscaling(str(SaveSystem.dados.get("upscaling", "off")), _escala_do_preset(int(SaveSystem.dados.get("upscaling_preset", 1))))
+	_atualizar_botoes_upscaling(str(SaveSystem.dados.get("upscaling", _modo_upscaling_padrao())))
+	_atualizar_rotulo_escala(int(SaveSystem.dados.get("upscaling_preset", _preset_upscaling_padrao())))
+	_aplicar_upscaling(str(SaveSystem.dados.get("upscaling", _modo_upscaling_padrao())), _escala_do_preset(int(SaveSystem.dados.get("upscaling_preset", _preset_upscaling_padrao()))))
 	btn_vsync.set_pressed_no_signal(bool(SaveSystem.dados.get("vsync", true)))
 	_aplicar_vsync(bool(SaveSystem.dados.get("vsync", true)))
 	btn_vsync.toggled.connect(_on_vsync)
@@ -331,7 +326,7 @@ func _on_upscaling(modo: String) -> void:
 	SaveSystem.dados["upscaling"] = modo
 	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 	_atualizar_botoes_upscaling(modo)
-	_aplicar_upscaling(modo, _escala_do_preset(int(SaveSystem.dados.get("upscaling_preset", 1))))
+	_aplicar_upscaling(modo, _escala_do_preset(int(SaveSystem.dados.get("upscaling_preset", _preset_upscaling_padrao()))))
 
 
 func _on_upscaling_escala(preset: float) -> void:
@@ -340,7 +335,7 @@ func _on_upscaling_escala(preset: float) -> void:
 	SaveSystem.dados["upscaling_scale"] = _escala_do_preset(p)
 	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 	_atualizar_rotulo_escala(p)
-	_aplicar_upscaling(str(SaveSystem.dados.get("upscaling", "off")), _escala_do_preset(p))
+	_aplicar_upscaling(str(SaveSystem.dados.get("upscaling", _modo_upscaling_padrao())), _escala_do_preset(p))
 
 
 func _escala_do_preset(p: int) -> float:
@@ -351,6 +346,15 @@ func _escala_do_preset(p: int) -> float:
 			return 0.85
 		_:
 			return 0.67
+
+
+## Valores padrao de upscaling: no celular ja comeca ligado no FSR 1.0.
+func _modo_upscaling_padrao() -> String:
+	return "fsr1" if OS.has_feature("mobile") else "off"
+
+
+func _preset_upscaling_padrao() -> int:
+	return UPSCALING_PRESET_MOBILE if OS.has_feature("mobile") else 1
 
 
 func _atualizar_rotulo_escala(p: int) -> void:
@@ -512,10 +516,6 @@ func _on_missao(missao_id: String) -> void:
 	else:
 		$MissaoCompleta/Inset/Conteudo/BotaoOK.text = "Concluir tudo"
 	
-	# Som de conclusão
-	if _som_conclusao.stream:
-		_som_conclusao.play()
-	
 	# Animação de entrada: escala 0 -> 1
 	# Mantém referência do tween para não ser coletado pelo garbage collector
 	if _popup_tween != null and _popup_tween.is_running():
@@ -544,11 +544,6 @@ func _on_acao_missao() -> void:
 	if not diario.visible and not dialogo.visible:
 		scrim.hide()
 		get_tree().paused = false
-	
-	# Se há próxima missão, abre o caderno para o jogador ver o próximo objetivo.
-	var prox = MissionManager.get_proxima_pendente()
-	if prox != null:
-		Jogo.alternar_diario.emit()
 
 func _preencher_diario() -> void:
 	var prox: Dictionary

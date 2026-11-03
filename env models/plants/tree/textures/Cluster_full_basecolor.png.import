@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dogc1ke7r13ju"
 path.s3tc="res://.godot/imported/Cluster_full_basecolor.png-a5b7459023fae11526c38ee319f7aad8.s3tc.ctex"
+path.etc2="res://.godot/imported/Cluster_full_basecolor.png-a5b7459023fae11526c38ee319f7aad8.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://env models/plants/tree/textures/Cluster_full_basecolor.png"
-dest_files=["res://.godot/imported/Cluster_full_basecolor.png-a5b7459023fae11526c38ee319f7aad8.s3tc.ctex"]
+dest_files=["res://.godot/imported/Cluster_full_basecolor.png-a5b7459023fae11526c38ee319f7aad8.s3tc.ctex", "res://.godot/imported/Cluster_full_basecolor.png-a5b7459023fae11526c38ee319f7aad8.etc2.ctex"]
 
 [params]
 

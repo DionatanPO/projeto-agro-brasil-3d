@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://whkw7vqkip67"
 path.s3tc="res://.godot/imported/maple_leaf_ao.jpg-f768a1149376d894f4f203593328cd37.s3tc.ctex"
+path.etc2="res://.godot/imported/maple_leaf_ao.jpg-f768a1149376d894f4f203593328cd37.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://env models/plants/tree/textures/maple_leaf_ao.jpg"
-dest_files=["res://.godot/imported/maple_leaf_ao.jpg-f768a1149376d894f4f203593328cd37.s3tc.ctex"]
+dest_files=["res://.godot/imported/maple_leaf_ao.jpg-f768a1149376d894f4f203593328cd37.s3tc.ctex", "res://.godot/imported/maple_leaf_ao.jpg-f768a1149376d894f4f203593328cd37.etc2.ctex"]
 
 [params]
 

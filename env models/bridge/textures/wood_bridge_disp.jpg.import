@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://btpyryriclgya"
 path.s3tc="res://.godot/imported/wood_bridge_disp.jpg-4d482bd039b9b9c5c395a49f2e4dca94.s3tc.ctex"
+path.etc2="res://.godot/imported/wood_bridge_disp.jpg-4d482bd039b9b9c5c395a49f2e4dca94.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://env models/bridge/textures/wood_bridge_disp.jpg"
-dest_files=["res://.godot/imported/wood_bridge_disp.jpg-4d482bd039b9b9c5c395a49f2e4dca94.s3tc.ctex"]
+dest_files=["res://.godot/imported/wood_bridge_disp.jpg-4d482bd039b9b9c5c395a49f2e4dca94.s3tc.ctex", "res://.godot/imported/wood_bridge_disp.jpg-4d482bd039b9b9c5c395a49f2e4dca94.etc2.ctex"]
 
 [params]
 

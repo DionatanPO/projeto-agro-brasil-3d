@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bgc57bx2q2w8w"
 path.s3tc="res://.godot/imported/Lilac_bark_roughness.jpg-4acfeb45d3fc0d664c9537e411a44bd8.s3tc.ctex"
+path.etc2="res://.godot/imported/Lilac_bark_roughness.jpg-4acfeb45d3fc0d664c9537e411a44bd8.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://env models/plants/bush/textures/Lilac_bark_roughness.jpg"
-dest_files=["res://.godot/imported/Lilac_bark_roughness.jpg-4acfeb45d3fc0d664c9537e411a44bd8.s3tc.ctex"]
+dest_files=["res://.godot/imported/Lilac_bark_roughness.jpg-4acfeb45d3fc0d664c9537e411a44bd8.s3tc.ctex", "res://.godot/imported/Lilac_bark_roughness.jpg-4acfeb45d3fc0d664c9537e411a44bd8.etc2.ctex"]
 
 [params]
 

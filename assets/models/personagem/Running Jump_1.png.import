@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://y260bt3u26my"
 path.s3tc="res://.godot/imported/Running Jump_1.png-d61708c7e0cb6bde16c5df541d3d33b6.s3tc.ctex"
+path.etc2="res://.godot/imported/Running Jump_1.png-d61708c7e0cb6bde16c5df541d3d33b6.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/personagem/Running Jump_1.png"
-dest_files=["res://.godot/imported/Running Jump_1.png-d61708c7e0cb6bde16c5df541d3d33b6.s3tc.ctex"]
+dest_files=["res://.godot/imported/Running Jump_1.png-d61708c7e0cb6bde16c5df541d3d33b6.s3tc.ctex", "res://.godot/imported/Running Jump_1.png-d61708c7e0cb6bde16c5df541d3d33b6.etc2.ctex"]
 
 [params]
 

@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://c5imwinsqjfdo"
 path.s3tc="res://.godot/imported/rock 2 base.jpg-f86ade8bff228c7c832c24176ee3b62e.s3tc.ctex"
+path.etc2="res://.godot/imported/rock 2 base.jpg-f86ade8bff228c7c832c24176ee3b62e.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://env models/rocks/texture/rock 2 base.jpg"
-dest_files=["res://.godot/imported/rock 2 base.jpg-f86ade8bff228c7c832c24176ee3b62e.s3tc.ctex"]
+dest_files=["res://.godot/imported/rock 2 base.jpg-f86ade8bff228c7c832c24176ee3b62e.s3tc.ctex", "res://.godot/imported/rock 2 base.jpg-f86ade8bff228c7c832c24176ee3b62e.etc2.ctex"]
 
 [params]
 

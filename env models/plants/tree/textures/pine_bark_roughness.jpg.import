@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bmv23ucm2uy1e"
 path.s3tc="res://.godot/imported/pine_bark_roughness.jpg-0155aa464e884c3b83e083684fe2a61a.s3tc.ctex"
+path.etc2="res://.godot/imported/pine_bark_roughness.jpg-0155aa464e884c3b83e083684fe2a61a.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://env models/plants/tree/textures/pine_bark_roughness.jpg"
-dest_files=["res://.godot/imported/pine_bark_roughness.jpg-0155aa464e884c3b83e083684fe2a61a.s3tc.ctex"]
+dest_files=["res://.godot/imported/pine_bark_roughness.jpg-0155aa464e884c3b83e083684fe2a61a.s3tc.ctex", "res://.godot/imported/pine_bark_roughness.jpg-0155aa464e884c3b83e083684fe2a61a.etc2.ctex"]
 
 [params]
 

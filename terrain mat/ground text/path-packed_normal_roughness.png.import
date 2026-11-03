@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://daty70bq535un"
 path.s3tc="res://.godot/imported/path-packed_normal_roughness.png-7b10578675808d74352d6b7f5156dca7.s3tc.ctex"
+path.etc2="res://.godot/imported/path-packed_normal_roughness.png-7b10578675808d74352d6b7f5156dca7.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://terrain mat/ground text/path-packed_normal_roughness.png"
-dest_files=["res://.godot/imported/path-packed_normal_roughness.png-7b10578675808d74352d6b7f5156dca7.s3tc.ctex"]
+dest_files=["res://.godot/imported/path-packed_normal_roughness.png-7b10578675808d74352d6b7f5156dca7.s3tc.ctex", "res://.godot/imported/path-packed_normal_roughness.png-7b10578675808d74352d6b7f5156dca7.etc2.ctex"]
 
 [params]
 

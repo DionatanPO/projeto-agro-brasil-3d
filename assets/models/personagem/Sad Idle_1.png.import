@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cm3wlvulm3l04"
 path.s3tc="res://.godot/imported/Sad Idle_1.png-2bafbf7fbc8ff70f73c5339a169a0e85.s3tc.ctex"
+path.etc2="res://.godot/imported/Sad Idle_1.png-2bafbf7fbc8ff70f73c5339a169a0e85.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/personagem/Sad Idle_1.png"
-dest_files=["res://.godot/imported/Sad Idle_1.png-2bafbf7fbc8ff70f73c5339a169a0e85.s3tc.ctex"]
+dest_files=["res://.godot/imported/Sad Idle_1.png-2bafbf7fbc8ff70f73c5339a169a0e85.s3tc.ctex", "res://.godot/imported/Sad Idle_1.png-2bafbf7fbc8ff70f73c5339a169a0e85.etc2.ctex"]
 
 [params]
 

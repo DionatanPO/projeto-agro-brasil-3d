@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://b0owjmcj17h5"
 path.s3tc="res://.godot/imported/butterfly blue.png-696b6e4ae5c926f8224e0d8d2d579323.s3tc.ctex"
+path.etc2="res://.godot/imported/butterfly blue.png-696b6e4ae5c926f8224e0d8d2d579323.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://env models/movable/butterfly blue.png"
-dest_files=["res://.godot/imported/butterfly blue.png-696b6e4ae5c926f8224e0d8d2d579323.s3tc.ctex"]
+dest_files=["res://.godot/imported/butterfly blue.png-696b6e4ae5c926f8224e0d8d2d579323.s3tc.ctex", "res://.godot/imported/butterfly blue.png-696b6e4ae5c926f8224e0d8d2d579323.etc2.ctex"]
 
 [params]
 

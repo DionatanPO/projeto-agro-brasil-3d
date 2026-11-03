@@ -11,7 +11,10 @@ extends Node
 ## sombras no _ready dele) e vale para qualquer cena, não só para o HUD.
 
 const NIVEIS := ["baixo", "medio", "alto"]
-const PADRAO := "alto"
+const PADRAO_DESKTOP := "alto"
+## Celular comeca no Baixo: a vegetacao do Terrain3D e o maior custo e o
+## preset Alto nao roda em tempo real em Android/iOS.
+const PADRAO_MOBILE := "baixo"
 
 ## Valor de ShadowCasting do Terrain3D (e dos MeshAssets de vegetação).
 const SOMBRA_OFF := 0
@@ -33,7 +36,7 @@ const DISTANCIA_VEGETACAO := {
 	"rocha": {"baixo": 80.0, "medio": 100.0, "alto": 0.0},
 }
 
-var nivel_atual: String = PADRAO
+var nivel_atual: String = PADRAO_DESKTOP
 
 var _reaplicar_agendado := false
 var _terreno_id := 0
@@ -71,15 +74,20 @@ func _reaplicar() -> void:
 
 # ------------------------------------------------------------------ API
 
+## Preset padrao conforme a plataforma (celular comeca no Baixo).
+func padrao_plataforma() -> String:
+	return PADRAO_MOBILE if OS.has_feature("mobile") else PADRAO_DESKTOP
+
+
 func nivel_salvo() -> String:
-	var n := str(SaveSystem.dados.get("grafico", PADRAO))
-	return n if NIVEIS.has(n) else PADRAO
+	var n := str(SaveSystem.dados.get("grafico", padrao_plataforma()))
+	return n if NIVEIS.has(n) else padrao_plataforma()
 
 
 ## Aplica e salva o preset (chamado pelos botões do HUD).
 func definir(nivel: String) -> void:
 	if not NIVEIS.has(nivel):
-		nivel = PADRAO
+		nivel = padrao_plataforma()
 	SaveSystem.dados["grafico"] = nivel
 	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 	aplicar(nivel)
@@ -88,7 +96,7 @@ func definir(nivel: String) -> void:
 ## Aplica o preset sem salvar nada.
 func aplicar(nivel: String) -> void:
 	if not NIVEIS.has(nivel):
-		nivel = PADRAO
+		nivel = padrao_plataforma()
 	nivel_atual = nivel
 	_aplicar_viewport(nivel)
 	var cena := get_tree().current_scene

@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://br7y0uw2vryxm"
 path.s3tc="res://.godot/imported/trator_NormalGL_78faf384-eba7-4b36-81ef-3e5441ca6f68.png-6a1bb9331b47f750110791884ca35e58.s3tc.ctex"
+path.etc2="res://.godot/imported/trator_NormalGL_78faf384-eba7-4b36-81ef-3e5441ca6f68.png-6a1bb9331b47f750110791884ca35e58.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/trator/trator_NormalGL_78faf384-eba7-4b36-81ef-3e5441ca6f68.png"
-dest_files=["res://.godot/imported/trator_NormalGL_78faf384-eba7-4b36-81ef-3e5441ca6f68.png-6a1bb9331b47f750110791884ca35e58.s3tc.ctex"]
+dest_files=["res://.godot/imported/trator_NormalGL_78faf384-eba7-4b36-81ef-3e5441ca6f68.png-6a1bb9331b47f750110791884ca35e58.s3tc.ctex", "res://.godot/imported/trator_NormalGL_78faf384-eba7-4b36-81ef-3e5441ca6f68.png-6a1bb9331b47f750110791884ca35e58.etc2.ctex"]
 
 [params]
 
