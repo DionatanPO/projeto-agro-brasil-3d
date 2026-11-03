@@ -199,7 +199,7 @@ func _carregar_configuracoes() -> void:
 	var chk_vsync := _no("ChkVSync") as Button
 	var ativo := false
 	if chk_vsync != null:
-		ativo := bool(d.get("vsync", true))
+		ativo = bool(d.get("vsync", true))
 		chk_vsync.button_pressed = ativo
 		if ativo:
 			DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
