@@ -175,6 +175,7 @@ func _ready() -> void:
 	_opt_fps_limit.add_item("Conforme o monitor", FPS_LIMITE_MONITOR)
 	_opt_fps_limit.add_item("30 FPS", FPS_LIMITE_30)
 	_opt_fps_limit.add_item("60 FPS", FPS_LIMITE_60)
+	_opt_fps_limit.add_item("Desbloqueado (maximo)", FPS_LIMITE_MONITOR)
 	_opt_fps_limit.custom_minimum_size = Vector2(180, 32)
 	_opt_fps_limit.add_theme_font_size_override("font_size", 12)
 	_opt_fps_limit.item_selected.connect(_on_fps_limit_alterado)
