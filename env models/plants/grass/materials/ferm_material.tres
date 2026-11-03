@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" format=3 uid="uid://cp648vaq6326j"]
 
-[ext_resource type="Shader" uid="uid://dw0wl0aeep0uk" path="res://env models/plants/grass/materials/shader/fern_shader.gdshader" id="1_m3u51"]
+[ext_resource type="Shader" uid="uid://dw0wl0aeep0uk" path="res://env models/plants/materials/shader/vegetacao.gdshader" id="1_m3u51"]
 [ext_resource type="Texture2D" uid="uid://cm3kuvtlggr83" path="res://env models/plants/grass/textures/ferm_albedo.jpg" id="2_f3gjn"]
 [ext_resource type="Texture2D" uid="uid://bhn0ohrkr3c0u" path="res://env models/plants/grass/textures/fern_normal.jpg" id="3_am5mo"]
 [ext_resource type="Texture2D" uid="uid://rk82xb5tw6ud" path="res://env models/plants/grass/textures/fern_roughness.jpg" id="4_j35gq"]

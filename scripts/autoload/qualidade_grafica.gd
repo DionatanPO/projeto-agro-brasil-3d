@@ -44,6 +44,8 @@ var _vegetacao_range_original: Dictionary = {}
 var _sombra_vegetacao_original: Dictionary = {}
 var _ambiente_id := 0
 var _nevoeiro_original := true
+var _fog_begin_original := 0.0
+var _fog_end_original := 0.0
 
 
 func _ready() -> void:
@@ -191,9 +193,44 @@ func _aplicar_ambiente(raiz: Node, nivel: String) -> void:
 	if id != _ambiente_id:
 		_ambiente_id = id
 		_nevoeiro_original = env.fog_enabled
-	# O Sky3D cuida do céu/ambiente; aqui só mexemos no nevoeiro (custo de
-	# tela cheia) e devolvemos o valor original nos níveis mais altos.
-	env.fog_enabled = false if nivel == "baixo" else _nevoeiro_original
+		_fog_begin_original = env.fog_depth_begin
+		_fog_end_original = env.fog_depth_end
+
+	# Neblina para disfarçar bordas do mapa (vazio além das paredes de colisão).
+	match nivel:
+		"baixo":
+			# Neblina forte e próxima: esconde as bordas rápido, economiza fill rate.
+			env.fog_enabled = true
+			env.fog_density = 0.015
+			env.fog_depth_begin = 60.0
+			env.fog_depth_end = 120.0
+			# Saturação um pouco mais baixa em mobile: cores menos vibrantes, mais suave.
+			env.adjustment_enabled = true
+			env.adjustment_brightness = 1.0
+			env.adjustment_contrast = 1.0
+			env.adjustment_saturation = 0.85
+		"medio":
+			# Neblina moderada.
+			env.fog_enabled = true
+			env.fog_density = 0.008
+			env.fog_depth_begin = 90.0
+			env.fog_depth_end = 180.0
+			# Saturação levemente reduzida.
+			env.adjustment_enabled = true
+			env.adjustment_brightness = 1.0
+			env.adjustment_contrast = 1.0
+			env.adjustment_saturation = 0.9
+		_:
+			# Neblina suave: preserva visibilidade à distância.
+			env.fog_enabled = true
+			env.fog_density = 0.0035
+			env.fog_depth_begin = 120.0
+			env.fog_depth_end = 240.0
+			# Saturação normal em alta qualidade.
+			env.adjustment_enabled = true
+			env.adjustment_brightness = 1.0
+			env.adjustment_contrast = 1.0
+			env.adjustment_saturation = 1.0
 
 
 ## Lens flare (addon SIsilicon) é um quad de tela cheia: no Baixo ele é

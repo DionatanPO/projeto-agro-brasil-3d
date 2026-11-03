@@ -46,6 +46,7 @@ func _ready() -> void:
 	# Precisa rodar antes dos scripts do jogador no frame de fisica, para que
 	# Input.is_action_just_pressed() enxergue o toque como uma tecla de verdade.
 	process_physics_priority = -10000
+	add_to_group("controles_toque")
 	_montar()
 	_aplicar_visibilidade()
 
@@ -58,7 +59,9 @@ func _physics_process(_delta: float) -> void:
 	_reafirmar.clear()
 
 
-func _process(_delta: float) -> void:
+## Atualiza a visibilidade apenas quando há mudança de plataforma ou
+## configuracao de toque (chamado externamente, nao todo frame).
+func atualizar_visibilidade() -> void:
 	_aplicar_visibilidade()
 
 

@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" format=3 uid="uid://baccdhucqk80q"]
 
-[ext_resource type="Shader" uid="uid://dajf5q4rfgurh" path="res://env models/plants/tree/materials/shader/tree_shader.gdshader" id="1_g1ve0"]
+[ext_resource type="Shader" uid="uid://dajf5q4rfgurh" path="res://env models/plants/materials/shader/vegetacao.gdshader" id="1_g1ve0"]
 [ext_resource type="Texture2D" uid="uid://cm6i5uggeppgs" path="res://env models/plants/tree/textures/Cluster_albedo.png" id="2_4wba5"]
 [ext_resource type="Texture2D" uid="uid://whkw7vqkip67" path="res://env models/plants/tree/textures/maple_leaf_ao.jpg" id="3_g1ve0"]
 [ext_resource type="Texture2D" uid="uid://dhjd8v0gj0m7n" path="res://env models/plants/tree/textures/maple_leaf_normal.jpg" id="4_4wba5"]

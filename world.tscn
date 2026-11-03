@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://rn1tbn2887uy" path="res://env models/plants/grass/scenes/grass main.tscn" id="5_gggvi"]
 [ext_resource type="Texture2D" uid="uid://cbtyl505sprv7" path="res://terrain mat/ground text/path-packed_albedo_height.png" id="5_wse8f"]
 [ext_resource type="Shader" uid="uid://whteqsleuo8v" path="res://terrain mat/water/watershader.gdshader" id="6_gbfbk"]
+[ext_resource type="Shader" uid="uid://whteqsleuo8m" path="res://terrain mat/water/watershader_mobile.gdshader" id="6_gbfbk_mobile"]
 [ext_resource type="Texture2D" uid="uid://daty70bq535un" path="res://terrain mat/ground text/path-packed_normal_roughness.png" id="6_ic0uy"]
 [ext_resource type="PackedScene" uid="uid://cablm6hxx6tpt" path="res://env models/plants/grass/scenes/main grass 1.tscn" id="6_w44yn"]
 [ext_resource type="Texture2D" uid="uid://dotmx0aur6c7w" path="res://terrain mat/water/foam.jpg" id="7_ioo17"]
@@ -137,170 +138,170 @@ dual_scaling = true
 name = "pine_1"
 scene_file = ExtResource("2_jjr1n")
 density = 0.01
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 85.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_6ah6f"]
 name = "pine_2"
 id = 1
 scene_file = ExtResource("3_gggvi")
 density = 0.01
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 85.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_g1i3r"]
 name = "pine_3"
 id = 2
 scene_file = ExtResource("4_w44yn")
 density = 0.01
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 85.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_w44yn"]
 name = "grass main"
 id = 3
 scene_file = ExtResource("5_gggvi")
 density = 4.692052
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 35.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_my276"]
 name = "main grass 1"
 id = 4
 scene_file = ExtResource("6_w44yn")
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 35.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_ryup7"]
 name = "maple_1"
 id = 5
 scene_file = ExtResource("7_my276")
 density = 0.01
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 85.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_ytpkv"]
 name = "maple_2"
 id = 6
 scene_file = ExtResource("8_yx0jh")
 density = 0.01
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 85.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_jas3d"]
 name = "maple_3"
 id = 7
 scene_file = ExtResource("9_1ew0l")
 density = 0.01
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 85.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_yx0jh"]
 name = "grass_1"
 id = 8
 scene_file = ExtResource("10_jas3d")
 density = 5.0203624
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 35.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_7htu6"]
 name = "grass_2"
 id = 9
 scene_file = ExtResource("11_7htu6")
 density = 2.6082437
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 35.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_7qk3m"]
 name = "grass_3"
 id = 10
 scene_file = ExtResource("12_7qk3m")
 density = 1.5472248
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 35.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_xpnt2"]
 name = "grass_4"
 id = 11
 scene_file = ExtResource("13_jas3d")
 density = 9.860744
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 35.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_ruyqm"]
 name = "grass_5"
 id = 12
 scene_file = ExtResource("14_jas3d")
 density = 8.137776
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 35.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_fnoqa"]
 name = "bush_1"
 id = 13
 scene_file = ExtResource("15_7htu6")
 density = 1.1115015
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 50.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_55kwu"]
 name = "bush_2"
 id = 14
 scene_file = ExtResource("16_ruyqm")
 density = 0.35645825
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 50.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_f3o6s"]
 name = "bush_3"
 id = 15
 scene_file = ExtResource("17_fnoqa")
 density = 0.9990582
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 50.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_w4lh7"]
 name = "bush_4"
 id = 16
 scene_file = ExtResource("18_nx736")
 density = 3.775064
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 50.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_nx736"]
 name = "small rock 1"
 id = 17
 scene_file = ExtResource("19_fnoqa")
 density = 0.5438387
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 80.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_k3lar"]
 name = "small rock 3"
 id = 18
 scene_file = ExtResource("20_nx736")
 density = 0.5832119
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+last_lod = 2
+last_shadow_lod = 1
+lod0_range = 80.0
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_ioo17"]
 name = "rock-packed_albedo_height"
@@ -356,6 +357,18 @@ shader_parameter/_refraction = 0.030000001425
 shader_parameter/_uv_scale = 0.246000011685
 shader_parameter/_foam_strength = 0.55600002641
 shader_parameter/_foam_size = 0.20000000298023
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_water_mobile"]
+render_priority = 0
+shader = ExtResource("6_gbfbk_mobile")
+shader_parameter/surface_color = Color(0, 0, 0, 1)
+shader_parameter/depth_color = Color(0.13527417, 0.47227302, 0.503125, 1)
+shader_parameter/opacity = 0.25
+shader_parameter/normal_map = ExtResource("8_wse8f")
+shader_parameter/normal_scale = -0.4879992631800007
+shader_parameter/beer_factor = 2.5
+shader_parameter/_roughness = 0.25
+shader_parameter/_uv_scale = 0.246
 
 [sub_resource type="BoxShape3D" id="RioParedeNorteShape"]
 size = Vector3(260, 200, 2)
@@ -458,7 +471,9 @@ reflected_light_source = 2
 tonemap_mode = 3
 tonemap_white = 6.0
 fog_enabled = true
-fog_density = 0.0035
+fog_density = 0.008
+fog_depth_begin = 80.0
+fog_depth_end = 160.0
 fog_aerial_perspective = 1.0
 fog_sky_affect = 0.0
 volumetric_fog_anisotropy = -0.53
@@ -605,75 +620,6 @@ stream = ExtResource("40_iett8")
 volume_db = -15.0
 autoplay = true
 
-[node name="Chirp3" type="AudioStreamPlayer3D" parent="Terrain3D/ForestAudio/Chirp" unique_id=1694447132]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.814774, 23.432997, 114.94599)
-stream = ExtResource("40_iett8")
-volume_db = -15.0
-autoplay = true
-
-[node name="Chirp4" type="AudioStreamPlayer3D" parent="Terrain3D/ForestAudio/Chirp" unique_id=681811943]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.7240143, 23.432997, 19.001328)
-stream = ExtResource("41_r5m4j")
-volume_db = -10.0
-autoplay = true
-
-[node name="Chirp5" type="AudioStreamPlayer3D" parent="Terrain3D/ForestAudio/Chirp" unique_id=576367564]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.361526, 23.432997, 24.415108)
-stream = ExtResource("41_r5m4j")
-volume_db = -10.0
-autoplay = true
-
-[node name="Chirp6" type="AudioStreamPlayer3D" parent="Terrain3D/ForestAudio/Chirp" unique_id=40327656]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8957977, 23.432997, 82.9007)
-stream = ExtResource("41_r5m4j")
-volume_db = -10.0
-autoplay = true
-
-[node name="Chirp_1" type="AudioStreamPlayer3D" parent="Terrain3D/ForestAudio/Chirp" unique_id=1384936917]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 49.46849, 23.432997, 108.36466)
-stream = ExtResource("42_e77ka")
-volume_db = -5.0
-autoplay = true
-
-[node name="Chirp_2" type="AudioStreamPlayer3D" parent="Terrain3D/ForestAudio/Chirp" unique_id=1065450855]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.54065, 23.432997, -3.86438)
-stream = ExtResource("42_e77ka")
-volume_db = -5.0
-autoplay = true
-
-[node name="Chirp_3" type="AudioStreamPlayer3D" parent="Terrain3D/ForestAudio/Chirp" unique_id=213560576]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -47.865967, 23.432997, 36.662773)
-stream = ExtResource("42_e77ka")
-volume_db = -5.0
-autoplay = true
-
-[node name="Chirp_4" type="AudioStreamPlayer3D" parent="Terrain3D/ForestAudio/Chirp" unique_id=1463392717]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.13403, 23.432997, 11.662773)
-stream = ExtResource("42_e77ka")
-volume_db = -5.0
-autoplay = true
-
-[node name="Chirp_1_5" type="AudioStreamPlayer3D" parent="Terrain3D/ForestAudio/Chirp" unique_id=780001397]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 93.609955, 23.432997, 17.204948)
-stream = ExtResource("43_c0wax")
-autoplay = true
-
-[node name="Chirp_1_6" type="AudioStreamPlayer3D" parent="Terrain3D/ForestAudio/Chirp" unique_id=1078910957]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.466904, 23.433004, -16.67846)
-stream = ExtResource("43_c0wax")
-autoplay = true
-
-[node name="Chirp_1_7" type="AudioStreamPlayer3D" parent="Terrain3D/ForestAudio/Chirp" unique_id=360744132]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -65.4669, 23.433004, 4.321541)
-stream = ExtResource("43_c0wax")
-autoplay = true
-
-[node name="Chirp_1_8" type="AudioStreamPlayer3D" parent="Terrain3D/ForestAudio/Chirp" unique_id=1338784315]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -55.075317, 23.433004, 86.761406)
-stream = ExtResource("43_c0wax")
-volume_db = -8.819
-autoplay = true
-
 [node name="ParqueEolico" parent="Terrain3D/ForestAudio" unique_id=839695814 instance=ExtResource("42_37ykd")]
 transform = Transform3D(-0.98995405, 0, -0.14138937, 0, 1, 0, 0.14138937, 0, -0.98995405, 123.988144, 10.841993, 226.99738)
 
@@ -683,7 +629,7 @@ transform = Transform3D(-0.94856465, 0, -0.31658334, 0.01451366, 0.9989486, -0.0
 [node name="Water" type="MeshInstance3D" parent="Terrain3D" unique_id=123465259]
 transform = Transform3D(-0.25881904, 0, -0.9659258, 0, 1, 0, 0.9659258, 0, -0.25881904, 127.373, 8.54921, 128.57552)
 mesh = SubResource("PlaneMesh_036b0")
-surface_material_override/0 = SubResource("ShaderMaterial_ic0uy")
+surface_material_override/0 = SubResource("ShaderMaterial_water_mobile")
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 

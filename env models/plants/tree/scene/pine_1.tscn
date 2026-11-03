@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://besmdopgbsjn5"]
 
 [ext_resource type="PackedScene" uid="uid://c44odjb0rycj7" path="res://env models/plants/tree/pine1.gltf" id="1_co4o8"]
-[ext_resource type="Shader" uid="uid://dajf5q4rfgurh" path="res://env models/plants/tree/materials/shader/tree_shader.gdshader" id="2_5qvmy"]
+[ext_resource type="Shader" uid="uid://dajf5q4rfgurh" path="res://env models/plants/materials/shader/vegetacao.gdshader" id="2_5qvmy"]
 [ext_resource type="Material" uid="uid://bbq3wxa6fmaf5" path="res://env models/plants/tree/materials/pine_leaf_material.res" id="3_cwx03"]
 [ext_resource type="Texture2D" uid="uid://dr40no80mnr6" path="res://env models/plants/tree/textures/pine_bark_base.jpg" id="3_wmv2i"]
 [ext_resource type="Texture2D" uid="uid://cyp6ff2k22g3m" path="res://env models/plants/tree/textures/pine_bark_ao.jpg" id="4_pt70d"]

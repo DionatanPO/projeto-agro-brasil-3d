@@ -357,7 +357,9 @@ func _process(delta: float) -> void:
 	if not ativo and _jogador != null and is_instance_valid(_jogador):
 		_prompt.text = "Pressione E para usar o trator (%.1f m)" % global_position.distance_to(_jogador.global_position)
 		if _jogador.visible:
-			var perto := global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0
+			# Calcula distância uma única vez por frame (distância ao quadrado, evita sqrt).
+			var raio2 := (RAIO_ESTACAO + 2.0) * (RAIO_ESTACAO + 2.0)
+			var perto := global_position.distance_squared_to(_jogador.global_position) < raio2
 			if perto and not _jogador_perto:
 				_on_corpo_entrou(_jogador)
 			elif not perto and _jogador_perto and estacao.get_overlapping_bodies().is_empty():

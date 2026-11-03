@@ -362,40 +362,40 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("ui_cancel") and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if not modo_tutorial and not ligado and _jogador != null and is_instance_valid(_jogador) and _prompt != null:
+		# Calcula distância uma única vez por frame (distância ao quadrado, evita sqrt).
+		var perto := false
+		if _jogador.visible:
+			var raio2 := (RAIO_ESTACAO + 2.0) * (RAIO_ESTACAO + 2.0)
+			perto = global_position.distance_squared_to(_jogador.global_position) < raio2
+
 		if not _pode_usar_drone():
 			_prompt.text = "Drone bloqueado: nível %d necessário" % nivel_necessario
-			if _jogador.visible:
-				var perto := global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0
-				if perto and not _jogador_perto:
-					_jogador_perto = true
-					_prompt.visible = true
-				elif not perto and _jogador_perto:
-					_jogador_perto = false
-					_prompt.visible = false
+			if perto and not _jogador_perto:
+				_jogador_perto = true
+				_prompt.visible = true
+			elif not perto and _jogador_perto:
+				_jogador_perto = false
+				_prompt.visible = false
 		elif not _tutorial_concluido():
 			_prompt.text = "Faça o tutorial do drone antes (T)"
-			if _jogador.visible:
-				var perto := global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0
-				if perto and not _jogador_perto:
-					_jogador_perto = true
-					_prompt.visible = true
-				elif not perto and _jogador_perto:
-					_jogador_perto = false
-					_prompt.visible = false
+			if perto and not _jogador_perto:
+				_jogador_perto = true
+				_prompt.visible = true
+			elif not perto and _jogador_perto:
+				_jogador_perto = false
+				_prompt.visible = false
 		else:
 			_prompt.text = "Pressione E para pilotar o drone  •  T tutorial"
-			if _jogador.visible:
-				var perto := global_position.distance_to(_jogador.global_position) < RAIO_ESTACAO + 2.0
-				if perto and not _jogador_perto:
-					_on_corpo_entrou(_jogador)
-				elif not perto and _jogador_perto and estacao != null and estacao.get_overlapping_bodies().is_empty():
-					_jogador_perto = false
-					_prompt.visible = false
-					_jogador_perto = true
-					_prompt.visible = true
-				elif not perto and _jogador_perto:
-					_jogador_perto = false
-					_prompt.visible = false
+			if perto and not _jogador_perto:
+				_on_corpo_entrou(_jogador)
+			elif not perto and _jogador_perto and estacao != null and estacao.get_overlapping_bodies().is_empty():
+				_jogador_perto = false
+				_prompt.visible = false
+				_jogador_perto = true
+				_prompt.visible = true
+			elif not perto and _jogador_perto:
+				_jogador_perto = false
+				_prompt.visible = false
 	_olhar_stick(delta)
 	spray.emitting = ligado and Input.is_action_pressed("pulverizar")
 	_efeitos_velocidade(delta)

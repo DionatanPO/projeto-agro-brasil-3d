@@ -305,6 +305,11 @@ func _definir_modo_toque(modo: String) -> void:
 	SaveSystem.dados["controles_toque"] = modo
 	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 	_atualizar_botoes_toque()
+	# Notifica os controles de toque para reaplicar a visibilidade imediatamente,
+	# sem depender do _process rodando todo frame.
+	var controles := get_tree().get_first_node_in_group("controles_toque")
+	if controles != null and controles.has_method("atualizar_visibilidade"):
+		controles.atualizar_visibilidade()
 
 
 func _atualizar_botoes_toque() -> void:

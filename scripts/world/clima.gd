@@ -399,7 +399,9 @@ func _aplicar_clima(chuvoso: bool, instantaneo: bool) -> void:
 func _aplicar_valores_chuvosos(t: float) -> void:
 	if _environment != null:
 		var fog_env: float = float(_originais.get("fog_density_env", 0.0035))
-		_environment.fog_density = lerpf(fog_env, maxf(fog_env, 0.025), t)
+		_environment.fog_enabled = true
+		# Neblina um pouco mais perceptível durante a chuva.
+		_environment.fog_density = lerpf(fog_env, maxf(fog_env, 0.045), t)
 		var amb: float = float(_originais.get("ambient_energy", 1.0))
 		_environment.ambient_light_energy = lerpf(amb, amb * 0.42, t)
 		var bg: float = float(_originais.get("bg_energy", 1.0))

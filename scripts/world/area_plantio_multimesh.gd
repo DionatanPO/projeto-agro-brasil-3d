@@ -2,7 +2,7 @@ extends Area3D
 ## AreaPlantioMultiMesh: versão otimizada da área de plantio usando MultiMesh3D.
 ##
 ## Em vez de criar 400 MeshInstance3D individuais (400 draw calls), usa um único
-## MultiMesh3D com 400 instâncias (1 draw call). Ganho massivo de FPS em mobile.
+## MultiMeshInstance3D com 400 instâncias (1 draw call). Ganho massivo de FPS em mobile.
 ##
 ## Para usar: substitua o script do nó AreaPlantio no world.tscn por este.
 
@@ -10,6 +10,7 @@ class_name AreaPlantioMultiMesh
 
 signal milho_plantado(posicao: Vector3)
 signal plantio_completo(quantidade: int)
+signal pulverizacao_progresso(percentual: float)
 
 @export var mission_id: String = ""
 @export var objective_id: String = ""
@@ -34,7 +35,7 @@ var _objetivo_concluido := false
 var _em_missao_pulverizacao: bool = false
 
 # Referência ao MultiMesh (criado em _ready)
-var _multimesh: MultiMesh3D = null
+var _multimesh: MultiMeshInstance3D = null
 var _multimesh_data: MultiMesh = null
 var _instancias_array: Array[Transform3D] = []
 
@@ -81,15 +82,13 @@ func _criar_multimesh() -> void:
 		push_error("AreaPlantioMultiMesh: não foi possível encontrar a malha do milho.")
 		return
 	
-	_multimesh = MultiMesh3D.new()
+	_multimesh = MultiMeshInstance3D.new()
 	_multimesh.name = "MilhosMultiMesh"
 	
 	var mm := MultiMesh.new()
 	mm.mesh = milho_mesh.mesh
 	mm.instance_count = quantidade_maxima
 	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.color_format = MultiMesh.COLOR_NONE
-	mm.custom_data_format = MultiMesh.CUSTOM_DATA_NONE
 	
 	_multimesh.multimesh = mm
 	_multimesh_data = mm
