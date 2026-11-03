@@ -10,6 +10,13 @@ const MODO_AUTO := "auto"
 const MODO_SEMPRE := "sempre"
 const MODO_NUNCA := "nunca"
 
+## Opcoes de limite de FPS (Engine.max_fps)
+const FPS_LIMITE_MONITOR := 0   # 0 = destravado, segue o monitor/VSync
+const FPS_LIMITE_30 := 30
+const FPS_LIMITE_60 := 60
+
+var _opt_fps_limit: OptionButton = null
+
 ## Rotulo exibido -> acao do InputMap (criadas pelo autoload InputSetup).
 const LISTA_CONTROLES := [
 	["Movimentar", "mover_frente"],
@@ -98,6 +105,37 @@ func _estilizar() -> void:
 		ajuda.add_theme_font_size_override("font_size", 12)
 		ajuda.add_theme_color_override("font_color", Color("#6b7280"))
 
+	# Seletor de limite de FPS (sobrepoe o VSync quando desligado)
+	var container_fps := VBoxContainer.new()
+	container_fps.name = "ContainerFpsLimit"
+	container_fps.add_theme_constant_override("separation", 6)
+	var rotulo_fps := Label.new()
+	rotulo_fps.name = "RotuloFpsLimit"
+	rotulo_fps.text = "Limite de FPS"
+	rotulo_fps.add_theme_font_size_override("font_size", 14)
+	rotulo_fps.add_theme_color_override("font_color", COR_ACCENT)
+	container_fps.add_child(rotulo_fps)
+
+	_opt_fps_limit = OptionButton.new()
+	_opt_fps_limit.name = "OptFpsLimit"
+	_opt_fps_limit.add_item("Conforme o monitor", FPS_LIMITE_MONITOR)
+	_opt_fps_limit.add_item("30 FPS", FPS_LIMITE_30)
+	_opt_fps_limit.add_item("60 FPS", FPS_LIMITE_60)
+	_opt_fps_limit.custom_minimum_size = Vector2(220, 40)
+	_opt_fps_limit.add_theme_font_size_override("font_size", 14)
+	container_fps.add_child(_opt_fps_limit)
+
+	var dica_fps := Label.new()
+	dica_fps.name = "DicaFpsLimit"
+	dica_fps.text = "Somente com V-Sync DESLIGADO"
+	dica_fps.add_theme_font_size_override("font_size", 11)
+	dica_fps.add_theme_color_override("font_color", Color("#6b7280"))
+	container_fps.add_child(dica_fps)
+
+	var painel := _no("Painel") as PanelContainer
+	if painel != null:
+		painel.add_child(container_fps)
+
 	var rotulo_toque := _no("RotuloToque") as Label
 	if rotulo_toque != null:
 		rotulo_toque.add_theme_font_size_override("font_size", 16)
@@ -126,6 +164,10 @@ func _conectar_sinais() -> void:
 	var chk_vsync := _no("ChkVSync") as Button
 	if chk_vsync != null:
 		chk_vsync.toggled.connect(_on_vsync_alterado)
+
+	var opt_fps := _no("OptFpsLimit") as OptionButton
+	if opt_fps != null:
+		opt_fps.item_selected.connect(_on_fps_limit_alterado)
 
 	var btn_voltar := _no("BotaoVoltar") as Button
 	if btn_voltar != null:
@@ -164,8 +206,18 @@ func _carregar_configuracoes() -> void:
 		else:
 			DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 
+	# Carrega o limite de FPS salvo
+	var fps_salvo := int(d.get("fps_limit", FPS_LIMITE_MONITOR))
+	var opt_fps := _no("OptFpsLimit") as OptionButton
+	if opt_fps != null:
+		opt_fps.select(fps_salvo)
+		# Aplica o limite salvo (se VSync estiver desligado)
+		if not ativo:
+			Engine.max_fps = fps_salvo
+
 	_atualizar_labels()
 	_atualizar_botoes_toque()
+	_atualizar_visibilidade_fps(ativo)
 
 
 func _on_efeitos_alterado(valor: float) -> void:
@@ -180,12 +232,38 @@ func _on_musica_alterado(valor: float) -> void:
 	_salvar()
 
 
+func _on_fps_limit_alterado(indice: int) -> void:
+	var opt_fps := _no("OptFpsLimit") as OptionButton
+	if opt_fps == null:
+		return
+	var limite := int(opt_fps.get_selected_id())
+	# So aplica o limite se VSync estiver desligado
+	var chk_vsync := _no("ChkVSync") as Button
+	if chk_vsync != null and not chk_vsync.button_pressed:
+		Engine.max_fps = limite
+	_salvar()
+
+
+func _atualizar_visibilidade_fps(vsync_ativo: bool) -> void:
+	var container := _no("ContainerFpsLimit")
+	if container != null:
+		# Se VSync ligado, esconde o seletor (FPS segue o monitor)
+		container.visible = not vsync_ativo
+
+
 func _on_vsync_alterado(ativo: bool) -> void:
 	if ativo:
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
+		# Com VSync ligado, o FPS segue o monitor: desativa limite manual
+		Engine.max_fps = 0
 	else:
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+		# Aplica o limite de FPS salvo (ou padrao 60)
+		var opt_fps := _no("OptFpsLimit") as OptionButton
+		if opt_fps != null:
+			Engine.max_fps = int(opt_fps.get_selected_id())
 	_atualizar_labels()
+	_atualizar_visibilidade_fps(ativo)
 	_salvar()
 
 
@@ -225,6 +303,10 @@ func _salvar() -> void:
 	var chk_vsync := _no("ChkVSync") as Button
 	if chk_vsync != null:
 		d["vsync"] = chk_vsync.button_pressed
+
+	var opt_fps := _no("OptFpsLimit") as OptionButton
+	if opt_fps != null:
+		d["fps_limit"] = int(opt_fps.get_selected_id())
 	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
 
 
