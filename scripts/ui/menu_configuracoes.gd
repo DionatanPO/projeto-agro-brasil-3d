@@ -132,7 +132,6 @@ func _estilizar() -> void:
 	dica_fps.add_theme_color_override("font_color", Color("#6b7280"))
 	container_fps.add_child(dica_fps)
 
-	var painel := _no("Painel") as PanelContainer
 	if painel != null:
 		painel.add_child(container_fps)
 
