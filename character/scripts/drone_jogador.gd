@@ -10,8 +10,8 @@ extends CharacterBody3D
 @export var velocidade_vertical := 6.0
 @export var aceleracao := 6.0
 @export var altura_min := 0.0
-@export var altura_max := 80.0
-const FOG_ALTURA_INICIO := 25.0
+@export var altura_max := 20.0
+const FOG_ALTURA_INICIO := 15.0
 const FOG_INICIO_MIN := 8.0
 const FOG_FIM_MIN := 70.0
 var _env: Environment
