@@ -66,13 +66,13 @@
 			"id": "plantio_milho",
 			"tipo": "discovery",
 			"titulo": "Plante Milho na Fazenda",
-			"descricao": "O Agrobot identificou uma área de terra entre o silo e o parque solar. Plante milho nessa região para começar a produção da fazenda.",
+			"descricao": "O Agrobot identificou a área de plantio entre o silo e o parque solar. Vá até a área de terra arada, olhe para baixo em direção ao solo e pressione [E] no teclado ou [X] no controle para plantar o milho.",
 			"objetivos": [
 				{
 					"id": "plantar_milho",
 					"tipo": "descoberta",
 					"alvo_id": "area_plantio_milho",
-					"texto": "Plante até 400 pés de milho na área entre o silo e o parque solar. Objetivo: 400. Limite da área: 400 pés."
+					"texto": "Vá até a área de terra, olhe para baixo e pressione [E] (teclado) ou [X] (controle) para plantar o milho (Meta: 400 pés)."
 				}
 			],
 			"recompensas": [

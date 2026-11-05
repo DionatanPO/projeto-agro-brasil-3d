@@ -28,6 +28,7 @@ var _preview_instance: Node3D = null
 var _modo_preview: bool = false
 var _em_missao_estacao: bool = false  # Processa apenas durante a missão "colocar_estacao"
 var _mission_manager: Node = null
+var _preview_frame_skip: int = 0  # Throttle de atualização do preview
 
 
 func _ready() -> void:
@@ -55,6 +56,7 @@ func _ready() -> void:
 	
 	set_process_unhandled_input(true)  # Sempre recebe input não tratado; _esta_ativa() filtra dentro de _unhandled_input
 	set_process(_em_missao_estacao)  # _process só roda se a missão estiver ativa (atualiza preview)
+	_atualizar_visibilidade_anel()
 
 
 func _process(delta: float) -> void:
@@ -62,6 +64,12 @@ func _process(delta: float) -> void:
 		return
 	if not _modo_preview or _estacao_colocada:
 		return
+	
+	# Throttle: atualiza o preview a cada 3 frames (~10x/s a 30 FPS)
+	_preview_frame_skip += 1
+	if _preview_frame_skip < 3:
+		return
+	_preview_frame_skip = 0
 	
 	# Atualiza preview seguindo o mouse/raycast
 	_atualizar_preview()
@@ -119,6 +127,9 @@ func _iniciar_preview() -> void:
 	
 	# Torna o preview semitransparente (ghost)
 	_tornar_ghost(_preview_instance)
+	
+	# Desabilita sombras, GI e culling no preview para evitar spike de GPU
+	_otimizar_preview(_preview_instance)
 	
 	# Adiciona o preview na árvore de cena (fallback para root se current_scene falhar)
 	var pai := get_tree().current_scene
@@ -219,6 +230,9 @@ func _tentar_colocar_estacao() -> void:
 	_estacao_colocada = true
 	estacao.add_to_group("estacao_meteorologica")
 	
+	# Esconde o anel ao colocar a estação
+	_atualizar_visibilidade_anel()
+	
 	# Salva a posição
 	_salvar_posicao_estacao(estacao.global_position, estacao.rotation)
 	
@@ -236,10 +250,7 @@ func _cancelar_preview() -> void:
 
 
 func _tornar_ghost(node: Node3D) -> void:
-	"""Torna o nó semitransparente para preview."""
-	for child in node.get_children():
-		_tornar_ghost(child)
-	
+	"""Torna o nó semitransparente para preview (recursivo)."""
 	if node is MeshInstance3D:
 		var mat = node.get_surface_override_material(0)
 		if mat == null:
@@ -249,16 +260,42 @@ func _tornar_ghost(node: Node3D) -> void:
 			mat.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
 			mat.albedo_color = Color(0.5, 0.8, 1.0, 0.4)
 			mat.cull_mode = StandardMaterial3D.CULL_DISABLED
+	for child in node.get_children():
+		_tornar_ghost(child as Node3D if child is Node3D else node)
+
+
+func _otimizar_preview(node: Node) -> void:
+	"""Desabilita sombras, GI e occlusion culling em todo o preview para evitar spike de GPU."""
+	if node is MeshInstance3D:
+		var mi := node as MeshInstance3D
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mi.ignore_occlusion_culling = true
+		mi.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
+	for child in node.get_children():
+		_otimizar_preview(child)
 
 
 func _definir_cor_preview(cor: Color) -> void:
 	if _preview_instance == null:
 		return
-	for child in _preview_instance.get_children():
-		if child is MeshInstance3D:
-			var mat = child.get_surface_override_material(0)
-			if mat is StandardMaterial3D:
-				mat.albedo_color = Color(cor.r, cor.g, cor.b, 0.4)
+	_aplicar_cor_recursivo(_preview_instance, cor)
+
+
+func _aplicar_cor_recursivo(node: Node, cor: Color) -> void:
+	"""Aplica a cor ghost recursivamente em toda hierarquia do preview."""
+	if node is MeshInstance3D:
+		var mat = (node as MeshInstance3D).get_surface_override_material(0)
+		if mat is StandardMaterial3D:
+			(mat as StandardMaterial3D).albedo_color = Color(cor.r, cor.g, cor.b, 0.4)
+	for child in node.get_children():
+		_aplicar_cor_recursivo(child, cor)
+
+
+func _atualizar_visibilidade_anel() -> void:
+	"""Mostra o anel vermelho apenas enquanto a missão estiver ativa e a estação não colocada."""
+	var anel := get_node_or_null("AreaEstacaoVisual") as MeshInstance3D
+	if anel != null:
+		anel.visible = _em_missao_estacao and not _estacao_colocada
 
 
 func _ponto_dentro_da_area(ponto: Vector3) -> bool:
@@ -329,19 +366,22 @@ func _habilitar_colisao_estacao(static_body: StaticBody3D) -> void:
 
 
 func _calcular_aabb(node: Node3D) -> AABB:
-	var aabb = AABB()
-	var primeiro = true
+	var aabb := AABB()
+	var primeiro := true
 	for child in node.get_children():
-		if child is MeshInstance3D and child.mesh != null:
-			var mesh_aabb = child.mesh.get_aabb()
-			var transformed = mesh_aabb * child.global_transform
-			if primeiro:
-				aabb = transformed
-				primeiro = false
-			else:
-				aabb = aabb.merge(transformed)
-	for child in node.get_children():
-		aabb = aabb.merge(_calcular_aabb(child))
+		var child_aabb: AABB
+		if child is MeshInstance3D and (child as MeshInstance3D).mesh != null:
+			child_aabb = (child as MeshInstance3D).mesh.get_aabb()
+			child_aabb = (child as MeshInstance3D).transform * child_aabb
+		elif child is Node3D:
+			child_aabb = _calcular_aabb(child as Node3D)
+		else:
+			continue
+		if primeiro:
+			aabb = child_aabb
+			primeiro = false
+		else:
+			aabb = aabb.merge(child_aabb)
 	return aabb
 
 
@@ -350,6 +390,7 @@ func _on_missao_estacao_mudou(mission_id: Variant) -> void:
 	_em_missao_estacao = (mid == "colocar_estacao")
 	set_process_unhandled_input(true)  # Mantém input ativo; _esta_ativa() filtra dentro de _unhandled_input
 	set_process(_em_missao_estacao)  # _process só roda se a missão estiver ativa (atualiza preview)
+	_atualizar_visibilidade_anel()
 	if not _em_missao_estacao:
 		_modo_preview = false
 		if _preview_instance != null:

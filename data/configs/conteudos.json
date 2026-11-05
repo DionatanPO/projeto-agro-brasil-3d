@@ -52,7 +52,7 @@
 		},
 		"area_plantio_milho": {
 			"titulo": "Plantio de Milho",
-			"texto": "O milho é uma das principais culturas do Brasil, cultivado em safra de verão e safrinha. É usado para ração animal, produção de etanol e alimentação humana. O plantio adequado requer solo preparado, espaçamento entre fileiras e boas práticas de manejo.",
+			"texto": "O milho é uma das principais culturas do Brasil, cultivado em safra de verão e safrinha. É usado para ração animal, produção de etanol e alimentação humana. Para plantar o milho na fazenda, olhe para baixo em direção ao solo da área de terra e pressione [E] no teclado ou [X] no controle.",
 			"fonte": "Embrapa Milho e Sorgo"
 		},
 		"estacao_colocada": {

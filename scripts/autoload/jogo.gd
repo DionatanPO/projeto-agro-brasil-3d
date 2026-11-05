@@ -40,6 +40,11 @@ func _on_objetivo_concluido(mission_id: String, objective_id: String) -> void:
 func _salvar_progresso_missao() -> void:
 	"""Grava posicao do jogador, drone, trator e tempo jogado no save e salva em disco.
 	Chamado apenas ao concluir uma missao ou subobjetivo."""
+	salvar_posicoes_atuais()
+
+
+func salvar_posicoes_atuais() -> void:
+	"""Grava a posição atual do jogador, drone e trator no save e persiste em disco."""
 	var player = get_tree().get_first_node_in_group("jogador")
 	if player is Node3D:
 		SaveSystem.dados["posicao_jogador"] = [player.global_position.x, player.global_position.y, player.global_position.z]

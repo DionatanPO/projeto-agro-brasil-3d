@@ -229,11 +229,19 @@ func _unhandled_input(evento: InputEvent) -> void:
 
 
 ## Abre o tutorial pelo atalho T, perto do drone e a pe.
-## Guarda as posicoes atuais para o mapa continuar de onde parou.
+## Guarda as posicoes atuais (jogador e drone) e salva no disco para o mapa continuar de onde parou.
 func _abrir_tutorial() -> void:
+	if _jogador == null:
+		_jogador = get_tree().get_first_node_in_group("jogador") as CharacterBody3D
+	if _jogador != null and SaveSystem != null:
+		SaveSystem.dados["posicao_jogador"] = [_jogador.global_position.x, _jogador.global_position.y, _jogador.global_position.z]
 	if SaveSystem != null:
 		SaveSystem.dados["posicao_drone"] = [global_position.x, global_position.y, global_position.z]
-	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
+		SaveSystem.dados["veiculo"] = "jogador"
+	if is_instance_valid(Jogo):
+		Jogo.salvar_posicoes_atuais()
+	elif SaveSystem != null:
+		SaveSystem.salvar()
 	get_tree().change_scene_to_file("res://scenes/world/tutorial_drone.tscn")
 
 
@@ -274,7 +282,7 @@ func _sair() -> void:
 	if _jogador == null:
 		_jogador = get_tree().get_first_node_in_group("jogador") as CharacterBody3D
 	if _jogador != null:
-		_jogador.position = global_position + Vector3(1.5, 0.5, 0.0)
+		_jogador.global_position = global_position + Vector3(1.5, 0.5, 0.0)
 		_jogador.velocity = Vector3.ZERO
 	_set_jogador(true)
 	ligado = false
@@ -286,6 +294,10 @@ func _sair() -> void:
 		_vento.stop()
 	if SaveSystem != null:
 		SaveSystem.dados["veiculo"] = "jogador"
+	if is_instance_valid(Jogo):
+		Jogo.salvar_posicoes_atuais()
+	elif SaveSystem != null:
+		SaveSystem.salvar()
 
 
 func _avisar_pulverizacao(posicao: Vector3) -> void:

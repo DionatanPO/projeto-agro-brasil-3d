@@ -448,7 +448,7 @@ func _sair() -> void:
 	if _jogador == null:
 		_jogador = get_tree().get_first_node_in_group("jogador") as CharacterBody3D
 	if _jogador != null:
-		_jogador.position = global_position + global_transform.basis.z * 2.8 + Vector3(0, 1.0, 0)
+		_jogador.global_position = global_position + global_transform.basis.z * 2.8 + Vector3(0, 1.0, 0)
 		_jogador.velocity = Vector3.ZERO
 	_set_jogador(true)
 	ativo = false
@@ -457,6 +457,10 @@ func _sair() -> void:
 	if _som_motor.playing:
 		_som_motor.stop()
 	SaveSystem.dados["veiculo"] = "jogador"
+	if is_instance_valid(Jogo):
+		Jogo.salvar_posicoes_atuais()
+	elif SaveSystem != null:
+		SaveSystem.salvar()
 
 
 ## Diesel 4 tempos: serra grave 55 Hz + harmonicos, pulsacao de 13 Hz e

@@ -413,7 +413,7 @@ func sair_tutorial() -> void:
 	_saindo_tutorial = true
 	SaveSystem.dados["posicao_drone"] = SaveSystem.dados.get("posicao_drone_backup", [69.664, 11.197, 192.916])
 	SaveSystem.dados.erase("posicao_drone_backup")
-	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
+	SaveSystem.salvar()
 
 	Loading.proxima_cena = CENA_MAPA
 	Loading.titulo_carga = "Retornando à fazenda..."
@@ -472,7 +472,7 @@ func _vencer() -> void:
 	_estado = Estado.FIM
 	SaveSystem.dados["tutorial_drone_concluido"] = true
 	SaveSystem.dados["tutorial_drone_visto"] = true
-	# Gravacao em disco ocorre apenas ao concluir missao/subobjetivo (via Jogo)
+	SaveSystem.salvar()
 	_congelar_drone(true)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_fim_titulo.text = "Tutorial concluido!"
