@@ -46,16 +46,29 @@ func _ready() -> void:
 		call_deferred("_restaurar_estacao_salva")
 	
 	# Conecta ao MissionManager para ativar/desativar processamento por missão
+	# Usa call_deferred para garantir que o MissionManager terminou seu _ready()
 	var mm: Node = get_node_or_null("/root/MissionManager")
 	_mission_manager = mm
 	if mm != null and mm.has_signal("mission_changed") and not mm.is_connected("mission_changed", _on_missao_estacao_mudou):
 		mm.mission_changed.connect(_on_missao_estacao_mudou)
-	var ativa: Variant = mm.get_missao_ativa() if mm != null else null
-	if ativa != null and str(ativa.mission_id) == "colocar_estacao":
-		_em_missao_estacao = true
 	
-	set_process_unhandled_input(true)  # Sempre recebe input não tratado; _esta_ativa() filtra dentro de _unhandled_input
-	set_process(_em_missao_estacao)  # _process só roda se a missão estiver ativa (atualiza preview)
+	set_process_unhandled_input(true)
+	set_process(false)  # Será habilitado por _verificar_missao_inicial após o frame
+	
+	# Esconde anel agora (padrão: oculto) e reavalia após todos os nós estarem prontos
+	_atualizar_visibilidade_anel()
+	call_deferred("_verificar_missao_inicial")
+
+
+func _verificar_missao_inicial() -> void:
+	"""Chamado via call_deferred para checar a missão após todos os autoloads estarem prontos."""
+	var mm: Node = _mission_manager
+	if mm == null:
+		mm = get_node_or_null("/root/MissionManager")
+		_mission_manager = mm
+	var ativa: Variant = mm.get_missao_ativa() if mm != null else null
+	_em_missao_estacao = (ativa != null and str(ativa.mission_id) == "colocar_estacao")
+	set_process(_em_missao_estacao)
 	_atualizar_visibilidade_anel()
 
 

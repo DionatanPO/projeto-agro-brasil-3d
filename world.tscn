@@ -488,6 +488,20 @@ albedo_color = Color(1, 0, 0, 0.3)
 emission_enabled = true
 emission = Color(1, 0.2, 0.2, 1)
 
+[sub_resource type="StandardMaterial3D" id="EstacaoRingMaterial"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+cull_mode = 2
+albedo_color = Color(1, 0, 0, 0.7)
+emission_enabled = true
+emission = Color(1, 0.1, 0.1, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="TorusMesh" id="EstacaoRingMesh"]
+inner_radius = 18.0
+outer_radius = 20.0
+
 [sub_resource type="TorusMesh" id="AreaRingMesh"]
 inner_radius = 59.5
 outer_radius = 60.5
@@ -871,9 +885,9 @@ distancia_max_colocacao = 15.0
 shape = SubResource("AreaEstacaoShape")
 
 [node name="AreaEstacaoVisual" type="MeshInstance3D" parent="AreaEstacaoColocacao" unique_id=-2094967293]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-material_override = SubResource("AreaRingMaterial")
-mesh = SubResource("AreaRingMesh")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+material_override = SubResource("EstacaoRingMaterial")
+mesh = SubResource("EstacaoRingMesh")
 
 [node name="AreaEstacaoDialogueTrigger" type="Area3D" parent="AreaEstacaoColocacao" unique_id=-2094967292]
 script = ExtResource("70_trigger")
