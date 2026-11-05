@@ -23,7 +23,7 @@ func _ready() -> void:
 
 func aplicar_volumes() -> void:
 	definir_volume_efeitos(float(SaveSystem.dados.get("volume_efeitos", 100.0)), false)
-	definir_volume_musica(float(SaveSystem.dados.get("volume_musica", 100.0)), false)
+	definir_volume_musica(float(SaveSystem.dados.get("volume_musica", 70.0)), false)
 
 
 func definir_volume_efeitos(valor_0_100: float, salvar := true) -> void:

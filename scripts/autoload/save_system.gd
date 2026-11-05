@@ -29,6 +29,17 @@ func carregar() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(arq.get_as_text())
 	if parsed is Dictionary:
 		dados = parsed
+		# Garante chaves padrao essenciais caso o save seja de versoes anteriores
+		if not dados.has("volume_musica"):
+			dados["volume_musica"] = 70.0
+		if not dados.has("volume_efeitos"):
+			dados["volume_efeitos"] = 100.0
+		if not dados.has("grafico"):
+			dados["grafico"] = "medio"
+		if not dados.has("vsync"):
+			dados["vsync"] = true
+		if not dados.has("fps_limit"):
+			dados["fps_limit"] = 30
 	else:
 		push_error("SaveSystem: save corrompido, usando padrao.")
 		dados = _dados_padrao()
@@ -63,8 +74,10 @@ func _dados_padrao() -> Dictionary:
 		"posicao_trator": [81.0, 11.0, 192.5],
 		"veiculo": "jogador",
 		"volume_efeitos": 100.0,
-		"volume_musica": 100.0,
+		"volume_musica": 70.0,
+		"grafico": "medio",
 		"vsync": true,
+		"fps_limit": 30,
 		"controles_toque": "auto",
 		"tutorial_drone_concluido": false,
 		"intro_mundo_vista": false,

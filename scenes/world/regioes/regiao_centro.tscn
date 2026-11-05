@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://regiao_centro_001"]
+
+[ext_resource type="PackedScene" uid="uid://rc_carroca" path="res://assets/models/carroca.glb" id="1"]
+[ext_resource type="PackedScene" uid="uid://rc_smallbarn2" path="res://assets/Farm Buildings - Sept 2018/FBX/SmallBarn.fbx" id="2"]
+[ext_resource type="PackedScene" uid="uid://rc_watertower2" path="res://assets/Farm Buildings - Sept 2018/FBX/WaterTower.fbx" id="3"]
+[ext_resource type="PackedScene" uid="uid://rc_well3" path="res://assets/Farm Buildings - Sept 2018/FBX/Well.fbx" id="4"]
+[ext_resource type="PackedScene" uid="uid://rc_silohouse" path="res://assets/Farm Buildings - Sept 2018/FBX/Silo_House.fbx" id="5"]
+[ext_resource type="PackedScene" uid="uid://rc_bigbarn" path="res://assets/Farm Buildings - Sept 2018/FBX/BigBarn.fbx" id="6"]
+[ext_resource type="PackedScene" uid="uid://rc_bridge3" path="res://env models/bridge/bridge.tscn" id="7"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="carroca" parent="." instance=ExtResource("1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 64.86531, 10.579062, 106.51745)
+
+[node name="SmallBarn2" parent="." instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 112.23154, 10.121099, 40.518444)
+
+[node name="WaterTower2" parent="." instance=ExtResource("3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 106.66843, 9.828512, 45.457684)
+
+[node name="Well3" parent="." instance=ExtResource("4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 107.176285, 10.175181, 51.736664)
+
+[node name="Silo_House" parent="." instance=ExtResource("5")]
+transform = Transform3D(-0.07952008, 0, -0.99683326, 0, 1, 0, 0.99683326, 0, -0.07952008, 125.26515, 11.107483, 40.7112)
+
+[node name="BigBarn" parent="." instance=ExtResource("6")]
+transform = Transform3D(-0.024764866, 0, -0.9996933, 0, 1, 0, 0.9996933, 0, -0.024764866, 126.16406, 9.70187, 46.83962)
+
+[node name="bridge3" parent="." instance=ExtResource("7")]
+transform = Transform3D(0.9847255, 0, 0.17411458, -0.0023638075, 0.99990785, 0.013368792, -0.17409854, -0.013576161, 0.98463476, 121.07134, 10.027, 71.420296)

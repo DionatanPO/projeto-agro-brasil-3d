@@ -10,10 +10,11 @@ config_version=5
 
 [application]
 
-config/name="Forest by GW Tuts"
+config/name="AgroBrasil 3D"
 run/main_scene="res://scenes/ui/menus/menu_inicial.tscn"
 config/features=PackedStringArray("4.7")
 boot_splash/image="uid://doejrknjcjs07"
+config/icon="res://icon.png"
 
 [autoload]
 

@@ -9,11 +9,9 @@
 [ext_resource type="PackedScene" uid="uid://tb3hpuwv8no0" path="res://env models/plants/tree/scene/pine_3.tscn" id="4_w44yn"]
 [ext_resource type="PackedScene" uid="uid://rn1tbn2887uy" path="res://env models/plants/grass/scenes/grass main.tscn" id="5_gggvi"]
 [ext_resource type="Texture2D" uid="uid://cbtyl505sprv7" path="res://terrain mat/ground text/path-packed_albedo_height.png" id="5_wse8f"]
-[ext_resource type="Shader" uid="uid://whteqsleuo8v" path="res://terrain mat/water/watershader.gdshader" id="6_gbfbk"]
-[ext_resource type="Shader" uid="uid://whteqsleuo8m" path="res://terrain mat/water/watershader_mobile.gdshader" id="6_gbfbk_mobile"]
+[ext_resource type="Shader" uid="uid://yxxkw8ajvrb" path="res://terrain mat/water/watershader_mobile.gdshader" id="6_gbfbk_mobile"]
 [ext_resource type="Texture2D" uid="uid://daty70bq535un" path="res://terrain mat/ground text/path-packed_normal_roughness.png" id="6_ic0uy"]
 [ext_resource type="PackedScene" uid="uid://cablm6hxx6tpt" path="res://env models/plants/grass/scenes/main grass 1.tscn" id="6_w44yn"]
-[ext_resource type="Texture2D" uid="uid://dotmx0aur6c7w" path="res://terrain mat/water/foam.jpg" id="7_ioo17"]
 [ext_resource type="PackedScene" uid="uid://cilc2by5f6ecb" path="res://env models/plants/tree/scene/maple_1.tscn" id="7_my276"]
 [ext_resource type="Texture2D" uid="uid://dugh1kl44bvrc" path="res://terrain mat/water/water_normal.jpg" id="8_wse8f"]
 [ext_resource type="PackedScene" uid="uid://bnahflp2ocmw" path="res://env models/rocks/scenes/big rock 3.tscn" id="8_wukud"]
@@ -51,35 +49,50 @@
 [ext_resource type="AudioStream" uid="uid://coomir52j1tj1" path="res://env models/audio/air 2.mp3" id="38_olr1q"]
 [ext_resource type="AudioStream" uid="uid://dcubyq78dk5sb" path="res://env models/audio/air.mp3" id="39_q42o5"]
 [ext_resource type="AudioStream" uid="uid://djnb0tj8wfxx5" path="res://env models/audio/air + chirp.mp3" id="40_iett8"]
-[ext_resource type="AudioStream" uid="uid://dlscn7dcgl7ps" path="res://env models/audio/chirp.mp3" id="41_r5m4j"]
 [ext_resource type="PackedScene" uid="uid://cvl0nqo1pugqd" path="res://scenes/ui/parque_eolico.tscn" id="42_37ykd"]
-[ext_resource type="AudioStream" uid="uid://ctdw3tmpsya52" path="res://env models/audio/chirp (2).mp3" id="42_e77ka"]
 [ext_resource type="PackedScene" uid="uid://cmmhmwkn27vlq" path="res://scenes/world/cenarios/parque_solar.tscn" id="43_1hvhf"]
-[ext_resource type="AudioStream" uid="uid://b5jr7eehkdf0w" path="res://env models/audio/chirp (3).mp3" id="43_c0wax"]
 [ext_resource type="PackedScene" uid="uid://bpkj5mqenfpw0" path="res://env models/movable/butterfly_scene/butterfly_area.tscn" id="49_55kwu"]
 [ext_resource type="PackedScene" uid="uid://dd6v46w7lb8o8" path="res://terrain mat/scenes/lens_flare.tscn" id="57_sedwk"]
 [ext_resource type="PackedScene" uid="uid://cqe8jd0vjbvfo" path="res://character/player.tscn" id="59_e77ka"]
-[ext_resource type="PackedScene" uid="uid://dvracmssmoc1r" path="res://env models/bridge/bridge.tscn" id="60_c0wax"]
 [ext_resource type="PackedScene" uid="uid://br4ljesnrpw12" path="res://character/scenes/trator_jogador.tscn" id="62_trator"]
 [ext_resource type="PackedScene" uid="uid://bpc1popflov1v" path="res://character/scenes/drone_jogador.tscn" id="63_drone"]
-[ext_resource type="PackedScene" uid="uid://dt011n2s4py3j" path="res://assets/Farm Buildings - Sept 2018/FBX/ChickenCoop.fbx" id="64_8f1f8"]
 [ext_resource type="PackedScene" uid="uid://crbgbbqyqkl40" path="res://scenes/ui/hud.tscn" id="64_hud"]
-[ext_resource type="PackedScene" uid="uid://6gyw0odkomrl" path="res://assets/Farm Buildings - Sept 2018/FBX/WaterTower.fbx" id="66_ir1d4"]
-[ext_resource type="PackedScene" uid="uid://cgp7byniv15f" path="res://assets/Farm Buildings - Sept 2018/FBX/Well.fbx" id="67_tj74d"]
-[ext_resource type="PackedScene" uid="uid://bv8030ocyb8tk" path="res://assets/Farm Buildings - Sept 2018/FBX/SmallBarn.fbx" id="68_yy5nj"]
 [ext_resource type="Script" uid="uid://xoo1kkvuhq05" path="res://scripts/world/area_encomenda.gd" id="69_encomenda"]
 [ext_resource type="Script" uid="uid://ukoj887alfra" path="res://scripts/world/area_trigger.gd" id="70_trigger"]
-[ext_resource type="PackedScene" uid="uid://bhatfe8c7clem" path="res://assets/models/silo.glb" id="71_ir1d4"]
-[ext_resource type="PackedScene" uid="uid://3v3alvbnwbd4" path="res://assets/models/casa.glb" id="72_tj74d"]
-[ext_resource type="PackedScene" uid="uid://cs2gv7sno7ivj" path="res://assets/models/galpao.glb" id="72_yy5nj"]
-[ext_resource type="PackedScene" uid="uid://tgppk10v6yqd" path="res://assets/Farm Buildings - Sept 2018/FBX/Silo_House.fbx" id="73_fl6gn"]
-[ext_resource type="PackedScene" uid="uid://3vtasx27k5vv" path="res://assets/models/carroca.glb" id="73_p5g01"]
-[ext_resource type="PackedScene" uid="uid://bjwnevipuwu80" path="res://assets/Farm Buildings - Sept 2018/FBX/BigBarn.fbx" id="74_gjwlp"]
 [ext_resource type="Script" uid="uid://dwlaalais2dpg" path="res://scripts/world/clima.gd" id="75_clima"]
 [ext_resource type="Script" uid="uid://cxqnlauh4ra0j" path="res://scripts/world/area_plantio.gd" id="76_plantio"]
 [ext_resource type="Script" uid="uid://c3k0e8gagqg03" path="res://scripts/world/estacao_colocacao.gd" id="77_estacao_colocacao"]
 [ext_resource type="Script" uid="uid://ceujun757vum1" path="res://scripts/world/rio_barreira.gd" id="78_qm10a"]
 [ext_resource type="Script" uid="uid://c1l5gosbi7kqe" path="res://scripts/world/limite_mapa.gd" id="79_7fs00"]
+[ext_resource type="Script" uid="uid://bjmjgdxqxgfws" path="res://scripts/world/chunk_data.gd" id="99_chunk"]
+[ext_resource type="Script" uid="uid://bcbhkq1p34q6a" path="res://scripts/world/world_streamer.gd" id="99_str"]
+
+[sub_resource type="Resource" id="ChunkData_centro"]
+script = ExtResource("99_chunk")
+chunk_id = "regiao_centro"
+cena_chunk = "res://scenes/world/regioes/regiao_centro.tscn"
+centro = Vector3(100, 0, 80)
+
+[sub_resource type="Resource" id="ChunkData_norte"]
+script = ExtResource("99_chunk")
+chunk_id = "regiao_norte"
+cena_chunk = "res://scenes/world/regioes/regiao_norte.tscn"
+centro = Vector3(185, 0, 135)
+tamanho = Vector3(60, 100, 70)
+
+[sub_resource type="Resource" id="ChunkData_leste"]
+script = ExtResource("99_chunk")
+chunk_id = "regiao_leste"
+cena_chunk = "res://scenes/world/regioes/regiao_leste.tscn"
+centro = Vector3(75, 0, 200)
+tamanho = Vector3(60, 100, 60)
+
+[sub_resource type="Resource" id="ChunkData_sul"]
+script = ExtResource("99_chunk")
+chunk_id = "regiao_sul"
+cena_chunk = "res://scenes/world/regioes/regiao_sul.tscn"
+centro = Vector3(100, 0, 136)
+tamanho = Vector3(60, 100, 60)
 
 [sub_resource type="Gradient" id="Gradient_gv5m4"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -138,8 +151,8 @@ dual_scaling = true
 name = "pine_1"
 scene_file = ExtResource("2_jjr1n")
 density = 0.01
-last_lod = 2
-last_shadow_lod = 1
+last_lod = 0
+last_shadow_lod = 0
 lod0_range = 85.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_6ah6f"]
@@ -147,8 +160,8 @@ name = "pine_2"
 id = 1
 scene_file = ExtResource("3_gggvi")
 density = 0.01
-last_lod = 2
-last_shadow_lod = 1
+last_lod = 0
+last_shadow_lod = 0
 lod0_range = 85.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_g1i3r"]
@@ -156,8 +169,8 @@ name = "pine_3"
 id = 2
 scene_file = ExtResource("4_w44yn")
 density = 0.01
-last_lod = 2
-last_shadow_lod = 1
+last_lod = 0
+last_shadow_lod = 0
 lod0_range = 85.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_w44yn"]
@@ -165,25 +178,25 @@ name = "grass main"
 id = 3
 scene_file = ExtResource("5_gggvi")
 density = 4.692052
-last_lod = 2
-last_shadow_lod = 1
-lod0_range = 35.0
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 15.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_my276"]
 name = "main grass 1"
 id = 4
 scene_file = ExtResource("6_w44yn")
-last_lod = 2
-last_shadow_lod = 1
-lod0_range = 35.0
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 15.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_ryup7"]
 name = "maple_1"
 id = 5
 scene_file = ExtResource("7_my276")
 density = 0.01
-last_lod = 2
-last_shadow_lod = 1
+last_lod = 0
+last_shadow_lod = 0
 lod0_range = 85.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_ytpkv"]
@@ -191,8 +204,8 @@ name = "maple_2"
 id = 6
 scene_file = ExtResource("8_yx0jh")
 density = 0.01
-last_lod = 2
-last_shadow_lod = 1
+last_lod = 0
+last_shadow_lod = 0
 lod0_range = 85.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_jas3d"]
@@ -200,8 +213,8 @@ name = "maple_3"
 id = 7
 scene_file = ExtResource("9_1ew0l")
 density = 0.01
-last_lod = 2
-last_shadow_lod = 1
+last_lod = 0
+last_shadow_lod = 0
 lod0_range = 85.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_yx0jh"]
@@ -209,99 +222,99 @@ name = "grass_1"
 id = 8
 scene_file = ExtResource("10_jas3d")
 density = 5.0203624
-last_lod = 2
-last_shadow_lod = 1
-lod0_range = 35.0
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 15.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_7htu6"]
 name = "grass_2"
 id = 9
 scene_file = ExtResource("11_7htu6")
 density = 2.6082437
-last_lod = 2
-last_shadow_lod = 1
-lod0_range = 35.0
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 15.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_7qk3m"]
 name = "grass_3"
 id = 10
 scene_file = ExtResource("12_7qk3m")
 density = 1.5472248
-last_lod = 2
-last_shadow_lod = 1
-lod0_range = 35.0
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 15.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_xpnt2"]
 name = "grass_4"
 id = 11
 scene_file = ExtResource("13_jas3d")
 density = 9.860744
-last_lod = 2
-last_shadow_lod = 1
-lod0_range = 35.0
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 15.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_ruyqm"]
 name = "grass_5"
 id = 12
 scene_file = ExtResource("14_jas3d")
 density = 8.137776
-last_lod = 2
-last_shadow_lod = 1
-lod0_range = 35.0
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 15.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_fnoqa"]
 name = "bush_1"
 id = 13
 scene_file = ExtResource("15_7htu6")
 density = 1.1115015
-last_lod = 2
-last_shadow_lod = 1
-lod0_range = 50.0
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 25.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_55kwu"]
 name = "bush_2"
 id = 14
 scene_file = ExtResource("16_ruyqm")
 density = 0.35645825
-last_lod = 2
-last_shadow_lod = 1
-lod0_range = 50.0
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 25.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_f3o6s"]
 name = "bush_3"
 id = 15
 scene_file = ExtResource("17_fnoqa")
 density = 0.9990582
-last_lod = 2
-last_shadow_lod = 1
-lod0_range = 50.0
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 25.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_w4lh7"]
 name = "bush_4"
 id = 16
 scene_file = ExtResource("18_nx736")
 density = 3.775064
-last_lod = 2
-last_shadow_lod = 1
-lod0_range = 50.0
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 25.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_nx736"]
 name = "small rock 1"
 id = 17
 scene_file = ExtResource("19_fnoqa")
 density = 0.5438387
-last_lod = 2
-last_shadow_lod = 1
-lod0_range = 80.0
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 45.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_k3lar"]
 name = "small rock 3"
 id = 18
 scene_file = ExtResource("20_nx736")
 density = 0.5832119
-last_lod = 2
-last_shadow_lod = 1
-lod0_range = 80.0
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 45.0
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_ioo17"]
 name = "rock-packed_albedo_height"
@@ -341,22 +354,6 @@ indices = PackedInt32Array(0, 1, 2, 0, 3, 1, 2, 1, 32, 2, 32, 33, 3, 4, 1, 3, 5,
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_036b0"]
 size = Vector2(256, 256)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ic0uy"]
-render_priority = 0
-shader = ExtResource("6_gbfbk")
-shader_parameter/surface_color = Color(0, 0, 0, 1)
-shader_parameter/depth_color = Color(0.13527417, 0.47227302, 0.503125, 1)
-shader_parameter/opacity = 0.250000011875
-shader_parameter/_foam = ExtResource("7_ioo17")
-shader_parameter/normal_map = ExtResource("8_wse8f")
-shader_parameter/normal_scale = -0.4879992631800007
-shader_parameter/beer_factor = 2.5330001203175
-shader_parameter/_roughness = 0.254000012065
-shader_parameter/_refraction = 0.030000001425
-shader_parameter/_uv_scale = 0.246000011685
-shader_parameter/_foam_strength = 0.55600002641
-shader_parameter/_foam_size = 0.20000000298023
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_water_mobile"]
 render_priority = 0
@@ -472,10 +469,10 @@ tonemap_mode = 3
 tonemap_white = 6.0
 fog_enabled = true
 fog_density = 0.008
-fog_depth_begin = 80.0
-fog_depth_end = 160.0
 fog_aerial_perspective = 1.0
 fog_sky_affect = 0.0
+fog_depth_begin = 80.0
+fog_depth_end = 160.0
 volumetric_fog_anisotropy = -0.53
 volumetric_fog_sky_affect = 0.0
 
@@ -511,6 +508,13 @@ height = 4.0
 radius = 25.0
 
 [node name="Node3D" type="Node3D" unique_id=2061065415]
+
+[node name="WorldStreamer" type="Node3D" parent="." unique_id=1286608619]
+script = ExtResource("99_str")
+_alvo_streaming = NodePath("../Player")
+raio_carregamento = 60.0
+raio_descarga = 100.0
+chunks = Array[ExtResource("99_chunk")]([SubResource("ChunkData_centro"), SubResource("ChunkData_norte"), SubResource("ChunkData_leste"), SubResource("ChunkData_sul")])
 
 [node name="Terrain3D" type="Terrain3D" parent="." unique_id=1958099366]
 data_directory = "res://terrain_Data"
@@ -722,14 +726,6 @@ transform = Transform3D(0.76021326, 0, -0.64967364, 0, 1, 0, 0.64967364, 0, 0.76
 [node name="Area3D3" parent="butterfly" unique_id=1673092679 instance=ExtResource("49_55kwu")]
 transform = Transform3D(0.76021326, 0, -0.64967364, 0, 1, 0, 0.64967364, 0, 0.76021326, 42.023575, 10.482239, 55.717278)
 
-[node name="bridge" parent="." unique_id=1865252733 instance=ExtResource("60_c0wax")]
-transform = Transform3D(0.7396311, 0, 0.6730125, 0, 1, 0, -0.6730125, 0, 0.7396311, 125.217, 10.027, 122.271)
-metadata/_edit_lock_ = true
-
-[node name="bridge2" parent="." unique_id=728106487 instance=ExtResource("60_c0wax")]
-transform = Transform3D(0.72647876, 0, 0.687189, 0, 1, 0, -0.687189, 0, 0.72647876, 75.48544, 9.356411, 150.43277)
-metadata/_edit_lock_ = true
-
 [node name="Player" parent="." unique_id=988198540 instance=ExtResource("59_e77ka")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 11.5, 50)
 
@@ -740,21 +736,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 81, 11, 192.5)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 69.664, 11.197, 192.916)
 
 [node name="HUD" parent="." unique_id=1027796201 instance=ExtResource("64_hud")]
-
-[node name="ChickenCoop" parent="." unique_id=1565183534 instance=ExtResource("64_8f1f8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 69.337975, -0.17880249, 197.68521)
-
-[node name="WaterTower" parent="." unique_id=1161770115 instance=ExtResource("66_ir1d4")]
-transform = Transform3D(0.9208765, 0, 0.38985446, 0, 1, 0, -0.38985446, 0, 0.9208765, 71.36576, 10.277155, 206.8024)
-
-[node name="Well" parent="." unique_id=5470539 instance=ExtResource("67_tj74d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 91.557556, -21.893818, 208.71114)
-
-[node name="ChickenCoop2" parent="." unique_id=1856212305 instance=ExtResource("64_8f1f8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.06796, 10.561348, 187.22913)
-
-[node name="Well2" parent="." unique_id=739476005 instance=ExtResource("67_tj74d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.104645, 11.606371, 197.58466)
 
 [node name="AreaEncomenda" type="Area3D" parent="." unique_id=1804591022]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 11, 100)
@@ -830,9 +811,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 material_override = SubResource("AreaRingMaterial")
 mesh = SubResource("AreaRingMesh")
 
-[node name="silo" parent="." unique_id=671258526 instance=ExtResource("71_ir1d4")]
-transform = Transform3D(2.6691895, 0, 1.6347373, 0, 2.8676758, 0, -1.4039009, 0, 3.108071, 188.66943, 10.461985, 113.03619)
-
 [node name="AreaSiloTrigger" type="Area3D" parent="." unique_id=-1894967295]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 193.28, 11.05, 113.04)
 script = ExtResource("70_trigger")
@@ -878,33 +856,6 @@ show_prompt = false
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AreaPlantio/AreaPlantioDialogueTrigger" unique_id=1234567894]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
 shape = SubResource("AreaPlantioDialogoShape")
-
-[node name="galpao" parent="." unique_id=1305804623 instance=ExtResource("72_yy5nj")]
-transform = Transform3D(0.7969278, 0.0121222325, -0.6039528, -0.06384537, 0.995889, -0.06425627, 0.600691, 0.0897672, 0.79442567, 184.06227, 12.213152, 159.90755)
-
-[node name="carroca" parent="." unique_id=1902465838 instance=ExtResource("73_p5g01")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 64.86531, 10.579062, 106.51745)
-
-[node name="SmallBarn2" parent="." unique_id=1965551695 instance=ExtResource("68_yy5nj")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 112.23154, 10.121099, 40.518444)
-
-[node name="WaterTower2" parent="." unique_id=1483945007 instance=ExtResource("66_ir1d4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 106.66843, 9.828512, 45.457684)
-
-[node name="Well3" parent="." unique_id=12311675 instance=ExtResource("67_tj74d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 107.176285, 10.175181, 51.736664)
-
-[node name="casa" parent="." unique_id=1539139065 instance=ExtResource("72_tj74d")]
-transform = Transform3D(0.49350807, 0, -0.8697413, 0, 1, 0, 0.8697413, 0, 0.49350807, 61.45755, 11.228033, 204.05148)
-
-[node name="bridge3" parent="." unique_id=40897842 instance=ExtResource("60_c0wax")]
-transform = Transform3D(0.9847255, 0, 0.17411458, -0.0023638075, 0.99990785, 0.013368792, -0.17409854, -0.013576161, 0.98463476, 121.07134, 10.027, 71.420296)
-
-[node name="Silo_House" parent="." unique_id=1160084009 instance=ExtResource("73_fl6gn")]
-transform = Transform3D(-0.07952008, 0, -0.99683326, 0, 1, 0, 0.99683326, 0, -0.07952008, 125.26515, 11.107483, 40.7112)
-
-[node name="BigBarn" parent="." unique_id=706689849 instance=ExtResource("74_gjwlp")]
-transform = Transform3D(-0.024764866, 0, -0.9996933, 0, 1, 0, 0.9996933, 0, -0.024764866, 126.16406, 9.70187, 46.83962)
 
 [node name="Clima" type="Node3D" parent="." unique_id=403151229]
 script = ExtResource("75_clima")

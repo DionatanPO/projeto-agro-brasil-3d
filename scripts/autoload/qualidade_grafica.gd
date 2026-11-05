@@ -11,10 +11,8 @@ extends Node
 ## sombras no _ready dele) e vale para qualquer cena, não só para o HUD.
 
 const NIVEIS := ["baixo", "medio", "alto"]
-const PADRAO_DESKTOP := "alto"
-## Celular comeca no Baixo: a vegetacao do Terrain3D e o maior custo e o
-## preset Alto nao roda em tempo real em Android/iOS.
-const PADRAO_MOBILE := "baixo"
+const PADRAO_DESKTOP := "medio"
+const PADRAO_MOBILE := "medio"
 
 ## Valor de ShadowCasting do Terrain3D (e dos MeshAssets de vegetação).
 const SOMBRA_OFF := 0
@@ -23,18 +21,24 @@ const SOMBRA_ON := 1
 ## LODs da malha do terreno por preset. É explícito de propósito: antes o
 ## valor "original" era lido no primeiro frame, enquanto o Terrain3D ainda
 ## montava a malha, e o Alto acabava travado em 3 LODs.
-const LODS_TERRENO := {"baixo": 3, "medio": 5, "alto": 7}
+const LODS_TERRENO := {"baixo": 2, "medio": 4, "alto": 6}
 
 ## Distância máxima de desenho da vegetação, em metros a partir da câmera.
 ## 0.0 = mantém a distância definida na cena (usado nas árvores/rochas no Alto).
 ## Grama e arbusto somem cedo: de longe ocupam poucos pixels, mas continuam
 ## custando vértices, sombra e draw call.
+## Valores reduzidos para mobile (baixo): a vegetação muda para LOD menor
+## ou some muito mais perto da câmera, economizando vértices e draw calls.
 const DISTANCIA_VEGETACAO := {
-	"grama": {"baixo": 35.0, "medio": 50.0, "alto": 70.0},
-	"arbusto": {"baixo": 50.0, "medio": 70.0, "alto": 95.0},
+	"grama": {"baixo": 25.0, "medio": 40.0, "alto": 100.0},
+	"arbusto": {"baixo": 25.0, "medio": 45.0, "alto": 120.0},
 	"arvore": {"baixo": 85.0, "medio": 110.0, "alto": 0.0},
-	"rocha": {"baixo": 80.0, "medio": 100.0, "alto": 0.0},
+	"rocha": {"baixo": 45.0, "medio": 60.0, "alto": 0.0},
 }
+
+## Fade de visibilidade para esconder o limite de desenho da grama.
+## Terrain3D 1.0.2 cria MultiMeshInstance3D sem margem de fade por padrão.
+const FAIXA_FADE_GRAMA := {"baixo": 8.0, "medio": 12.0, "alto": 18.0}
 
 var nivel_atual: String = PADRAO_DESKTOP
 
@@ -42,6 +46,7 @@ var _reaplicar_agendado := false
 var _terreno_id := 0
 var _vegetacao_range_original: Dictionary = {}
 var _sombra_vegetacao_original: Dictionary = {}
+var _ids_assets_grama: Dictionary = {}
 var _ambiente_id := 0
 var _nevoeiro_original := true
 var _fog_begin_original := 0.0
@@ -51,6 +56,7 @@ var _fog_end_original := 0.0
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	aplicar(nivel_salvo())
+	aplicar_vsync_e_fps()
 	# A cena pode terminar de montar depois deste autoload (o Sky3D liga as
 	# sombras do sol no _ready dele), então reaplicamos quando entrarem na
 	# árvore os nós que o preset controla.
@@ -58,6 +64,15 @@ func _ready() -> void:
 
 
 func _on_no_adicionado(no: Node) -> void:
+	if no is MultiMeshInstance3D and _esta_no_instancer_terrain(no):
+		var id_asset := _id_asset_do_mmi(str(no.name))
+		if _ids_assets_grama.has(id_asset):
+			# Deferido por ID, não por referência: o Terrain3D recria os
+			# MultiMeshes de vegetação ao regenerar uma região e o nó antigo
+			# pode ser liberado antes deste call_deferred rodar. Passar o
+			# objeto direto gerava "Cannot convert argument 1 from Object to
+			# Object" (milhares de erros por sessão, travando o console).
+			call_deferred("_configurar_fade_mmi_id", no.get_instance_id(), float(FAIXA_FADE_GRAMA.get(nivel_atual, 12.0)))
 	if no is WorldEnvironment or no is DirectionalLight3D or no.get_class() == "Terrain3D":
 		_agendar_reaplicacao()
 
@@ -76,14 +91,25 @@ func _reaplicar() -> void:
 
 # ------------------------------------------------------------------ API
 
-## Preset padrao conforme a plataforma (celular comeca no Baixo).
+## Preset padrao conforme a plataforma (inicia no Medio por padrao).
 func padrao_plataforma() -> String:
-	return PADRAO_MOBILE if OS.has_feature("mobile") else PADRAO_DESKTOP
+	return "medio"
 
 
 func nivel_salvo() -> String:
-	var n := str(SaveSystem.dados.get("grafico", padrao_plataforma()))
-	return n if NIVEIS.has(n) else padrao_plataforma()
+	var n := str(SaveSystem.dados.get("grafico", "medio"))
+	return n if NIVEIS.has(n) else "medio"
+
+
+## Aplica o estado de VSync e o limite de FPS (padrao VSync ativado a 30 FPS).
+func aplicar_vsync_e_fps() -> void:
+	var vsync_ativo: bool = bool(SaveSystem.dados.get("vsync", true))
+	var limite_fps: int = int(SaveSystem.dados.get("fps_limit", 30))
+	if vsync_ativo:
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
+	else:
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+	Engine.max_fps = limite_fps
 
 
 ## Aplica e salva o preset (chamado pelos botões do HUD).
@@ -282,12 +308,15 @@ func _aplicar_vegetacao(terreno: Node, nivel: String) -> void:
 	var assets: Object = terreno.call("get_assets")
 	if assets == null:
 		return
+	_ids_assets_grama.clear()
 	var total := int(assets.call("get_mesh_count"))
 	for i in total:
 		var asset: Object = assets.call("get_mesh_asset", i)
 		if asset == null:
 			continue
 		var tipo := _tipo_vegetacao(str(asset.call("get_name")).to_lower())
+		if tipo == "grama":
+			_ids_assets_grama[int(asset.call("get_id"))] = true
 
 		if not _vegetacao_range_original.has(i):
 			_vegetacao_range_original[i] = float(asset.call("get_lod0_range"))
@@ -311,6 +340,68 @@ func _aplicar_vegetacao(terreno: Node, nivel: String) -> void:
 			alvo = SOMBRA_OFF
 		if int(asset.call("get_cast_shadows")) != alvo:
 			asset.call("set_cast_shadows", alvo)
+
+	# O Terrain3D atualiza os MultiMeshes em resposta às mudanças nos assets.
+	# Aplicar deferido garante que os novos nós recebam a margem depois da atualização.
+	call_deferred("_aplicar_fade_grama_na_cena", terreno.get_instance_id(), float(FAIXA_FADE_GRAMA.get(nivel, 12.0)))
+
+
+func _aplicar_fade_grama_na_cena(terreno_id: int, margem: float) -> void:
+	var cena := get_tree().current_scene
+	if cena == null:
+		return
+	var terreno := _achar_primeiro(cena, "Terrain3D")
+	if terreno == null or terreno.get_instance_id() != terreno_id:
+		return
+	for no in terreno.find_children("*", "MultiMeshInstance3D", true, false):
+		var mmi := no as MultiMeshInstance3D
+		if mmi != null and _ids_assets_grama.has(_id_asset_do_mmi(str(mmi.name))):
+			_configurar_fade_mmi(mmi, margem)
+
+
+func _configurar_fade_mmi_id(no_id: int, margem: float) -> void:
+	# instance_from_id devolve null quando o nó já foi liberado; assim o
+	# call_deferred nunca recebe um Object morto (era isso que gerava erro).
+	if no_id == 0:
+		return
+	var no := instance_from_id(no_id)
+	if no == null or not is_instance_valid(no):
+		return
+	_configurar_fade_mmi(no, margem)
+
+
+func _configurar_fade_mmi(no: Node, margem: float) -> void:
+	if not is_instance_valid(no) or not no is GeometryInstance3D:
+		return
+	var geometria := no as GeometryInstance3D
+	var fim := geometria.visibility_range_end
+	if fim <= 0.0:
+		return
+	geometria.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+	geometria.visibility_range_end_margin = minf(margem, fim * 0.4)
+
+
+func _esta_no_instancer_terrain(no: Node) -> bool:
+	var atual: Node = no.get_parent()
+	while atual != null:
+		if atual.name == "MMI":
+			return atual.get_parent() != null and atual.get_parent().get_class() == "Terrain3D"
+		atual = atual.get_parent()
+	return false
+
+
+func _id_asset_do_mmi(nome: String) -> int:
+	var marcador := nome.find("_M")
+	if marcador < 0:
+		return -1
+	var inicio := marcador + 2
+	var fim := nome.find("_", inicio)
+	if fim < 0:
+		return -1
+	var texto_id := nome.substr(inicio, fim - inicio)
+	if not texto_id.is_valid_int():
+		return -1
+	return texto_id.to_int()
 
 
 func _tipo_vegetacao(nome: String) -> String:

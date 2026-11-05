@@ -172,34 +172,6 @@ text = "NOVA JORNADA"
 flat = true
 alignment = 0
 
-[node name="ItemConfiguracoes" type="Control" parent="MenuLateral/Coluna/Botoes" unique_id=368491759]
-custom_minimum_size = Vector2(340, 44)
-layout_mode = 2
-
-[node name="Barra" type="ColorRect" parent="MenuLateral/Coluna/Botoes/ItemConfiguracoes" unique_id=400952611]
-modulate = Color(1, 1, 1, 0)
-custom_minimum_size = Vector2(3, 22)
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_top = -11.0
-offset_right = 3.0
-offset_bottom = 11.0
-grow_vertical = 2
-color = Color(0.38, 1, 0.62, 1)
-
-[node name="BotaoConfiguracoes" type="Button" parent="MenuLateral/Coluna/Botoes/ItemConfiguracoes" unique_id=1332270133]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "CONFIGURAÇÕES"
-flat = true
-alignment = 0
-
 [node name="ItemSair" type="Control" parent="MenuLateral/Coluna/Botoes" unique_id=368491758]
 custom_minimum_size = Vector2(340, 44)
 layout_mode = 2

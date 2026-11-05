@@ -23,6 +23,10 @@ signal pulverizacao_progresso(percentual: float)
 @export var quantidade_maxima: int = 400
 @export var cena_milho: String = "res://scenes/world/milho_plantavel.tscn"
 @export var distancia_max_plantio: float = 15.0
+## Logs de depuração no console. Deixe desligado: cada print vai para o
+## depurador do editor e, no meio da missão (um print por milho plantado e
+## um por frame de pulverização), trava o jogo.
+@export var debug_log: bool = false
 
 var _milhos_plantados: int = 0
 var _cena_milho: PackedScene
@@ -46,6 +50,11 @@ var _salvar_agendado := false
 var _objetivo_concluido := false
 # Pulverização processa apenas durante a missão "operacao_drone_milho".
 var _em_missao_pulverizacao: bool = false
+# Última posição de pulverização já processada (evita revarrer tudo parado).
+var _ultima_pos_pulverizacao := Vector3.ZERO
+var _ultima_pos_pulverizacao_valida := false
+# Gerador reaproveitado para a rotação aleatória de cada milho.
+var _rng: RandomNumberGenerator = null
 
 
 func _ready() -> void:
@@ -87,10 +96,12 @@ func _conectar_drone() -> void:
 	if _drone != null and _drone.has_signal("pulverizando"):
 		if _em_missao_pulverizacao and not _drone.is_connected("pulverizando", _on_drone_pulverizando):
 			_drone.pulverizando.connect(_on_drone_pulverizando)
-			print("[AreaPlantio] Conectado ao sinal de pulverização do drone (missao ativa)")
+			if debug_log:
+				print("[AreaPlantio] Conectado ao sinal de pulverização do drone (missao ativa)")
 		elif not _em_missao_pulverizacao and _drone.is_connected("pulverizando", _on_drone_pulverizando):
 			_drone.pulverizando.disconnect(_on_drone_pulverizando)
-			print("[AreaPlantio] Desconectado do sinal de pulverização do drone (missao inativa)")
+			if debug_log:
+				print("[AreaPlantio] Desconectado do sinal de pulverização do drone (missao inativa)")
 	elif _drone == null:
 		# Tenta novamente daqui a 1 segundo se o drone ainda não apareceu
 		# Usa Timer one-shot em vez de call_deferred em loop.
@@ -142,17 +153,20 @@ func _unhandled_input(event: InputEvent) -> void:
 	var resultado := space_state.intersect_ray(query)
 	
 	if resultado.is_empty():
-		print("[AreaPlantio] Raycast não atingiu nada")
+		if debug_log:
+			print("[AreaPlantio] Raycast não atingiu nada")
 		return
 	
 	var ponto := resultado.position as Vector3
 	
 	# Verifica se o ponto está dentro da área de plantio (usando o raio do collision shape)
 	if not _ponto_dentro_da_area(ponto):
-		print("[AreaPlantio] Ponto fora da área de plantio: ", ponto)
+		if debug_log:
+			print("[AreaPlantio] Ponto fora da área de plantio: ", ponto)
 		return
 	
-	print("[AreaPlantio] Plantando milho em: ", ponto)
+	if debug_log:
+		print("[AreaPlantio] Plantando milho em: ", ponto)
 	_plantar_milho(ponto)
 
 
@@ -184,7 +198,10 @@ func _achar_collision_shape() -> CollisionShape3D:
 
 func _plantar_milho(ponto: Vector3) -> void:
 	if _milhos_plantados >= quantidade_maxima:
-		push_error("AreaPlantio: limite máximo de ", quantidade_maxima, " milhos atingido.")
+		# Campo cheio é estado normal de jogo, não erro: antes um push_error
+		# aqui disparava a cada clique no chão, enchendo o console.
+		if debug_log:
+			print("[AreaPlantio] Limite de ", quantidade_maxima, " milhos atingido.")
 		return
 	if _cena_milho == null:
 		return
@@ -194,6 +211,12 @@ func _plantar_milho(ponto: Vector3) -> void:
 
 	# Direção da fileira ao longo do eixo X do mundo.
 	var direcao := Vector3.RIGHT
+
+	# Um único gerador reutilizado. Antes cada milho criava um RNG e chamava
+	# randomize() (reseed pelo sistema operacional) — 3 chamadas por clique.
+	if _rng == null:
+		_rng = RandomNumberGenerator.new()
+		_rng.randomize()
 
 	for i in 3:
 		if _milhos_plantados >= quantidade_maxima:
@@ -217,15 +240,15 @@ func _plantar_milho(ponto: Vector3) -> void:
 		pai.add_child(milho)
 		milho.global_position = pos + Vector3(0, 0.1, 0)
 
-		var rng := RandomNumberGenerator.new()
-		rng.randomize()
+		var rng := _rng
 		milho.rotation = Vector3(0, rng.randf_range(0, TAU), 0)
 
 		_milhos_plantados += 1
 		milho.add_to_group("milho_plantado")
 		_nos_milhos.append(milho)
 		milho_plantado.emit(pos)
-		print("[AreaPlantio] Milho plantado: ", _milhos_plantados, " / ", quantidade_necessaria)
+		if debug_log:
+			print("[AreaPlantio] Milho plantado: ", _milhos_plantados, " / ", quantidade_necessaria)
 
 		# Registra a posição no save (sem gravar em disco ainda).
 		_salvar_posicao_milho(milho.global_position, milho.rotation)
@@ -311,7 +334,8 @@ func _atualizar_progresso_pulverizacao() -> void:
 	if percentual >= percentual_necessario:
 		if is_instance_valid(Jogo):
 			Jogo.registrar_descoberta("milho_pulverizado")
-		print("[AreaPlantio] Pulverizacao completa (", int(percentual * 100), "%)!")
+		if debug_log:
+			print("[AreaPlantio] Pulverizacao completa (", int(percentual * 100), "%)!")
 
 
 func _on_drone_pulverizando(posicao: Vector3) -> void:
@@ -320,6 +344,14 @@ func _on_drone_pulverizando(posicao: Vector3) -> void:
 		return
 	if not _ponto_dentro_da_area(posicao):
 		return
+
+	# O drone emite este sinal a cada frame. Se ele está parado (ou quase),
+	# a nuvem anterior já marcou tudo que estava no raio: varrer os 400
+	# milhos de novo é trabalho jogado fora.
+	if _ultima_pos_pulverizacao_valida and posicao.distance_squared_to(_ultima_pos_pulverizacao) < 0.0625:
+		return
+	_ultima_pos_pulverizacao = posicao
+	_ultima_pos_pulverizacao_valida = true
 
 	var raio2 := raio_pulverizacao * raio_pulverizacao
 	var pulverizou_algo := false
@@ -342,7 +374,10 @@ func _on_drone_pulverizando(posicao: Vector3) -> void:
 	if pulverizou_algo:
 		_atualizar_progresso_pulverizacao()
 		_agendar_salvar()
-		print("[AreaPlantio] Milho pulverizado! Progresso: ", round(_percentual_pulverizado() * 100), "% / ", round(percentual_necessario * 100), "%")
+		# Um print por evento, e o drone emite a cada frame enquanto borrifa:
+		# isso sozinho já pesa no console do editor.
+		if debug_log:
+			print("[AreaPlantio] Milho pulverizado! Progresso: ", round(_percentual_pulverizado() * 100), "% / ", round(percentual_necessario * 100), "%")
 
 
 func _marcar_milho_pulverizado(milho: Node3D) -> void:
@@ -463,7 +498,8 @@ func _on_missao_pulverizacao_mudou(mission_id: Variant) -> void:
 	# Reconecta/desconecta o sinal do drone baseado na missão
 	call_deferred("_conectar_drone")
 	if not _em_missao_pulverizacao:
-		print("[AreaPlantio] Missão de pulverização encerrada. Sinal de drone desconectado.")
+		if debug_log:
+			print("[AreaPlantio] Missão de pulverização encerrada. Sinal de drone desconectado.")
 
 
 func _posicao_foi_pulverizada(posicao: Vector3) -> bool:
@@ -475,11 +511,12 @@ func _posicao_foi_pulverizada(posicao: Vector3) -> bool:
 func _restaurar_milhos_salvos() -> void:
 	"""Recria os milhos salvos no disco ao carregar o jogo."""
 	var posicoes: Array = SaveSystem.dados.get("milhos_plantados_posicoes", [])
-	print("[AreaPlantio DEBUG] _restaurar_milhos_salvos chamado, posicoes: ", posicoes.size())
+	if debug_log:
+		print("[AreaPlantio] Restaurando milhos salvos: ", posicoes.size())
 	if posicoes == null or posicoes.is_empty():
 		return
 	if _cena_milho == null:
-		print("[AreaPlantio DEBUG] _cena_milho é null!")
+		push_error("AreaPlantio: cena do milho não carregada, impossível restaurar o plantio.")
 		return
 
 	var pai := get_tree().current_scene
@@ -524,4 +561,5 @@ func _restaurar_milhos_salvos() -> void:
 					corpo = milho
 				corpo.material_override = material_pulverizado
 
-	print("[AreaPlantio] Milhos restaurados do save: ", restaurados, " / ", _milhos_plantados, " | Pulverizados: ", _milhos_pulverizados.size())
+	if debug_log:
+		print("[AreaPlantio] Milhos restaurados do save: ", restaurados, " / ", _milhos_plantados, " | Pulverizados: ", _milhos_pulverizados.size())

@@ -4,3 +4,9 @@
 
 # Artefatos locais de ferramentas (screenshots/cache do MCP)
 addons/godot_mcp/cache/
+
+# Arquivos temporários do Windows / Office / Builds
+*.TMP
+*.tmp
+~$*
+~*

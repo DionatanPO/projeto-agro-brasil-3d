@@ -172,10 +172,9 @@ func _ready() -> void:
 
 	_opt_fps_limit = OptionButton.new()
 	_opt_fps_limit.name = "OptFpsLimit"
-	_opt_fps_limit.add_item("Conforme o monitor", FPS_LIMITE_MONITOR)
 	_opt_fps_limit.add_item("30 FPS", FPS_LIMITE_30)
 	_opt_fps_limit.add_item("60 FPS", FPS_LIMITE_60)
-	_opt_fps_limit.add_item("Desbloqueado (maximo)", FPS_LIMITE_MONITOR)
+	_opt_fps_limit.add_item("Conforme o monitor", FPS_LIMITE_MONITOR)
 	_opt_fps_limit.custom_minimum_size = Vector2(180, 32)
 	_opt_fps_limit.add_theme_font_size_override("font_size", 12)
 	_opt_fps_limit.item_selected.connect(_on_fps_limit_alterado)
@@ -183,7 +182,7 @@ func _ready() -> void:
 
 	var dica_fps := Label.new()
 	dica_fps.name = "DicaFpsLimit"
-	dica_fps.text = "Somente com V-Sync DESLIGADO"
+	dica_fps.text = "Limite de taxa de quadros (padrao: 30 FPS)"
 	dica_fps.add_theme_font_size_override("font_size", 10)
 	dica_fps.add_theme_color_override("font_color", AgroUITheme.MUTED_INK)
 	container_fps.add_child(dica_fps)
@@ -192,10 +191,13 @@ func _ready() -> void:
 	if coluna_tela != null:
 		coluna_tela.add_child(container_fps)
 
-	# Carrega o limite de FPS salvo
-	var fps_salvo := int(SaveSystem.dados.get("fps_limit", FPS_LIMITE_MONITOR))
+	# Carrega o limite de FPS salvo (padrao 30)
+	var fps_salvo := int(SaveSystem.dados.get("fps_limit", FPS_LIMITE_30))
 	if _opt_fps_limit != null:
-		_opt_fps_limit.select(fps_salvo)
+		for i in range(_opt_fps_limit.item_count):
+			if _opt_fps_limit.get_item_id(i) == fps_salvo:
+				_opt_fps_limit.select(i)
+				break
 
 	_atualizar_visibilidade_fps(bool(SaveSystem.dados.get("vsync", true)))
 	_configurar_sons_ui()
@@ -425,30 +427,29 @@ func _on_vsync(ativado: bool) -> void:
 func _aplicar_vsync(ativado: bool) -> void:
 	if ativado:
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
-		# Com VSync ligado, o FPS segue o monitor: desativa limite manual
-		Engine.max_fps = 0
 	else:
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
-		# Aplica o limite de FPS selecionado
-		if _opt_fps_limit != null:
-			Engine.max_fps = int(_opt_fps_limit.get_selected_id())
+	
+	# Aplica o limite de FPS (padrao 30)
+	var limite := int(SaveSystem.dados.get("fps_limit", FPS_LIMITE_30))
+	if _opt_fps_limit != null:
+		limite = int(_opt_fps_limit.get_selected_id())
+	Engine.max_fps = limite
 
 
 func _on_fps_limit_alterado(indice: int) -> void:
 	if _opt_fps_limit == null:
 		return
 	var limite := int(_opt_fps_limit.get_selected_id())
-	# So aplica o limite se VSync estiver desligado
-	if not btn_vsync.button_pressed:
-		Engine.max_fps = limite
+	Engine.max_fps = limite
 	SaveSystem.dados["fps_limit"] = limite
 
 
 func _atualizar_visibilidade_fps(vsync_ativo: bool) -> void:
 	var container := $Diario/Inset/Conteudo/Abas/Tela/Margem/Coluna/ContainerFpsLimit
 	if container != null:
-		# Se VSync ligado, esconde o seletor (FPS segue o monitor)
-		container.visible = not vsync_ativo
+		# Mantem visivel para o usuario poder ajustar o limite de FPS
+		container.visible = true
 
 
 func _configurar_sons_ui() -> void:

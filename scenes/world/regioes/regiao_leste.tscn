@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://regiao_leste_001"]
+
+[ext_resource type="PackedScene" uid="uid://rl_chickencoop" path="res://assets/Farm Buildings - Sept 2018/FBX/ChickenCoop.fbx" id="1"]
+[ext_resource type="PackedScene" uid="uid://rl_watertower" path="res://assets/Farm Buildings - Sept 2018/FBX/WaterTower.fbx" id="2"]
+[ext_resource type="PackedScene" uid="uid://rl_well" path="res://assets/Farm Buildings - Sept 2018/FBX/Well.fbx" id="3"]
+[ext_resource type="PackedScene" uid="uid://rl_chickencoop2" path="res://assets/Farm Buildings - Sept 2018/FBX/ChickenCoop.fbx" id="4"]
+[ext_resource type="PackedScene" uid="uid://rl_well2" path="res://assets/Farm Buildings - Sept 2018/FBX/Well.fbx" id="5"]
+[ext_resource type="PackedScene" uid="uid://rl_casa" path="res://assets/models/casa.glb" id="6"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="ChickenCoop" parent="." instance=ExtResource("1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 69.337975, -0.17880249, 197.68521)
+
+[node name="WaterTower" parent="." instance=ExtResource("2")]
+transform = Transform3D(0.9208765, 0, 0.38985446, 0, 1, 0, -0.38985446, 0, 0.9208765, 71.36576, 10.277155, 206.8024)
+
+[node name="Well" parent="." instance=ExtResource("3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 91.557556, -21.893818, 208.71114)
+
+[node name="ChickenCoop2" parent="." instance=ExtResource("4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.06796, 10.561348, 187.22913)
+
+[node name="Well2" parent="." instance=ExtResource("5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.104645, 11.606371, 197.58466)
+
+[node name="casa" parent="." instance=ExtResource("6")]
+transform = Transform3D(0.49350807, 0, -0.8697413, 0, 1, 0, 0.8697413, 0, 0.49350807, 61.45755, 11.228033, 204.05148)

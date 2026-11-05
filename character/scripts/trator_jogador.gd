@@ -41,6 +41,7 @@ var _som_re: AudioStreamPlayer3D
 var _poeira_roda_te: GPUParticles3D
 var _poeira_roda_td: GPUParticles3D
 var _tempo_beep := 0.0
+var _tempo_atualizacao_prompt := 0.0
 var _angulo_vertical := -0.32
 
 @onready var rig: Node3D = $CameraRig
@@ -355,16 +356,26 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("ui_cancel") and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if not ativo and _jogador != null and is_instance_valid(_jogador):
-		_prompt.text = "Pressione E para usar o trator (%.1f m)" % global_position.distance_to(_jogador.global_position)
 		if _jogador.visible:
-			# Calcula distância uma única vez por frame (distância ao quadrado, evita sqrt).
+			# A checagem de proximidade roda por frame, mas sem raiz quadrada.
 			var raio2 := (RAIO_ESTACAO + 2.0) * (RAIO_ESTACAO + 2.0)
-			var perto := global_position.distance_squared_to(_jogador.global_position) < raio2
+			var distancia2 := global_position.distance_squared_to(_jogador.global_position)
+			var perto := distancia2 < raio2
 			if perto and not _jogador_perto:
 				_on_corpo_entrou(_jogador)
 			elif not perto and _jogador_perto and estacao.get_overlapping_bodies().is_empty():
 				_jogador_perto = false
 				_prompt.visible = false
+			if _jogador_perto:
+				# Texto e distância são atualizados a 10 Hz, em vez de reconstruídos
+				# em todos os frames.
+				_tempo_atualizacao_prompt -= delta
+				if _tempo_atualizacao_prompt <= 0.0:
+					_prompt.text = "Pressione E para usar o trator (%.1f m)" % sqrt(distancia2)
+					_tempo_atualizacao_prompt = 0.1
+		else:
+			_jogador_perto = false
+			_prompt.visible = false
 	if not ativo:
 		return
 	_olhar_stick(delta)

@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://regiao_sul_001"]
+
+[ext_resource type="PackedScene" uid="uid://rs_bridge" path="res://env models/bridge/bridge.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://rs_bridge2" path="res://env models/bridge/bridge.tscn" id="2"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="bridge" parent="." instance=ExtResource("1")]
+transform = Transform3D(0.7396311, 0, 0.6730125, 0, 1, 0, -0.6730125, 0, 0.7396311, 125.217, 10.027, 122.271)
+
+[node name="bridge2" parent="." instance=ExtResource("2")]
+transform = Transform3D(0.72647876, 0, 0.687189, 0, 1, 0, -0.687189, 0, 0.72647876, 75.48544, 9.356411, 150.43277)

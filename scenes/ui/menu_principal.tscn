@@ -31,16 +31,6 @@ layout_mode = 2
 [node name="BotaoNovo" type="Button" parent="MenuLateral/Coluna/Botoes/ItemNovo" unique_id=1145727462]
 layout_mode = 2
 
-[node name="ItemConfiguracoes" type="VBoxContainer" parent="MenuLateral/Coluna/Botoes" unique_id=777000101]
-layout_mode = 2
-
-[node name="Barra" type="ColorRect" parent="MenuLateral/Coluna/Botoes/ItemConfiguracoes" unique_id=777000102]
-layout_mode = 2
-
-[node name="BotaoConfiguracoes" type="Button" parent="MenuLateral/Coluna/Botoes/ItemConfiguracoes" unique_id=777000103]
-layout_mode = 2
-text = "CONFIGURACOES"
-
 [node name="ItemSair" type="VBoxContainer" parent="MenuLateral/Coluna/Botoes" unique_id=728196125]
 layout_mode = 2
 
@@ -52,5 +42,3 @@ layout_mode = 2
 
 [node name="FadeRect" type="ColorRect" parent="." unique_id=10825261]
 layout_mode = 0
-
-

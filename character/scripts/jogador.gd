@@ -171,8 +171,12 @@ func forcar_idle_cutscene() -> void:
 func _instanciar_intro_cutscene() -> void:
 	if SaveSystem.dados.get("intro_mundo_vista", false):
 		return
+	# Protege contra uma segunda instância caso o jogador seja recriado durante a entrada no mundo.
+	if get_tree().get_first_node_in_group("intro_cutscene") != null:
+		return
 	var cena := preload("res://scenes/world/intro_cutscene.tscn")
 	var inst := cena.instantiate()
+	inst.add_to_group("intro_cutscene")
 	get_tree().root.add_child(inst)
 	# Garante pose de idle (parado) durante a cutscene
 	_atualizar_animacao("Idle")
@@ -548,6 +552,11 @@ func _atualizar_animacao(nome: String) -> void:
 				break
 	if chave == "":
 		return
+	var trocar := _animacao_atual != chave
+	var repetir_pulo := (nome == "Jump" or nome == "WalkJump" or nome == "RunJump") and not animador.is_playing()
+	if not trocar and not repetir_pulo:
+		return
+
 	var animacao := animador.get_animation(chave)
 	if nome == "Walk" or nome == "Run":
 		animacao.loop_mode = Animation.LOOP_LINEAR
@@ -556,33 +565,30 @@ func _atualizar_animacao(nome: String) -> void:
 		animacao.loop_mode = Animation.LOOP_PINGPONG
 	else:
 		animacao.loop_mode = Animation.LOOP_NONE
-	var trocar := _animacao_atual != chave
-	var repetir_pulo := (nome == "Jump" or nome == "WalkJump" or nome == "RunJump") and not animador.is_playing()
-	if trocar or repetir_pulo:
-		var blend := BLEND_TERRA
-		if nome == "Jump" or nome == "WalkJump" or nome == "RunJump":
-			blend = BLEND_PULO_SAIDA
-		elif _animacao_atual == "Jump" or _animacao_atual == "WalkJump" or _animacao_atual == "RunJump":
-			blend = BLEND_POUSO
-		# Alternar Walk<->Run preserva a fase da passada em vez de
-		# recomecar o ciclo (evita o "solavanco" ao segurar o correr).
-		var manter_fase := (chave == "Walk" or chave == "Run") and (_animacao_atual == "Walk" or _animacao_atual == "Run")
-		var fase := 0.0
-		if manter_fase and animador.is_playing():
-			var antiga := animador.get_animation(_animacao_atual)
-			if antiga != null and antiga.length > 0.0 and animacao.length > 0.0:
-				fase = fposmod(animador.get_current_animation_position() / antiga.length, 1.0)
-		animador.play(chave, blend)
-		if manter_fase:
-			animador.seek(fase * animacao.length, true)
-		_animacao_atual = chave
-		# Diálogo quando entra em idle parado (apenas fora da cutscene)
-		if nome == "SadIdle" and chave == "SadIdle" and not bloqueado and _permitir_dialogo_idle:
-			var agora := Time.get_ticks_msec() / 1000.0
-			if agora - _ultimo_dialogo_idle >= 8.0:
-				_ultimo_dialogo_idle = agora
-				if is_instance_valid(DialogueManager):
-					DialogueManager.play("player_parado")
+	var blend := BLEND_TERRA
+	if nome == "Jump" or nome == "WalkJump" or nome == "RunJump":
+		blend = BLEND_PULO_SAIDA
+	elif _animacao_atual == "Jump" or _animacao_atual == "WalkJump" or _animacao_atual == "RunJump":
+		blend = BLEND_POUSO
+	# Alternar Walk<->Run preserva a fase da passada em vez de
+	# recomecar o ciclo (evita o "solavanco" ao segurar o correr).
+	var manter_fase := (chave == "Walk" or chave == "Run") and (_animacao_atual == "Walk" or _animacao_atual == "Run")
+	var fase := 0.0
+	if manter_fase and animador.is_playing():
+		var antiga := animador.get_animation(_animacao_atual)
+		if antiga != null and antiga.length > 0.0 and animacao.length > 0.0:
+			fase = fposmod(animador.get_current_animation_position() / antiga.length, 1.0)
+	animador.play(chave, blend)
+	if manter_fase:
+		animador.seek(fase * animacao.length, true)
+	_animacao_atual = chave
+	# Diálogo quando entra em idle parado (apenas fora da cutscene)
+	if nome == "SadIdle" and chave == "SadIdle" and not bloqueado and _permitir_dialogo_idle:
+		var agora := Time.get_ticks_msec() / 1000.0
+		if agora - _ultimo_dialogo_idle >= 8.0:
+			_ultimo_dialogo_idle = agora
+			if is_instance_valid(DialogueManager):
+				DialogueManager.play("player_parado")
 
 
 ## Inicia a caminhada autônoma da cutscene em direção ao destino.

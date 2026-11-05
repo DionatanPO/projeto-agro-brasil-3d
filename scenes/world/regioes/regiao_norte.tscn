@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://regiao_norte_001"]
+
+[ext_resource type="PackedScene" uid="uid://rn_silo" path="res://assets/models/silo.glb" id="1"]
+[ext_resource type="PackedScene" uid="uid://rn_galpao" path="res://assets/models/galpao.glb" id="2"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="silo" parent="." instance=ExtResource("1")]
+transform = Transform3D(2.6691895, 0, 1.6347373, 0, 2.8676758, 0, -1.4039009, 0, 3.108071, 188.66943, 10.461985, 113.03619)
+
+[node name="galpao" parent="." instance=ExtResource("2")]
+transform = Transform3D(0.7969278, 0.0121222325, -0.6039528, -0.06384537, 0.995889, -0.06425627, 0.600691, 0.0897672, 0.79442567, 184.06227, 12.213152, 159.90755)

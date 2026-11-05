@@ -5,7 +5,6 @@ extends Control
 const CENA_MUNDO := "res://world.tscn"
 const CENA_LOADING := "res://scenes/ui/menus/loading.tscn"
 const CENA_HUD := "res://scenes/ui/hud.tscn"
-const CENA_CONFIGURACOES := "res://scenes/ui/menu_configuracoes.tscn"
 
 @onready var backdrop: TextureRect = get_node_or_null("Backdrop") as TextureRect
 @onready var video_fundo: VideoStreamPlayer = get_node_or_null("VideoFundo") as VideoStreamPlayer
@@ -20,9 +19,6 @@ const CENA_CONFIGURACOES := "res://scenes/ui/menu_configuracoes.tscn"
 @onready var item_sair: Control = find_child("ItemSair", true, false) as Control
 @onready var botao_sair: Button = find_child("BotaoSair", true, false) as Button
 @onready var barra_sair: ColorRect = get_node_or_null("MenuLateral/Coluna/Botoes/ItemSair/Barra") as ColorRect
-@onready var item_configuracoes: Control = find_child("ItemConfiguracoes", true, false) as Control
-@onready var botao_configuracoes: Button = find_child("BotaoConfiguracoes", true, false) as Button
-@onready var barra_configuracoes: ColorRect = get_node_or_null("MenuLateral/Coluna/Botoes/ItemConfiguracoes/Barra") as ColorRect
 @onready var fade_rect: ColorRect = get_node_or_null("FadeRect") as ColorRect
 
 var _musica_menu: AudioStreamPlayer
@@ -94,8 +90,6 @@ func _ready() -> void:
 		_configurar_item_menu(botao_novo, barra_novo)
 	if botao_sair != null:
 		_configurar_item_menu(botao_sair, barra_sair)
-	if botao_configuracoes != null:
-		_configurar_item_menu(botao_configuracoes, barra_configuracoes)
 
 	# Lógica de Save: se não houver save game, esconde ou desativa "Continuar Jornada"
 	var tem_progresso := SaveSystem.tem_save()
@@ -114,8 +108,6 @@ func _ready() -> void:
 	if botao_sair != null and not botao_sair.pressed.is_connected(_on_sair):
 		botao_sair.pressed.connect(_on_sair)
 
-	if botao_configuracoes != null and not botao_configuracoes.pressed.is_connected(_on_configuracoes):
-		botao_configuracoes.pressed.connect(_on_configuracoes)
 
 	# Foco inicial inteligente
 	if tem_progresso and botao_continuar != null and botao_continuar.visible:
@@ -146,9 +138,6 @@ func _validar_nos() -> bool:
 		valido = false
 	if botao_sair == null:
 		push_error("Menu: não foi encontrado 'BotaoSair'.")
-		valido = false
-	if botao_configuracoes == null:
-		push_error("Menu: não foi encontrado 'BotaoConfiguracoes'.")
 		valido = false
 	if fade_rect == null:
 		push_error("Menu: não foi encontrado o nó 'FadeRect'.")
@@ -224,53 +213,6 @@ func _on_sair() -> void:
 	get_tree().quit()
 
 
-## Configurações: painel EXCLUSIVO do menu principal
-## (não reaproveita o Diário/HUD do jogo nem do mundo principal)
-func _on_configuracoes() -> void:
-	if _transicao_em_andamento:
-		return
-
-	# Evita abrir duas vezes
-	if get_node_or_null("MenuConfiguracoes") != null:
-		return
-
-	_transicao_em_andamento = true
-
-	# Abre o painel de configurações exclusivo do menu principal
-	var cena_cfg := load(CENA_CONFIGURACOES) as PackedScene
-	if cena_cfg == null:
-		push_error("Menu principal: nao foi possivel carregar " + CENA_CONFIGURACOES)
-		_transicao_em_andamento = false
-		return
-
-	var inst_cfg := cena_cfg.instantiate() as Control
-	if inst_cfg == null:
-		_transicao_em_andamento = false
-		return
-
-	inst_cfg.name = "MenuConfiguracoes"
-	inst_cfg.process_mode = Node.PROCESS_MODE_ALWAYS
-	inst_cfg.z_index = 200
-	add_child(inst_cfg)
-	inst_cfg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-
-	# Fade de entrada suave (o tween precisa rodar mesmo com a árvore pausada)
-	inst_cfg.modulate.a = 0.0
-	var tw := create_tween()
-	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	tw.tween_property(inst_cfg, "modulate:a", 1.0, 0.25)
-
-
-## Fecha o painel de configurações do menu principal e volta ao menu
-func fechar_configuracoes_menu() -> void:
-	var cfg := get_node_or_null("MenuConfiguracoes")
-	if cfg != null:
-		cfg.queue_free()
-	_transicao_em_andamento = false
-
-
 func _desativar_botoes() -> void:
 	_transicao_em_andamento = true
 	if botao_continuar != null:
@@ -279,8 +221,6 @@ func _desativar_botoes() -> void:
 		botao_novo.disabled = true
 	if botao_sair != null:
 		botao_sair.disabled = true
-	if botao_configuracoes != null:
-		botao_configuracoes.disabled = true
 
 
 func _transicionar_para_loading() -> void:
